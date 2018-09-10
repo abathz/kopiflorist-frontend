@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import App, { Container } from 'next/app'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
@@ -13,9 +13,7 @@ export default class MyApp extends App {
     return (
       <Container>
         <Provider store={store}>
-          <div className='container'>
-            <Component {...pageProps} />
-          </div>
+          <Component {...pageProps} />
         </Provider>
       </Container>
     )

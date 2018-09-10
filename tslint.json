@@ -1,3 +1,20 @@
 {
-  "extends": ["tslint-config-standard", "tslint-react"]
+  "extends": ["tslint:recommended", "tslint-config-standard", "tslint-react"],
+  "rules": {
+    "jsx-no-multiline-js": false,
+    "object-literal-sort-keys": false,
+    "no-empty-interface": false,
+    "interface-name": false,
+    "ordered-imports": false,
+    "max-line-length": false,
+    "member-access": false,
+    "no-console": false,
+    "await-promise": false,
+    "deprecation": false,
+    "no-use-before-declare": false,
+    "no-floating-promises": false,
+    "no-unnecessary-qualifier": false,
+    "no-unnecessary-type-assertion": false,
+    "strict-type-predicates": false
+  }
 }

@@ -10,10 +10,10 @@ module.exports = withTypescript(withCss(withSass({
     if (!options.isServer) {
       config = commonsChunkConfig(config, /\.(scss|css)$/)
     }
-    config.module.rules.push({
-      test: /\.(woff|woff2|eot|ttf|otf)$/,
-      use: 'file-loader?name=static/fonts/[name].[ext]'
-    })
+    // config.module.rules.push({
+    //   test: /\.(woff|woff2|eot|ttf|otf)$/,
+    //   use: 'file-loader?name=static/fonts/[name].[ext]'
+    // })
     config.resolve.alias = {
       container: path.resolve(__dirname, 'src/container'),
       components: path.resolve(__dirname, 'src/components'),
@@ -21,12 +21,6 @@ module.exports = withTypescript(withCss(withSass({
       reducers: path.resolve(__dirname, 'src/reducers'),
       routes: path.resolve(__dirname, './routes')
     }
-    config.plugins.push(
-      new webpack.ProvidePlugin({
-        '_': 'lodash'
-      })
-    )
-
     return config
   }
 })))
