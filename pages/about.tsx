@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Container } from 'reactstrap'
-import Header from 'components/Common/Header'
-import Footer from 'components/Common/Footer'
-import AboutBanner from 'components/About/AboutBanner'
-import AboutContent from 'components/About/AboutContent'
+import Header from 'container/Common/Header'
+import Footer from 'container/Common/Footer'
+import AboutBanner from 'container/About/AboutBanner'
+import AboutContent from 'container/About/AboutContent'
 
 export default class extends Component<{}, {}> {
   render () {

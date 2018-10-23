@@ -1,10 +1,4 @@
-import { Dispatch } from 'redux'
-
-export const getFullName = () => {
-  return (dispatch: Dispatch<any>) => {
-    dispatch({
-      type: 'getfull',
-      payload: 'Adli Fariz Bonaputra'
-    })
-  }
-}
+export * from './ShopActions'
+export * from './AuthActions'
+export * from './UserActions'
+export * from './BlogActions'

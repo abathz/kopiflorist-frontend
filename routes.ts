@@ -8,9 +8,9 @@ routes
   .add('coffeetrip', '/coffee_trip', 'coffeetrip')
   .add('/coffee_trip/:id', 'coffeetripdetail')
   .add('shop', '/shop', 'shop')
-  .add('/shop/:id', 'shopdetail')
+  .add('/shop/:id/:slug', 'shopdetail')
   .add('blog', '/blog', 'blog')
-  .add('/blog/:id', 'blogdetail')
+  .add('/blog/:id/:slug', 'blogdetail')
   .add('howtoorder','/howtoorder', 'howtoorder')
 
 export default routes

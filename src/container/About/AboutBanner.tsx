@@ -12,7 +12,7 @@ class AboutBanner extends Component<{}, {}> {
         </Row>
         <Row style={{ marginBottom: '40px' }}>
           <Col xs='12' className='text-center'>
-            <div style={{ backgroundColor: '#333', height: '423.5px' }} />
+            <img className='img-fluid' src='/static/img/about1.jpg' alt=''/>
           </Col>
         </Row>
       </>

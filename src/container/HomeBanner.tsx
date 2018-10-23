@@ -7,12 +7,6 @@ import {
   CarouselIndicators,
   CarouselCaption } from 'reactstrap'
 
-const items = [
-  { caption: 'Slide 1' },
-  { caption: 'Slide 2' },
-  { caption: 'Slide 3' }
-]
-
 interface StateProps { }
 
 interface DispatchProps { }
@@ -20,14 +14,23 @@ interface DispatchProps { }
 interface PropsComponent extends StateProps, DispatchProps { }
 
 interface StateComponent {
-  activeIndex: number,
+  activeIndex: number
   animating: boolean
+  items: any[]
 }
 
 class HomeBanner extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
-    this.state = { activeIndex: 0, animating: false }
+    this.state = {
+      activeIndex: 0,
+      animating: false,
+      items: [
+        { caption: 'Slide 1' },
+        { caption: 'Slide 2' },
+        { caption: 'Slide 3' }
+      ]
+    }
     this.next = this.next.bind(this)
     this.previous = this.previous.bind(this)
     this.goToIndex = this.goToIndex.bind(this)
@@ -49,13 +52,13 @@ class HomeBanner extends Component<PropsComponent, StateComponent> {
 
   next () {
     if (this.state.animating) return
-    const index = this.state.activeIndex === items.length - 1 ? 0 : this.state.activeIndex + 1
+    const index = this.state.activeIndex === this.state.items.length - 1 ? 0 : this.state.activeIndex + 1
     this.setState({ activeIndex: index })
   }
 
   previous () {
     if (this.state.animating) return
-    const index = this.state.activeIndex === 0 ? items.length - 1 : this.state.activeIndex - 1
+    const index = this.state.activeIndex === 0 ? this.state.items.length - 1 : this.state.activeIndex - 1
     this.setState({ activeIndex: index })
   }
 
@@ -65,7 +68,7 @@ class HomeBanner extends Component<PropsComponent, StateComponent> {
   }
 
   renderSlide () {
-    return _.map(items, (item: any, index: number) => {
+    return _.map(this.state.items, (item: any, index: number) => {
       return (
         <CarouselItem
           onExiting={this.onExiting}
@@ -89,7 +92,7 @@ class HomeBanner extends Component<PropsComponent, StateComponent> {
         previous={this.previous}
         interval={2000}
       >
-        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
+        <CarouselIndicators items={this.state.items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
         {this.renderSlide()}
         <CarouselControl direction='prev' directionText='Previous' onClickHandler={this.previous} />
         <CarouselControl direction='next' directionText='Next' onClickHandler={this.next} />

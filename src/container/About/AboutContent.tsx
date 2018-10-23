@@ -24,7 +24,7 @@ class AboutContent extends Component<{},{}> {
             </p>
           </Col>
           <Col xs='6'>
-            <div style={{ backgroundColor: '#333', height: '100%' }}/>
+            <img className='img-fluid' src='/static/img/about2.jpg' alt='' />
           </Col>
         </Row>
       </>

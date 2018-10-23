@@ -1,4 +1,5 @@
-import React, { Component, EventHandler } from 'react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import _ from 'lodash'
 import {
   Col,
@@ -9,9 +10,25 @@ import {
   DropdownItem
 } from 'reactstrap'
 import { Link } from 'routes'
-import ListArchive from 'components/Blog/ListArchive'
+import ListArchive from 'container/Blog/ListArchive'
+import { getAllBlog } from 'actions/index'
 
-class BlogList extends Component<{}, { dropdownOpen: boolean, year: string }> {
+interface StateProps {
+  allBlog: any[]
+}
+
+interface DispatchProps {
+  getAllBlog: typeof getAllBlog
+}
+
+interface PropsComponent extends StateProps, DispatchProps { }
+
+interface StateComponent {
+  dropdownOpen: boolean
+  year: string
+}
+
+class BlogList extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
@@ -21,6 +38,10 @@ class BlogList extends Component<{}, { dropdownOpen: boolean, year: string }> {
       dropdownOpen: false,
       year: '2018'
     }
+  }
+
+  componentDidMount () {
+    this.props.getAllBlog()
   }
 
   toggle () {
@@ -36,19 +57,30 @@ class BlogList extends Component<{}, { dropdownOpen: boolean, year: string }> {
     })
   }
 
+  renderBlogList () {
+    const { allBlog } = this.props
+    if (!allBlog) return ''
+    console.log(allBlog)
+    return _.map(allBlog, (data: any) => {
+      const dateCreated = data.date_created.substring(0, 10).split('-')
+      const date = `${dateCreated[2]}-${dateCreated[1]}-${dateCreated[0]}`
+      return (
+        <div key={data.id}>
+          <h3>{data.blog_title}</h3>
+          <span className='text-s'>{date}</span>
+          <Link route={`/blog/${data.id}/${data.slug}`} prefetch={true}>
+            <img className='img-fluid' src={data.photo} />
+          </Link>
+        </div>
+      )
+    })
+  }
+
   render () {
     return (
       <Row>
         <Col xs='8'>
-        {
-          _.map(Array(3), (data: any, index: number) => {
-            return (
-              <Link key={index} route={`/blog/${index}`}>
-                <div className='mb-5' style={{ backgroundColor: '#333', height: '423.5px' }} />
-              </Link>
-            )
-          })
-        }
+          {this.renderBlogList()}
         </Col>
         <Col xs='4'>
           <Row>
@@ -74,4 +106,10 @@ class BlogList extends Component<{}, { dropdownOpen: boolean, year: string }> {
   }
 }
 
-export default BlogList
+const mapStateToProps = ({ blog }: any) => {
+  const { allBlog } = blog
+
+  return { allBlog }
+}
+
+export default connect(mapStateToProps, { getAllBlog })(BlogList)

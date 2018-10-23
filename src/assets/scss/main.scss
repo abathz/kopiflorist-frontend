@@ -6,14 +6,18 @@ h1, h2, h3, h4, h5, h6 {
   color: $black;
 }
 
-a {
-  color: $black;
+a:hover {
+  cursor: pointer;
+  text-decoration: none;
+}
 
-  &:hover {
-    cursor: pointer;
-    text-decoration: none;
-    color: $black-light;
-  }
+p {
+  white-space: pre-line;
+}
+
+span:hover{
+  cursor: pointer;
+  text-decoration: none;
 }
 
 footer {
@@ -36,6 +40,18 @@ footer {
 .icon-categories-shop {
   width: 30px;
   height: 30px;
+}
+
+.navbar-collapse {
+  & .navbar-nav:nth-last-child(1) {
+    @media (max-width: 576px) {
+      margin-left: 24px !important;
+    }
+  }
+}
+
+.active {
+  border-bottom: 2px solid $yellow;
 }
 
 /***********************************************************/
@@ -114,7 +130,7 @@ footer {
   &-black {
     color: $black;
 
-    &:hover {
+    &:hover:not(p) {
       color: $black-light;
     }
   }
@@ -122,7 +138,7 @@ footer {
   &-yellow {
     color: $yellow;
 
-    &:hover {
+    &:hover:not(p) {
       color: $yellow-light
     }
   }

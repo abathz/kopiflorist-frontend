@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Container } from 'reactstrap'
-import Header from 'components/Common/Header'
-import Footer from 'components/Common/Footer'
-import CoffeeTripList from 'components/CoffeeTrip/CoffeeTripList'
+import Header from 'container/Common/Header'
+import Footer from 'container/Common/Footer'
+import CoffeeTripList from 'container/CoffeeTrip/CoffeeTripList'
 
 export default class extends Component<{},{}> {
   render () {

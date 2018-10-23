@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
-  Collapse,
+  UncontrolledCollapse,
   Navbar,
   NavbarToggler,
   NavbarBrand,
@@ -10,61 +11,28 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input
+  DropdownItem
  } from 'reactstrap'
 import { Link } from 'routes'
+import ModalPopup from './Modal'
+import { getProfile, logout } from 'actions/index'
 
-interface StateProps { }
+interface StateProps {
+  profile: any
+  session: string
+}
 
-interface DispatchProps { }
+interface DispatchProps {
+  getProfile: typeof getProfile
+  logout: typeof logout
+}
 
 interface PropsComponent extends StateProps, DispatchProps { }
 
 interface StateComponent {
-  isOpen: boolean,
+  isOpen: boolean
   modal: boolean
-}
-
-const ModalPopup = ({ modal, toggleModal }: any) => {
-  return (
-    <Modal isOpen={modal} toggle={toggleModal} contentClassName='border-modal'>
-      <ModalHeader toggle={toggleModal}>WELCOME!</ModalHeader>
-      <ModalBody>
-        <Form>
-          <FormGroup>
-            <Label for='email'>Email</Label>
-            <Input type='email' name='email' id='email' placeholder='example@mail.com' />
-          </FormGroup>
-          <FormGroup>
-            <Label for='password'>Password</Label>
-            <Input type='password' name='email' id='password' placeholder='********' />
-          </FormGroup>
-          <FormGroup className='clearfix mb-5'>
-            <Link route=''>
-              <a className='float-right'>Forgot Password</a>
-            </Link>
-          </FormGroup>
-        </Form>
-        <Button color='primary' className='float-right pr-5 pl-5' onClick={toggleModal}>Sign in</Button>
-        <div className='clearfix'/>
-        <p className='float-right clearfix'>
-          or{' '}
-          <Link route=''>
-            <a>Sign Up</a>
-          </Link>{' '}
-          here
-        </p>
-      </ModalBody>
-    </Modal>
-  )
+  active: string
 }
 
 class Header extends Component<PropsComponent, StateComponent> {
@@ -72,17 +40,24 @@ class Header extends Component<PropsComponent, StateComponent> {
     super(props)
     this.state = {
       isOpen: false,
-      modal: false
+      modal: false,
+      active: ''
     }
 
-    this.toggleDropdown = this.toggleDropdown.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
+    this.logout = this.logout.bind(this)
   }
 
-  toggleDropdown () {
+  componentDidMount () {
     this.setState({
-      isOpen: !this.state.isOpen
+      active: window.location.pathname
     })
+    const email: any = localStorage.getItem('email')
+    this.props.getProfile(email)
+  }
+
+  logout () {
+    this.props.logout()
   }
 
   toggleModal () {
@@ -92,33 +67,33 @@ class Header extends Component<PropsComponent, StateComponent> {
   }
 
   renderDropdown () {
-    // tslint:disable-next-line:no-constant-condition
-    if (false) {
+    const { profile, session } = this.props
+    if (!profile) return ''
+    if (session) {
       return (
         <UncontrolledDropdown className='ml-auto' nav={true} inNavbar={true}>
           <DropdownToggle nav={true} caret={true}>
-            Adli Fariz
-                  </DropdownToggle>
+            {profile.name}
+          </DropdownToggle>
           <DropdownMenu right={true}>
             <DropdownItem>
               Setting
-                    </DropdownItem>
+            </DropdownItem>
             <DropdownItem divider={true} />
-            <DropdownItem>
-              Sign out
-                    </DropdownItem>
+            <DropdownItem onClick={this.logout}>
+              Sign Out
+            </DropdownItem>
           </DropdownMenu>
         </UncontrolledDropdown>
       )
-    } else {
-      return (
-        <NavItem>
-          <NavLink onClick={this.toggleModal}>
-            <p>Signin/Signup</p>
-          </NavLink>
-        </NavItem>
-      )
     }
+    return (
+      <NavItem>
+        <NavLink onClick={this.toggleModal}>
+          <p>Signin/Signup</p>
+        </NavLink>
+      </NavItem>
+    )
   }
 
   render () {
@@ -131,40 +106,40 @@ class Header extends Component<PropsComponent, StateComponent> {
                 <img className='img-fluid logo' src='/static/img/logo.png' alt='Kopi Florist' />
               </Link>
             </NavbarBrand>
-            <NavbarToggler onClick={this.toggleDropdown} />
-            <Collapse isOpen={this.state.isOpen} navbar={true} className='text-hel-reg'>
+            <NavbarToggler id='dropdown' />
+            <UncontrolledCollapse toggler='#dropdown' navbar={true} className='text-hel-reg'>
               <Nav className='ml-4 mt-3' navbar={true}>
                 <NavItem className='pr-3'>
                   <Link route='about'>
-                    <NavLink>
+                    <NavLink active={this.state.active === '/about'}>
                       <p>About</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
                   <Link route='coffeetrip'>
-                    <NavLink>
+                    <NavLink active={this.state.active === '/coffee_trip'}>
                       <p>Coffee Trip</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
                   <Link route='shop'>
-                    <NavLink>
+                    <NavLink active={this.state.active === '/shop'}>
                       <p>Shop</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
                   <Link route='blog'>
-                    <NavLink>
+                    <NavLink active={this.state.active === '/blog'}>
                       <p>Blog</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
                   <Link route='howtoorder'>
-                    <NavLink>
+                    <NavLink active={this.state.active === '/howtoorder'}>
                       <p>How To Order</p>
                     </NavLink>
                   </Link>
@@ -172,15 +147,15 @@ class Header extends Component<PropsComponent, StateComponent> {
               </Nav>
               <Nav className='ml-auto mt-3' navbar={true}>
                 <NavItem>
-                  <NavLink href=''>
-                    <Link route=''>
+                  <NavLink>
+                    <Link route='#'>
                       <p>Cart(0)</p>
                     </Link>
                   </NavLink>
                 </NavItem>
                 {this.renderDropdown()}
               </Nav>
-            </Collapse>
+            </UncontrolledCollapse>
           </Navbar>
           <div style={{ borderBottom: '1px solid #979797', marginTop: '10px', marginBottom: '50px' }} />
           <ModalPopup modal={this.state.modal} toggleModal={this.toggleModal}/>
@@ -190,4 +165,10 @@ class Header extends Component<PropsComponent, StateComponent> {
   }
 }
 
-export default Header
+const mapStateToProps = ({ user }: any) => {
+  const { profile, session } = user
+
+  return { profile, session }
+}
+
+export default connect(mapStateToProps, { getProfile, logout })(Header)

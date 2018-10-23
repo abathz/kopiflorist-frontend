@@ -4,11 +4,11 @@ import {
   Col,
   Row } from 'reactstrap'
 import _ from 'lodash'
-import Header from 'components/Common/Header'
-import Footer from 'components/Common/Footer'
-import HomeBanner from 'components/HomeBanner'
-import ShopList from 'components/Shop/ShopList'
-import CoffeeTripList from 'components/CoffeeTrip/CoffeeTripList'
+import Header from 'container/Common/Header'
+import Footer from 'container/Common/Footer'
+import HomeBanner from 'container/HomeBanner'
+import ShopList from 'container/Shop/ShopList'
+import CoffeeTripList from 'container/CoffeeTrip/CoffeeTripList'
 import { Link } from 'routes'
 
 interface StateProps { }
