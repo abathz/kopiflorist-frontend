@@ -53,7 +53,9 @@ class Header extends Component<PropsComponent, StateComponent> {
       active: window.location.pathname
     })
     const email: any = localStorage.getItem('email')
-    this.props.getProfile(email)
+    if (email) {
+      this.props.getProfile(email)
+    }
   }
 
   logout () {
