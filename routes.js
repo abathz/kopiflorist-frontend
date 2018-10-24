@@ -1,8 +1,6 @@
-import Routes from 'next-routes'
+const routes = require('next-routes')
 
-const routes = new Routes()
-
-routes
+module.exports = routes()
   .add('home', '/', 'index')
   .add('about', '/about', 'about')
   .add('coffeetrip', '/coffee_trip', 'coffeetrip')
@@ -12,7 +10,3 @@ routes
   .add('blog', '/blog', 'blog')
   .add('/blog/:id/:slug', 'blogdetail')
   .add('howtoorder','/howtoorder', 'howtoorder')
-
-export default routes
-export const Link = routes.Link
-export const Router = routes.Router
