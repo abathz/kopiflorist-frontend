@@ -19,10 +19,10 @@ class CoffeeTripList extends Component<PropsComponent, StateComponent> {
   }
 
   renderList () {
-    return _.map(Array(this.props.size || 6), (data: any, index: any) => {
+    return _.map(Array(this.props.size || 3), (data: any, index: any) => {
       return (
         <Col key={index} xs='4' className='mb-5'>
-          <Link route={`/coffee_trip/${index}`}>
+          <Link route={`/coffee_trip/${index}`} replace={true}>
             <div style={{ backgroundColor: '#333', height: '350px' }} />
           </Link>
           <div className='mt-3'>

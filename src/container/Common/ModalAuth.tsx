@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent, FormEvent } from 'react'
 import { connect } from 'react-redux'
 import { Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import { Link } from 'routes'
-import { updateDataSignUp, signUp } from 'actions/index'
+import { updateDataSignUp, signUp, signIn } from 'actions/index'
 
 interface StateProps {
   modal: any
@@ -13,6 +13,7 @@ interface StateProps {
 interface DispatchProps {
   updateDataSignUp: typeof updateDataSignUp
   signUp: typeof signUp
+  signIn: typeof signIn
 }
 
 interface PropsComponent extends StateProps, DispatchProps { }
@@ -21,7 +22,7 @@ interface StateComponent {
   register: boolean
 }
 
-class ModalPopup extends Component<PropsComponent, StateComponent> {
+class ModalAuth extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
@@ -30,7 +31,8 @@ class ModalPopup extends Component<PropsComponent, StateComponent> {
     }
 
     this.onInputChange = this.onInputChange.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
+    this.onRegisterSubmit = this.onRegisterSubmit.bind(this)
+    this.onLoginSubmit = this.onLoginSubmit.bind(this)
     this.changeModal = this.changeModal.bind(this)
   }
 
@@ -38,9 +40,14 @@ class ModalPopup extends Component<PropsComponent, StateComponent> {
     this.props.updateDataSignUp({ prop: e.target.id, value: e.target.value })
   }
 
-  onSubmit (e: FormEvent) {
+  onRegisterSubmit (e: FormEvent) {
     e.preventDefault()
     this.props.signUp(this.props.auth)
+  }
+
+  onLoginSubmit (e: FormEvent) {
+    e.preventDefault()
+    this.props.signIn(this.props.auth)
   }
 
   changeModal () {
@@ -62,7 +69,7 @@ class ModalPopup extends Component<PropsComponent, StateComponent> {
                 </div>
               : <div/>
             }
-            <Form onSubmit={this.onSubmit}>
+            <Form onSubmit={this.onRegisterSubmit}>
               <FormGroup>
                 <Label for='name'>Nama</Label>
                 <Input type='text' name='name' id='name' placeholder='John Doe' onChange={this.onInputChange} />
@@ -95,7 +102,7 @@ class ModalPopup extends Component<PropsComponent, StateComponent> {
             </Form>
             <div className='clearfix' />
             <div className='float-right clearfix'>
-              Have account? <span className='text-black' onClick={this.changeModal}>Sign In</span> here
+              Have account? <span className='text-black' onMouseDown={this.changeModal}>Sign In</span> here
           </div>
           </ModalBody>
         </>
@@ -105,25 +112,25 @@ class ModalPopup extends Component<PropsComponent, StateComponent> {
         <>
           <ModalHeader>Sign in</ModalHeader>
           <ModalBody>
-            <Form>
+            <Form onSubmit={this.onLoginSubmit}>
               <FormGroup>
                 <Label for='email'>Email</Label>
-                <Input type='email' name='email' id='email' placeholder='example@mail.com' />
+                <Input type='email' name='email' id='email' placeholder='example@mail.com' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='password'>Password</Label>
-                <Input type='password' name='email' id='password' placeholder='********' />
+                <Input type='password' name='email' id='password' placeholder='********' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup className='clearfix mb-5'>
                 <Link route='#'>
                   <a className='float-right'>Forgot Password</a>
                 </Link>
               </FormGroup>
+              <Button color='primary' className='float-right pr-5 pl-5'>Sign in</Button>
             </Form>
-            <Button color='primary' className='float-right pr-5 pl-5'>Sign in</Button>
             <div className='clearfix' />
             <div className='float-right clearfix'>
-              or <span className='text-black' onClick={this.changeModal}>Sign Up</span> here
+              or <span className='text-black' onMouseDown={this.changeModal}>Sign Up</span> here
           </div>
           </ModalBody>
         </>
@@ -144,4 +151,4 @@ const mapStateToProps = ({ auth }: any) => {
   return { auth }
 }
 
-export default connect(mapStateToProps, { updateDataSignUp, signUp })(ModalPopup)
+export default connect(mapStateToProps, { updateDataSignUp, signUp, signIn })(ModalAuth)

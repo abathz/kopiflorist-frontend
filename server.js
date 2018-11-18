@@ -1,6 +1,6 @@
-var express = require('express')
-var next = require('next')
-var routes = require('./routes')
+let express = require('express')
+let next = require('next')
+let routes = require('./routes')
 
 const port = process.env.PORT || 3000
 const dev = process.env.NODE_ENV !== 'production'

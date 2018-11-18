@@ -54,6 +54,78 @@ footer {
   border-bottom: 2px solid $yellow;
 }
 
+.nav-link p {
+  margin-bottom: 0px !important;
+}
+
+.img-round {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+
+.scroll-overflow {
+  overflow-y: scroll;
+  height: 250px;
+}
+
+/***********************************************************/
+/************************ LOADING **************************/
+/***********************************************************/
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.obj {
+  width: 6px;
+  height: 0px;
+  background: white;
+  margin: 0 3px;
+  border-radius: 10px;
+  animation: loading 0.8s infinite;
+}
+
+.obj:nth-child(2){
+  animation-delay: 0.1s;
+}
+.obj:nth-child(3){
+  animation-delay: 0.2s;
+}
+.obj:nth-child(4){
+  animation-delay: 0.3s;
+}
+.obj:nth-child(5){
+  animation-delay: 0.4s;
+}
+.obj:nth-child(6){
+  animation-delay: 0.5s;
+}
+.obj:nth-child(7){
+  animation-delay: 0.6s;
+}
+.obj:nth-child(8){
+  animation-delay: 0.7s;
+}
+
+@keyframes loading {
+  0% {
+    height: 0;
+  }
+  50% {
+    height: 50px;
+  }
+  100% {
+    height: 0;
+  }
+}
+
 /***********************************************************/
 /****************** LIST ITEM UTILITIES ********************/
 /***********************************************************/
@@ -70,16 +142,33 @@ footer {
   padding-bottom: 13.5px;
 }
 
-.list-archive li {
+.list-archive {
   @extend %list-custom;
-  padding-bottom: 5px;
+  padding: 0;
+  & li {
+    padding-bottom: 5px;
+  }
+  & a p {
+    margin-bottom: 5px;
+  }
+}
+
+.list-profile{
+  @extend %list-custom;
+  padding: 0;
 }
 
 .list-categories-shop {
+  cursor: pointer;
   width: 100%;
   height: 47px;
   background-color: $yellow;
+  border: 2px solid $yellow;
   border-radius: 20px;
+  &.active {
+    background-color: white;
+    border: 2px solid $yellow;
+  }
 }
 
 /******************************************************/
@@ -131,6 +220,10 @@ footer {
     color: $black;
 
     &:hover:not(p) {
+      color: $black-light;
+    }
+
+    &-light {
       color: $black-light;
     }
   }

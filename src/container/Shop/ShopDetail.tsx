@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import { Col, Row, FormGroup, Input, Button } from 'reactstrap'
+import { Link } from 'routes'
 import { getProduct, resetStateProduct } from 'actions/index'
 
 interface StateProps {
@@ -46,7 +47,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
       <Row>
         <Col xs='6'>
           <img className='img-fluid' src={product.photo} alt={product.name}/>
-          <Row>
+          <Row className='mb-4'>
             {this.renderListPhoto()}
           </Row>
           <Row>
@@ -54,8 +55,11 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
               <FormGroup>
                 <Input type='select' id='quantity'>
                   <option defaultChecked={true}>Quantity</option>
-                  <option value='gr'>gr/bag</option>
-                  <option value='kg'>kg/bag</option>
+                  <option value='1'>1</option>
+                  <option value='2'>2</option>
+                  <option value='3'>3</option>
+                  <option value='4'>4</option>
+                  <option value='5'>5</option>
                 </Input>
               </FormGroup>
             </Col>
@@ -65,10 +69,14 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             </Col>
           </Row>
           <Row>
-            <Col xs='8'><Button block={true}>Buy</Button></Col>
+            <Col xs='9'>
+              <Link route='cart'>
+                <Link route='cart'><Button block={true}>Buy</Button></Link>
+              </Link>
+            </Col>
           </Row>
         </Col>
-        <Col>
+        <Col xs={{ size: 5, offset: 1 }}>
           <p className='text-xl text-black text-hel-95'>{product.name}</p>
           <p className='text-ml text-black text-hel-95'>Product Description</p>
           <p className='text-m text-black text-hel-reg'>{product.description}</p>

@@ -20,11 +20,11 @@ const INITIAL_STATE: State = {
 
 export default (state = INITIAL_STATE, action: Action) => {
   switch (action.type) {
-  case UPDATE_DATA_SIGNUP:
-    return { ...state, [action.payload.prop]: action.payload.value }
-  case SIGNUP_FAILED:
-    return { ...state, error: action.payload.data }
-  default:
-    return state
+    case UPDATE_DATA_SIGNUP:
+      return { ...state, [action.payload.prop]: action.payload.value }
+    case SIGNUP_FAILED:
+      return { ...state, error: action.payload }
+    default:
+      return state
   }
 }
