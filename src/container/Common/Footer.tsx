@@ -47,7 +47,7 @@ class Footer extends Component<{},{}> {
             </Row>
             <Row>
               <Col xs='12'>
-                <div className='text-os-reg text-white text-m'>0812 1234 5678</div>
+                <div className='text-os-reg text-white text-m'>+62 813-1375-5587</div>
               </Col>
               <Col xs='12'>
                 <div className='text-os-reg text-white text-m'>sampurasun@kopiflorist.id</div>

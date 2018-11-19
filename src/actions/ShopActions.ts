@@ -1,6 +1,13 @@
 import axios from 'axios'
 import { Dispatch } from 'redux'
-import { GET_ALL_PRODUCT, GET_PRODUCT, RESET_STATE_PRODUCT } from './types'
+import { GET_ALL_PRODUCT, GET_PRODUCT, RESET_STATE_PRODUCT, UPDATE_DATA_SHOP } from './types'
+
+export const updateDataShop = ({ prop, value }: any) => (dispatch: Dispatch<any>) => {
+  dispatch({
+    type: UPDATE_DATA_SHOP,
+    payload: { prop, value }
+  })
+}
 
 export const getAllProduct = () => async (dispatch: Dispatch<any>) => {
   const res = await axios.get('/products')

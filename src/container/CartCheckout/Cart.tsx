@@ -1,33 +1,52 @@
 import React, { Component, FormEvent, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import { Table, Row, Col, Button, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, Form } from 'reactstrap'
 import { Link } from 'routes'
-import { updateCouponCode } from 'actions/index'
+import { updateCouponCode, getAllCart } from 'actions/index'
 
 interface StateProps {
-  cartcheckout: any
+  dataProduct: any
+  dataTrip: any
+  shop: any
 }
 
 interface DispatchProps {
   updateCouponCode: typeof updateCouponCode
+  getAllCart: typeof getAllCart
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
 
 interface StateComponent {
   modal: boolean
+  totalPrice: number
 }
 
 class Cart extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
-    this.state = { modal: false }
+    this.state = { modal: false, totalPrice: 0 }
 
     this.onUseCouponMouseDowned = this.onUseCouponMouseDowned.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.onCouponSubmit = this.onCouponSubmit.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
+  }
+
+  componentDidMount () {
+    this.props.getAllCart()
+
+  }
+
+  componentDidUpdate () {
+    const { dataProduct, dataTrip } = this.props
+    const totalPriceProduct = _.map(dataProduct, (data: any) => data.total_price).reduce((a: any, b: any) => a + b, 0)
+    let totalPrice = totalPriceProduct
+    if (this.state.totalPrice !== totalPrice) {
+      this.setState({ totalPrice })
+    }
   }
 
   toggleModal () {
@@ -71,8 +90,24 @@ class Cart extends Component<PropsComponent, StateComponent> {
     )
   }
 
+  renderDataCart () {
+    const { dataProduct, dataTrip } = this.props
+    return _.map(dataProduct, (data: any, index: number) => {
+      return (
+        <tr key={index}>
+          <td>
+            <img className='img-fluid mr-3' src={data.photo} width='80' />
+            <span className='text-os-reg text-ml text-black-light'>{data.name}</span>
+          </td>
+          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.price}</td>
+          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>{data.quantity}</td>
+          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.total_price}</td>
+        </tr>
+      )
+    })
+  }
+
   render () {
-    console.log(this.props.cartcheckout)
     return (
       <>
         <Row>
@@ -88,24 +123,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <img className='img-fluid mr-3' src='static/img/logo.png' width='80' />
-                    Ciwidey Coffee trip
-                  </td>
-                  <td>Rp 500000</td>
-                  <td>5 Guest (Small Group)</td>
-                  <td>Rp 2500000</td>
-                </tr>
-                <tr>
-                  <td>
-                    <img className='img-fluid mr-3' src='static/img/logo.png' width='80' />
-                    Ciwidey Coffee trip
-                  </td>
-                  <td>Rp 500000</td>
-                  <td>5 Guest (Small Group)</td>
-                  <td>Rp 2500000</td>
-                </tr>
+                {this.renderDataCart()}
               </tbody>
             </Table>
           </Col>
@@ -113,7 +131,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
         <Row className='mb-4'>
           <Col className='text-right'>
             <span className='float-right mr-5 text-black-light text-xl'>
-              5000000
+              Rp {this.state.totalPrice}
               <div className='text-yellow text-s' onMouseDown={this.onUseCouponMouseDowned}>Use Coupon Code</div>
             </span>
             <p className='float-right mr-5 pt-3 text-hel-95 text-l text-black'>Sub Total</p>
@@ -132,8 +150,9 @@ class Cart extends Component<PropsComponent, StateComponent> {
   }
 }
 
-const mapStateToProps = ({ cartcheckout }: any) => {
-  return { cartcheckout }
+const mapStateToProps = ({ cartcheckout, shop }: any) => {
+  const { dataProduct, dataTrip } = cartcheckout
+  return { dataProduct, dataTrip, shop }
 }
 
-export default connect(mapStateToProps, { updateCouponCode })(Cart)
+export default connect(mapStateToProps, { updateCouponCode, getAllCart })(Cart)

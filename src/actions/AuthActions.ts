@@ -41,7 +41,7 @@ export const signIn = (newData: any) => async (dispatch: Dispatch<any>) => {
   }
 }
 
-export const logout = () => () => {
+export const logout = () => {
   localStorage.clear()
   window.location.href = '/'
 }

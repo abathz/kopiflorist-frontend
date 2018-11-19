@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component, ChangeEvent } from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
 import { Col, Row, FormGroup, Input, Button } from 'reactstrap'
 import { Link } from 'routes'
-import { getProduct, resetStateProduct } from 'actions/index'
+import { getProduct, resetStateProduct, updateDataShop } from 'actions/index'
 
 interface StateProps {
   id: number
@@ -13,19 +13,33 @@ interface StateProps {
 interface DispatchProps {
   getProduct: typeof getProduct
   resetStateProduct: typeof resetStateProduct
+  updateDataShop: typeof updateDataShop
 }
 
 interface PropsComponent extends StateProps, DispatchProps { }
 
-interface StateComponent { }
+interface StateComponent {
+  quality: string
+}
 
 class ShopDetail extends Component<PropsComponent, StateComponent> {
+  constructor (props: any) {
+    super(props)
+
+    this.state = { quality: '' }
+    this.onInputChange = this.onInputChange.bind(this)
+  }
+
   componentDidMount () {
     this.props.getProduct(this.props.id)
   }
 
   componentWillUnmount () {
     this.props.resetStateProduct()
+  }
+
+  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+    this.props.updateDataShop({ prop: 'quality', value: e.target.id })
   }
 
   renderListPhoto () {
@@ -42,7 +56,6 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
   render () {
     const { product } = this.props
     if (!product) return ''
-    console.log(product)
     return (
       <Row>
         <Col xs='6'>
@@ -53,7 +66,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
           <Row>
             <Col xs='4'>
               <FormGroup>
-                <Input type='select' id='quantity'>
+                <Input type='select' id='quantity' onChange={this.onInputChange}>
                   <option defaultChecked={true}>Quantity</option>
                   <option value='1'>1</option>
                   <option value='2'>2</option>
@@ -96,4 +109,4 @@ const mapStateToProps = ({ shop }: any) => {
   return { product }
 }
 
-export default connect(mapStateToProps, { getProduct, resetStateProduct })(ShopDetail)
+export default connect(mapStateToProps, { getProduct, resetStateProduct, updateDataShop })(ShopDetail)
