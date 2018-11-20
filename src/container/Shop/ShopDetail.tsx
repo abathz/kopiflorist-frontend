@@ -3,17 +3,19 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import { Col, Row, FormGroup, Input, Button } from 'reactstrap'
 import { Link } from 'routes'
-import { getProduct, resetStateProduct, updateDataShop } from 'actions/index'
+import { getProduct, resetStateProduct, updateDataShop, orderProduct } from 'actions/index'
 
 interface StateProps {
   id: number
   product: any
+  shop: any
 }
 
 interface DispatchProps {
   getProduct: typeof getProduct
   resetStateProduct: typeof resetStateProduct
   updateDataShop: typeof updateDataShop
+  orderProduct: typeof orderProduct
 }
 
 interface PropsComponent extends StateProps, DispatchProps { }
@@ -28,6 +30,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
 
     this.state = { quality: '' }
     this.onInputChange = this.onInputChange.bind(this)
+    this.onBuyClicked = this.onBuyClicked.bind(this)
   }
 
   componentDidMount () {
@@ -39,7 +42,16 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
   }
 
   onInputChange (e: ChangeEvent<HTMLInputElement>) {
-    this.props.updateDataShop({ prop: 'quality', value: e.target.id })
+    this.props.updateDataShop({ prop: 'quantity', value: Number(e.target.value) })
+  }
+
+  onBuyClicked () {
+    const { product, shop } = this.props
+    let data = {
+      id: product.id,
+      quantity: shop.quantity
+    }
+    this.props.orderProduct(data)
   }
 
   renderListPhoto () {
@@ -83,9 +95,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
           </Row>
           <Row>
             <Col xs='9'>
-              <Link route='cart'>
-                <Link route='cart'><Button block={true}>Buy</Button></Link>
-              </Link>
+              <Button block={true} onClick={this.onBuyClicked}>Buy</Button>
             </Col>
           </Row>
         </Col>
@@ -106,7 +116,12 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
 const mapStateToProps = ({ shop }: any) => {
   const { product } = shop
 
-  return { product }
+  return { product, shop }
 }
 
-export default connect(mapStateToProps, { getProduct, resetStateProduct, updateDataShop })(ShopDetail)
+export default connect(mapStateToProps, {
+  getProduct,
+  resetStateProduct,
+  updateDataShop,
+  orderProduct
+})(ShopDetail)

@@ -1,13 +1,13 @@
 import { GET_ALL_PRODUCT, GET_PRODUCT, Action, RESET_STATE_PRODUCT, UPDATE_DATA_SHOP } from 'actions/types'
 
 interface State {
-  quality: string
+  quantity: number
   allProduct: any[]
   product: any[]
 }
 
 const INITIAL_STATE: State = {
-  quality: '',
+  quantity: 0,
   allProduct: [],
   product: []
 }

@@ -48,6 +48,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
   renderList () {
     const { allProduct } = this.props
     if (!allProduct) return ''
+    console.log(allProduct)
     const product = this.props.size ? _.slice(allProduct.data, 0, this.props.size) : allProduct.data
 
     if (this.props.all) {
