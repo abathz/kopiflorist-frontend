@@ -10,8 +10,8 @@ export const updateDataProfile = ({ prop, value }: any) => (dispatch: Dispatch<a
   })
 }
 
-export const getProfile = (email: string) => async (dispatch: Dispatch<any>) => {
-  const res = await axios.post('/profile', querystring.stringify({ email }), {
+export const getProfile = () => async (dispatch: Dispatch<any>) => {
+  const res = await axios.get('/profile', {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
