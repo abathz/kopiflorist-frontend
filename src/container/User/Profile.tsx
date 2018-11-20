@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Row, Col, Button } from 'reactstrap'
 import { getProfile } from 'actions/index'
 import EditProfile from './EditProfile'
+import _ from 'lodash'
 
 interface StateProps {
   profile: any
@@ -34,8 +35,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
   }
 
   componentDidMount () {
-    const email: any = localStorage.getItem('email')
-    this.props.getProfile(email)
+    this.props.getProfile()
   }
 
   render () {
@@ -43,6 +43,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
     if (!profile) return ''
     return (
       <>
+        <div/>
         <Row>
           <Col xs='10'>
             <h1 className='text-reg-95 text-black text-xl'>My Account</h1>
@@ -68,7 +69,13 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
               <span className='text-m text-hel-reg'>Phone</span>
               <p className='text-ml text-os-reg text-black-light'>{profile.phone}</p>
               <span className='text-m text-hel-reg'>Address</span>
-              <p className='text-ml text-os-reg text-black-light'>{profile.address}</p>
+              <p className='text-ml text-os-reg text-black-light'>
+                {
+                  _.map(profile.address, (data: any, index: number) => {
+                    return data.address
+                  })
+                }
+              </p>
             </Col>
           }
         </Row>

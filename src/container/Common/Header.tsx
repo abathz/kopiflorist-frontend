@@ -33,7 +33,7 @@ interface StateComponent {
   isOpen: boolean
   modal: boolean
   active: string
-  email: string
+  token: string
 }
 
 class Header extends Component<PropsComponent, StateComponent> {
@@ -43,7 +43,7 @@ class Header extends Component<PropsComponent, StateComponent> {
       isOpen: false,
       modal: false,
       active: '',
-      email: ''
+      token: ''
     }
 
     this.toggleModal = this.toggleModal.bind(this)
@@ -51,13 +51,13 @@ class Header extends Component<PropsComponent, StateComponent> {
   }
 
   componentDidMount () {
-    const email: any = localStorage.getItem('email')
+    const token: any = localStorage.getItem('token')
     this.setState({
       active: window.location.pathname,
-      email
+      token
     })
-    if (email) {
-      this.props.getProfile(email)
+    if (token) {
+      this.props.getProfile()
     }
   }
 
@@ -72,9 +72,9 @@ class Header extends Component<PropsComponent, StateComponent> {
   }
 
   renderDropdown () {
-    const { profile, session } = this.props
+    const { profile } = this.props
     if (!profile) return ''
-    if (session) {
+    if (this.state.token) {
       return (
         <UncontrolledDropdown className='ml-auto' nav={true} inNavbar={true}>
           <DropdownToggle nav={true} caret={true}>
@@ -154,7 +154,7 @@ class Header extends Component<PropsComponent, StateComponent> {
               </Nav>
               <Nav className='ml-auto mt-3' navbar={true}>
                 {
-                  this.state.email
+                  this.state.token
                   ? <NavItem>
                       <NavLink>
                         <Link route='cart'>

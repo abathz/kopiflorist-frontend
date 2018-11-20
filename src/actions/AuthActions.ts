@@ -19,7 +19,6 @@ export const signUp = (newData: any) => async (dispatch: Dispatch<any>) => {
     gender: newData.gender,
     address: newData.address
   }
-
   try {
     const res = await axios.post('/signup', querystring.stringify(data))
     await signUpSuccess(res)
@@ -48,7 +47,7 @@ export const logout = () => {
 
 const signUpSuccess = (res: any) => {
   localStorage.setItem('token', res.data.token)
-  localStorage.setItem('email', res.data.data.user.email)
+  localStorage.setItem('email', res.data.user.email)
   window.location.reload()
 }
 
@@ -60,7 +59,8 @@ const signUpFailed = (dispatch: Dispatch<any>, err: any) => {
 }
 
 const signInSuccess = (res: any) => {
+  console.log(res)
   localStorage.setItem('token', res.data.token)
   localStorage.setItem('email', res.data.user.email)
-  window.location.reload()
+  // window.location.reload()
 }

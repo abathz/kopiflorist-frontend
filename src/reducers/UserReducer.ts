@@ -6,7 +6,6 @@ interface State {
   phone: number
   address: string
   profile: any
-  session: any
 }
 
 const INITIAL_STATE: State = {
@@ -14,8 +13,7 @@ const INITIAL_STATE: State = {
   email: '',
   phone: 0,
   address: '',
-  profile: {},
-  session: ''
+  profile: {}
 }
 
 export default (state = INITIAL_STATE, action: Action) => {
@@ -23,10 +21,8 @@ export default (state = INITIAL_STATE, action: Action) => {
     case UPDATE_DATA_PROFILE:
       return { ...state, [action.payload.prop]: action.payload.value }
     case GET_PROFILE:
-      const session = localStorage.getItem('email')
       return {
         ...state,
-        session,
         profile: action.payload,
         name: action.payload.name,
         email: action.payload.email,

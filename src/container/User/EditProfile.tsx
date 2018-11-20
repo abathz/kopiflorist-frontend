@@ -26,8 +26,7 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
   }
 
   componentDidMount () {
-    const email: any = localStorage.getItem('email')
-    this.props.getProfile(email)
+    this.props.getProfile()
   }
 
   onInputChange (e: ChangeEvent<HTMLInputElement>) {
@@ -56,8 +55,8 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
           <Input type='text' id='phone' value={user.phone} onChange={this.onInputChange} />
         </FormGroup>
         <FormGroup>
-          <Label for='address'>Phone</Label>
-          <Input type='text' id='address' value={user.address} onChange={this.onInputChange} />
+          <Label for='address'>Address</Label>
+          <Input type='text' id='address' value={user.address[0].address} onChange={this.onInputChange} />
         </FormGroup>
         <Button block={true} color='primary'>Save</Button>
       </Form>
