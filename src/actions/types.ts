@@ -32,3 +32,6 @@ export const GET_ALL_CART = 'GET_ALL_CART'
 // TRIP
 export const UPDATE_DATA_TRIP = 'UPDATE_DATA_TRIP'
 export const ADD_DATA_GUEST = 'ADD_DATA_GUEST'
+export const GET_TRIP_PACKAGE = 'GET_TRIP_PACKAGE'
+export const GET_ALL_TRIP = 'GET_ALL_TRIP'
+export const GET_TRIP = 'GET_TRIP'

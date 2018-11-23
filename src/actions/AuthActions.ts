@@ -59,8 +59,7 @@ const signUpFailed = (dispatch: Dispatch<any>, err: any) => {
 }
 
 const signInSuccess = (res: any) => {
-  console.log(res)
   localStorage.setItem('token', res.data.token)
   localStorage.setItem('email', res.data.user.email)
-  // window.location.reload()
+  window.location.reload()
 }

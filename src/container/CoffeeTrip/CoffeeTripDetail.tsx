@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Col, Row, FormGroup, Input, Button, Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Table, Modal, ModalHeader, ModalBody, Form, Label } from 'reactstrap'
 import { Link } from 'routes'
+import { getTrip, getTripPackage } from 'actions/index'
 
 interface StateProps {
-  id?: number
+  id: number
+  tripDetail: any
+  tripPackage: any
 }
 
-interface DispatchProps { }
+interface DispatchProps {
+  getTrip: typeof getTrip
+  getTripPackage: typeof getTripPackage
+}
 
 interface PropsComponent extends StateProps, DispatchProps { }
 
@@ -16,6 +23,20 @@ interface StateComponent {
   dropdownOpen: boolean
   modal: boolean
 }
+
+const arrMonth: any = []
+arrMonth[1] = 'January'
+arrMonth[2] = 'February'
+arrMonth[3] = 'March'
+arrMonth[4] = 'April'
+arrMonth[5] = 'May'
+arrMonth[6] = 'June'
+arrMonth[7] = 'July'
+arrMonth[8] = 'August'
+arrMonth[9] = 'September'
+arrMonth[10] = 'October'
+arrMonth[11] = 'November'
+arrMonth[12] = 'December'
 
 class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
@@ -28,6 +49,11 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
       dropdownOpen: false,
       modal: false
     }
+  }
+
+  componentDidMount () {
+    this.props.getTrip(this.props.id)
+    this.props.getTripPackage()
   }
 
   toggle () {
@@ -71,34 +97,61 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     })
   }
 
+  sortItinerary () {
+    const { tripDetail } = this.props
+    return _.countBy(tripDetail.itinerary, (data: any) => {
+      switch (data.day) {
+        case 1: return 1
+        case 2: return 2
+        case 3: return 3
+        case 4: return 4
+        default: return ''
+      }
+    })
+  }
+
   renderContentDetails () {
+    const { tripDetail } = this.props
+    let arrItinerary: any[] = []
+    const arrDayItinerary = this.sortItinerary()
+    const day = Object.keys(arrDayItinerary)
+
+    _.map(day, (n) => {
+      arrItinerary[Number(n) - 1] = []
+    })
+
+    _.map(tripDetail.itinerary, (itinerary) => {
+      arrItinerary[Number(itinerary.day) - 1].push(itinerary)
+    })
+
     if (this.state.activeTab === 1) {
-      return (
-        <Table>
-          <thead>
-            <tr>
-              <th className='text-ml text-hel-bold'>Time</th>
-              <th className='text-ml text-hel-bold'>Activity</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>08.00</td>
-              <td>Lorem Ipsum</td>
-            </tr>
-            <tr>
-              <td>10.00</td>
-              <td>Suspendisse</td>
-            </tr>
-            <tr>
-              <td>11.00</td>
-              <td>Curabitur</td>
-            </tr>
-          </tbody>
-        </Table>
-      )
+      return _.map(arrItinerary, (data: any, index: number) => {
+        return (
+          <Col xs='12' key={index}>
+            <Table>
+              <thead>
+                <h3>Day {index + 1}</h3>
+                <tr>
+                  <th className='text-ml text-hel-bold'>Time</th>
+                  <th className='text-ml text-hel-bold'>Activity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {_.map(data, (itinerary: any, index: number) => {
+                  return (
+                    <tr key={index}>
+                      <td style={{ width: '40%' }}>{itinerary.time}</td>
+                      <td>{itinerary.activity}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </Col>
+        )
+      })
     } else if (this.state.activeTab === 2) {
-      return <p>Suspendisse et venenatis nisi, ut tristique leo. Duis imperdiet, velit non luctus molestie, tellus odio venenatis orci, vitae semper arcu lacus eget urna. Etiam convallis orci eu nisl consequat fringilla. Cras sapien velit, tempus nec erat pellentesque, semper gravida eros. Mauris aliquam augue et mollis dictum. Donec tristique nunc sed nibh tristique, ut consequat magna pretium. Aliquam scelerisque ac ante vel varius. Pellentesque sollicitudin, sapien at laoreet molestie, sem purus egestas orci, nec varius orci velit at ante. Morbi condimentum euismod nisl, eget egestas urna sodales quis. Vivamus ac fermentum mi. Morbi porta vitae lorem ac congue. Nullam accumsan ipsum eget rutrum sagittis. Fusce eu lorem vehicula, lobortis ligula at, sagittis libero. Cras euismod mauris quis ultricies finibus. Sed at ultricies sem, at maximus est.</p>
+      return <p>{tripDetail.description}</p>
     } else if (this.state.activeTab === 3) {
       return (
         <div>{this.renderReviewList()}</div>
@@ -139,32 +192,42 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     )
   }
 
+  renderGroupSize () {
+    const { tripPackage } = this.props
+    return _.map(tripPackage, (data: any, index: number) => {
+      return <option key={data.id} value={data.package_name.toLowerCase()}>{data.package_name}</option>
+    })
+  }
+
+  tripDate () {
+    const { tripDetail } = this.props
+    const dateCreated = `${tripDetail.trip_date}`.substring(0, 10).split('-')
+    return `${dateCreated[2]} ${arrMonth[Number(dateCreated[1])]} ${dateCreated[0]}`
+  }
+
   render () {
+    const { tripDetail } = this.props
     return (
       <>
         <Row>
           <Col xs='6'>
-            <div style={{ backgroundColor: '#333', height: '500px' }} className='mb-4' />
+            <img className='img-fluid mb-4' src={tripDetail.main_photo} alt=''/>
             <Row>
               {this.renderPhotoList()}
             </Row>
           </Col>
           <Col xs={{ size: 5, offset: 1 }}>
-            <p className='text-xl text-black text-hel-95'>{`{trip_name}`}</p>
-            <p className='text-m text-black text-hel-reg'>{`{trip_description}`}</p>
-            <p className='text-m text-black text-hel-reg'>{`{trip_location}`}</p>
-            <p className='text-m text-black text-hel-reg'>{`{trip_date}`}</p>
-            <p className='text-m text-black text-hel-reg'>{`{trip_provide}`}</p>
+            <p className='text-xl text-black text-hel-95'>{tripDetail.title}</p>
+            <p className='text-m text-black text-hel-reg'>{tripDetail.description}</p>
+            <p className='text-m text-black text-hel-reg'>{tripDetail.address}</p>
+            <p className='text-m text-black text-hel-reg'>{this.tripDate()}</p>
+            <p className='text-m text-black text-hel-reg'>{tripDetail.notes}</p>
             <Row>
               <Col xs='6'>
                 <FormGroup>
                   <Input type='select' id='group_size'>
                     <option defaultChecked={true}>Group Size</option>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
+                    {this.renderGroupSize()}
                   </Input>
                 </FormGroup>
               </Col>
@@ -172,7 +235,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
                 <Button block={true} onMouseDown={this.toggleModal}>See Dates</Button>
               </Col>
             </Row>
-            <p className='text-l text-black text-hel-95'>IDR 50000 <span className='text-s text-black text-hel-reg'> /person</span></p>
+            <p className='text-l text-black text-hel-95'>IDR {tripDetail.price} <span className='text-s text-black text-hel-reg'> /person</span></p>
           </Col>
         </Row>
         <Row>
@@ -191,9 +254,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
           </Col>
         </Row>
         <Row>
-          <Col xs='12'>
-            {this.renderContentDetails()}
-          </Col>
+          {this.renderContentDetails()}
         </Row>
         {this.renderModalDates()}
       </>
@@ -201,4 +262,10 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   }
 }
 
-export default CoffeeTripDetail
+const mapStateToProps = ({ trip }: any) => {
+  const { tripDetail, tripPackage } = trip
+
+  return { tripDetail, tripPackage }
+}
+
+export default connect(mapStateToProps, { getTrip, getTripPackage })(CoffeeTripDetail)

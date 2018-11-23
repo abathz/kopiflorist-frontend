@@ -56,7 +56,7 @@ class BlogList extends Component<PropsComponent, StateComponent> {
     if (!allBlog) return ''
     return _.map(allBlog, (data: any) => {
       const dateCreated = data.date_created.substring(0, 10).split('-')
-      const date = `${dateCreated[2]} ${arrMonth[dateCreated[1]]} ${dateCreated[0]}`
+      const date = `${dateCreated[2]} ${arrMonth[Number(dateCreated[1])]} ${dateCreated[0]}`
       return (
         <div key={data.id} className='mb-5'>
           <h3>{data.blog_title}</h3>
