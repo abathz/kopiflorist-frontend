@@ -41,7 +41,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
   }
 
   componentDidUpdate () {
-    const { dataProduct, dataTrip } = this.props
+    const { dataProduct } = this.props
     const totalPriceProduct = _.map(dataProduct, (data: any) => data.total_price).reduce((a: any, b: any) => a + b, 0)
     let totalPrice = totalPriceProduct
     if (this.state.totalPrice !== totalPrice) {

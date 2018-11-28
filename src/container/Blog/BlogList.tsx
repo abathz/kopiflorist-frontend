@@ -61,7 +61,7 @@ class BlogList extends Component<PropsComponent, StateComponent> {
         <div key={data.id} className='mb-5'>
           <h3>{data.blog_title}</h3>
           <p className='text-black text-s text-hel-reg'>Posted on <span className='text-yellow'>{date}</span></p>
-          <Link route={`/blog/${data.id}/${data.slug}`} replace={true}>
+          <Link route={`/blog/${data.id}/${data.slug}`}>
             <img className='img-fluid' src={data.photo} />
           </Link>
         </div>

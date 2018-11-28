@@ -81,7 +81,7 @@ class Header extends Component<PropsComponent, StateComponent> {
             {profile.name}
           </DropdownToggle>
           <DropdownMenu right={true}>
-            <Link route='/profile' replace={true}>
+            <Link route='/profile'>
               <DropdownItem>
                 My Account
               </DropdownItem>
@@ -109,7 +109,7 @@ class Header extends Component<PropsComponent, StateComponent> {
         <header style={{ marginTop: '10px' }}>
           <Navbar color='none' light={true} expand='md'>
             <NavbarBrand>
-              <Link route='/' replace={true}>
+              <Link route='/'>
                 <img className='img-fluid logo' src='/static/img/logo.png' alt='Kopi Florist' />
               </Link>
             </NavbarBrand>
@@ -117,35 +117,35 @@ class Header extends Component<PropsComponent, StateComponent> {
             <UncontrolledCollapse toggler='#dropdown' navbar={true} className='text-hel-reg'>
               <Nav className='ml-4 mt-3' navbar={true}>
                 <NavItem className='pr-3'>
-                  <Link route='/about' replace={true}>
+                  <Link route='/about'>
                     <NavLink active={this.state.active.includes('/about')}>
                       <p>About</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
-                  <Link route='/coffee_trip' replace={true}>
+                  <Link route='/coffee_trip'>
                     <NavLink active={this.state.active.includes('/coffee_trip')}>
                       <p>Coffee Trip</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
-                  <Link route='/shop' replace={true}>
+                  <Link route='/shop'>
                     <NavLink active={this.state.active.includes('/shop')}>
                       <p>Shop</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
-                  <Link route='/blog' replace={true}>
+                  <Link route='/blog'>
                     <NavLink active={this.state.active.includes('/blog')}>
                       <p>Blog</p>
                     </NavLink>
                   </Link>
                 </NavItem>
                 <NavItem className='pr-3'>
-                  <Link route='/howtoorder' replace={true}>
+                  <Link route='/howtoorder'>
                     <NavLink active={this.state.active.includes('/howtoorder')}>
                       <p>How To Order</p>
                     </NavLink>

@@ -48,7 +48,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
   renderList () {
     const { allProduct } = this.props
     if (!allProduct) return ''
-    const product = this.props.size ? _.slice(allProduct.data, 0, this.props.size) : allProduct.data
+    const product = this.props.size ? _.slice(allProduct, 0, this.props.size) : allProduct
 
     if (this.props.all) {
       return _.map(product, (data: any) => {
@@ -56,7 +56,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
         const slug = data.name.split(' ').join('-').toLowerCase()
         return (
           <Col key={data.id} xs='3' className='mb-5'>
-            <Link route={`/shop/${data.id}/${slug}`} replace={true}>
+            <Link route={`/shop/${data.id}/${slug}`}>
               <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
             </Link>
             <div className='mt-3'>
@@ -74,7 +74,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
             const slug = data.name.split(' ').join('-').toLowerCase()
             return (
               <Col key={data.id} xs='3' className='mb-5'>
-                <Link route={`/shop/${data.id}/${slug}`} replace={true}>
+                <Link route={`/shop/${data.id}/${slug}`}>
                   <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
                 </Link>
                 <div className='mt-3'>
@@ -92,7 +92,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
             const slug = data.name.split(' ').join('-').toLowerCase()
             return (
               <Col key={data.id} xs='3' className='mb-5'>
-                <Link route={`/shop/${data.id}/${slug}`} replace={true}>
+                <Link route={`/shop/${data.id}/${slug}`}>
                   <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
                 </Link>
                 <div className='mt-3'>

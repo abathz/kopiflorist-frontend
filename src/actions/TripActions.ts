@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { Dispatch } from 'redux'
-import { UPDATE_DATA_TRIP, ADD_DATA_GUEST, GET_ALL_TRIP, GET_TRIP, GET_TRIP_PACKAGE } from './types'
+import _ from 'lodash'
+import querystring from 'querystring'
+import { UPDATE_DATA_TRIP, ADD_DATA_GUEST, GET_ALL_TRIP, GET_TRIP, GET_TRIP_PACKAGE, REMOVE_DATA_GUEST, INCREMENT_QUANTITY, DECREMENT_QUANTITY } from './types'
+import { orderProduct } from './ShopActions'
 
 export const updateDataTrip = ({ prop, value }: any) => (dispatch: Dispatch<any>) => {
   dispatch({
@@ -9,11 +12,32 @@ export const updateDataTrip = ({ prop, value }: any) => (dispatch: Dispatch<any>
   })
 }
 
+export const orderTrip = (newData: any) => async (dispatch: Dispatch<any>) => {
+
+  let data = {
+    trip_days_id: newData.trip_days_id,
+    trip_package_type_id: newData.trip_package_id,
+    trip_booked_participants: JSON.stringify(newData.guest_list)
+  }
+
+  const res = await axios.post('/order_trip', querystring.stringify(data), {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  _.map(newData.productAddOns, async (data: any, index: number) => {
+    await dispatch(orderProduct(data))
+  })
+
+  console.log(res)
+}
+
 export const addDataGuest = (newData: any) => (dispatch: Dispatch<any>) => {
   let data = {
-    guest_name: newData.guest_name,
+    name: newData.name,
     email: newData.email,
-    meal_preference: newData.meal_preference,
+    food_preference: newData.food_preference,
     age: newData.age,
     phone: newData.phone
   }
@@ -21,6 +45,13 @@ export const addDataGuest = (newData: any) => (dispatch: Dispatch<any>) => {
   dispatch({
     type: ADD_DATA_GUEST,
     payload: data
+  })
+}
+
+export const removeDataGuest = (id: number) => (dispatch: Dispatch<any>) => {
+  dispatch({
+    type: REMOVE_DATA_GUEST,
+    payload: id
   })
 }
 

@@ -69,6 +69,24 @@ footer {
   height: 250px;
 }
 
+%button-custom {
+  background-color: #FEB411;
+  cursor: pointer;
+}
+
+.increment {
+  @extend %button-custom;
+}
+
+.decrement {
+  @extend %button-custom;
+}
+
+.quantity {
+  background-color: #ddd;
+  width: 54px;
+}
+
 /***********************************************************/
 /************************ LOADING **************************/
 /***********************************************************/

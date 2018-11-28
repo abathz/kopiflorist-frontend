@@ -10,19 +10,19 @@ class Footer extends Component<{},{}> {
         <Row>
           <Col xs='4'>
             <ul className='list-footer'>
-              <Link route='/about' replace={true}>
+              <Link route='/about'>
                 <li>About</li>
               </Link>
-              <Link route='/coffeetrip' replace={true}>
+              <Link route='/coffeetrip'>
                 <li>Coffee Trip</li>
               </Link>
-              <Link route='/shop' replace={true}>
+              <Link route='/shop'>
                 <li>Shop</li>
               </Link>
-              <Link route='/blog' replace={true}>
+              <Link route='/blog'>
                 <li>Blog</li>
               </Link>
-              <Link route='/howtoorder' replace={true}>
+              <Link route='/howtoorder'>
                 <li>How To Order</li>
               </Link>
             </ul>

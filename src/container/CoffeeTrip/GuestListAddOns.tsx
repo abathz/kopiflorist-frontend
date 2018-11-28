@@ -3,15 +3,34 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Link } from 'routes'
 import { Row, Col, Table, Button, Form, FormGroup, Label, Input } from 'reactstrap'
-import { updateDataTrip, addDataGuest } from 'actions/index'
+import {
+  updateDataTrip,
+  addDataGuest,
+  removeDataGuest,
+  getTrip,
+  getAllProduct,
+  incrementQuantity,
+  decrementQuantity,
+  orderTrip
+} from 'actions/index'
 
 interface StateProps {
+  id: any
   trip: any
+  tripDetail: any
+  allProduct: any
+  shop: any
 }
 
 interface DispatchProps {
+  getTrip: typeof getTrip
   updateDataTrip: typeof updateDataTrip
   addDataGuest: typeof addDataGuest
+  removeDataGuest: typeof removeDataGuest
+  getAllProduct: typeof getAllProduct
+  incrementQuantity: typeof incrementQuantity
+  decrementQuantity: typeof decrementQuantity
+  orderTrip: typeof orderTrip
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
@@ -28,6 +47,12 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     this.toggleForm = this.toggleForm.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
     this.onSaveGuestClicked = this.onSaveGuestClicked.bind(this)
+    this.onContinueToCartClicked = this.onContinueToCartClicked.bind(this)
+  }
+
+  componentDidMount () {
+    this.props.getTrip(this.props.id)
+    this.props.getAllProduct()
   }
 
   toggleForm () {
@@ -43,15 +68,70 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   onSaveGuestClicked () {
     const { trip } = this.props
     let data = {
-      guest_name: trip.guest_name,
+      name: trip.name,
       email: trip.email,
-      meal_preference: trip.meal_preference,
+      food_preference: trip.food_preference,
       age: trip.age,
       phone: trip.phone
     }
 
     this.props.addDataGuest(data)
     this.toggleForm()
+  }
+
+  onRemoveGuestClicked (id: number) {
+    this.props.removeDataGuest(id)
+  }
+
+  onContinueToCartClicked () {
+    const { shop, trip, allProduct } = this.props
+    const productAddOns = _.map(allProduct, (data: any, index: number) => {
+      return {
+        id: data.id,
+        quantity: shop.quantityAddOns[index]
+      }
+    })
+
+    let data = {
+      trip_days_id: trip.tripDetail.trip_days_id,
+      trip_package_id: trip.group_size,
+      guest_list: trip.guestList,
+      productAddOns
+    }
+
+    this.props.orderTrip(data)
+  }
+
+  totalAddOns () {
+    const { allProduct, shop } = this.props
+    let res: number = 0
+
+    let totalProductAddOns: number = _.map(allProduct, (data: any, index: number) => data.price * shop.quantityAddOns[index]).reduce((a: number, b: number) => a + b, 0)
+
+    res += totalProductAddOns
+
+    return res
+  }
+
+  totalPrice () {
+    const { tripDetail, allProduct, shop } = this.props
+    let res: number = 0
+    res += tripDetail.price
+
+    let totalPrice: number = _.map(allProduct, (data: any, index: number) => data.price * shop.quantityAddOns[index]).reduce((a: number, b: number) => a + b, 0)
+    res += totalPrice
+
+    return res
+  }
+
+  incrementQuantity (id: number) {
+    this.props.incrementQuantity(id)
+    this.props.updateDataTrip({ prop: 'total_price', value: this.totalPrice() })
+  }
+
+  decrementQuantity (id: number) {
+    this.props.decrementQuantity(id)
+    this.props.updateDataTrip({ prop: 'total_price', value: this.totalPrice() })
   }
 
   renderFormGuest () {
@@ -63,16 +143,16 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
           <Col xs='6'>
             <Form>
               <FormGroup>
-                <Label for='guest_name'>Guest Name</Label>
-                <Input type='text' id='guest_name' onChange={this.onInputChange} />
+                <Label for='name'>Guest Name</Label>
+                <Input type='text' id='name' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='email'>Email</Label>
                 <Input type='text' id='email' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
-                <Label for='meal_preference'>Meal Preference</Label>
-                <Input type='select' id='meal_preference' onChange={this.onInputChange}>
+                <Label for='food_preference'>Meal Preference</Label>
+                <Input type='select' id='food_preference' onChange={this.onInputChange}>
                   <option defaultChecked={true}>{}</option>
                   <option value='vegetable'>Vegetable</option>
                   <option value='meat'>Meat</option>
@@ -103,18 +183,40 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   renderDataGuest () {
     const { trip } = this.props
     return _.map(trip.guestList, (data: any, index: number) => {
+      console.log(data)
       return (
         <tr key={index}>
-          <td>{data.guest_name}</td>
-          <td>{data.meal_preference.charAt(0).toUpperCase() + data.meal_preference.slice(1)}</td>
-          <td>remove</td>
+          <td>{data.name}</td>
+          <td>{data.food_preference.charAt(0).toUpperCase() + data.food_preference.slice(1)}</td>
+          <td><Button onMouseDown={this.onRemoveGuestClicked.bind(this, index)}>Remove</Button></td>
         </tr>
       )
     })
   }
 
+  renderDataProduct () {
+    const { allProduct, shop } = this.props
+    return _.map(allProduct, (data: any, index: number) => {
+      if (!data.availability) return ''
+      return (
+        <Col key={index} xs='3'>
+          <img className='img-fluid' src={data.photo} alt=''/>
+          <p>{data.name}</p>
+          <p>Rp {data.price}</p>
+          <Row>
+            <Col xs='12'>
+              <div className='d-inline-block px-3 py-1 text-white decrement' onMouseDown={this.decrementQuantity.bind(this, index)}>-</div>
+              <div className='d-inline-block py-1 text-center quantity'>{shop.quantityAddOns[index]}</div>
+              <div className='d-inline-block px-3 py-1 text-white increment' onMouseDown={this.incrementQuantity.bind(this, index)}>+</div>
+            </Col>
+          </Row>
+        </Col>
+      )
+    })
+  }
+
   render () {
-    console.log(this.props.trip)
+    const { tripDetail, trip } = this.props
     return (
       <>
         <Row>
@@ -140,14 +242,24 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
             <Button onMouseDown={this.toggleForm}>{this.state.form ? 'Cancel' : 'Add'}</Button>
           </Col>
           <Col xs={{ size: 4, offset: 1 }}>
-            <span className='text-black text-hel-reg text-m'>Total Price</span><span className='float-right text-black text-os-reg text-m'>Rp 450000</span>
+            <span className='text-black text-hel-reg text-m'>Total Price</span><span className='float-right text-black text-os-reg text-m'>Rp {tripDetail.price}</span>
             <div className='clearfix'/>
-            <span className='text-black text-hel-reg text-m'>Total Price</span><span className='float-right text-black text-os-reg text-m'>Rp 450000</span>
-            <div className='clearfix' />
+            {this.totalAddOns() === 0 ? <div/>
+            : <>
+                <span className='text-black text-hel-reg text-m'>Add-ons</span> <span className='float-right text-black text-os-reg text-m'>Rp {this.totalAddOns()}</span>
+                <div className='clearfix' />
+              </>
+            }
             <div className='my-4' style={{ borderBottom: '1px solid #ddd' }} />
-            <span className='text-black text-hel-bold text-m'>Total Price</span><span className='float-right text-black text-os-reg text-l'>Rp 450000</span>
+            <span className='text-black text-hel-bold text-m'>Total Price</span><span className='float-right text-black text-os-reg text-l'>Rp {this.totalPrice()}</span>
             <div className='clearfix' />
-            <Link route='cart'><Button className='mt-4' block={true}>Continue to cart</Button></Link>
+            {/* <Link route='cart'><Button className='mt-4' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button></Link> */}
+            <Button className='mt-4' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button>
+          </Col>
+          <Col xs='7'>
+            <Row>
+              {this.renderDataProduct()}
+            </Row>
           </Col>
         </Row>
       </>
@@ -155,8 +267,20 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 }
 
-const mapStateToProps = ({ trip }: any) => {
-  return { trip }
+const mapStateToProps = ({ trip, shop }: any) => {
+  const { tripDetail } = trip
+  const { allProduct } = shop
+
+  return { trip, shop, tripDetail, allProduct }
 }
 
-export default connect(mapStateToProps, { updateDataTrip, addDataGuest })(GuestListAddOns)
+export default connect(mapStateToProps, {
+  updateDataTrip,
+  addDataGuest,
+  removeDataGuest,
+  getTrip,
+  getAllProduct,
+  incrementQuantity,
+  decrementQuantity,
+  orderTrip
+})(GuestListAddOns)

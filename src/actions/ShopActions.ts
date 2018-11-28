@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Dispatch } from 'redux'
 import querystring from 'querystring'
-import { GET_ALL_PRODUCT, GET_PRODUCT, RESET_STATE_PRODUCT, UPDATE_DATA_SHOP } from './types'
+import { GET_ALL_PRODUCT, GET_PRODUCT, RESET_STATE_PRODUCT, UPDATE_DATA_SHOP, INCREMENT_QUANTITY, DECREMENT_QUANTITY } from './types'
 
 export const updateDataShop = ({ prop, value }: any) => (dispatch: Dispatch<any>) => {
   dispatch({
@@ -38,6 +38,20 @@ export const getProduct = (id: number) => async (dispatch: Dispatch<any>) => {
 export const resetStateProduct = () => async (dispatch: Dispatch<any>) => {
   dispatch({
     type: RESET_STATE_PRODUCT
+  })
+}
+
+export const incrementQuantity = (id: number) => (dispatch: Dispatch<any>) => {
+  dispatch({
+    type: INCREMENT_QUANTITY,
+    payload: id
+  })
+}
+
+export const decrementQuantity = (id: number) => (dispatch: Dispatch<any>) => {
+  dispatch({
+    type: DECREMENT_QUANTITY,
+    payload: id
   })
 }
 

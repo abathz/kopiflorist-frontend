@@ -1,19 +1,20 @@
-import React, { Component } from 'react'
+import React, { Component, ChangeEvent, MouseEvent, createRef } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import moment from 'moment'
 import { Col, Row, FormGroup, Input, Button, Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Table, Modal, ModalHeader, ModalBody, Form, Label } from 'reactstrap'
 import { Link } from 'routes'
-import { getTrip, getTripPackage } from 'actions/index'
+import { getTrip, updateDataTrip } from 'actions/index'
 
 interface StateProps {
   id: number
   tripDetail: any
-  tripPackage: any
+  trip: any
 }
 
 interface DispatchProps {
   getTrip: typeof getTrip
-  getTripPackage: typeof getTripPackage
+  updateDataTrip: typeof updateDataTrip
 }
 
 interface PropsComponent extends StateProps, DispatchProps { }
@@ -22,6 +23,8 @@ interface StateComponent {
   activeTab: number
   dropdownOpen: boolean
   modal: boolean
+  mainPhoto: string
+  selectedPhoto: string
 }
 
 const arrMonth: any = []
@@ -39,21 +42,27 @@ arrMonth[11] = 'November'
 arrMonth[12] = 'December'
 
 class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
+  private img: any = createRef<HTMLImageElement>()
+
   constructor (props: any) {
     super(props)
 
-    this.toggle = this.toggle.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
     this.state = {
       activeTab: 1,
       dropdownOpen: false,
-      modal: false
+      modal: false,
+      mainPhoto: '',
+      selectedPhoto: ''
     }
+
+    this.toggle = this.toggle.bind(this)
+    this.toggleModal = this.toggleModal.bind(this)
+    this.onInputChange = this.onInputChange.bind(this)
+    this.changeInitialPhoto = this.changeInitialPhoto.bind(this)
   }
 
   componentDidMount () {
     this.props.getTrip(this.props.id)
-    this.props.getTripPackage()
   }
 
   toggle () {
@@ -76,23 +85,31 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     }
   }
 
+  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+    this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
+  }
+
+  changeInitialPhoto (e: any) {
+    let img: any = this.img.current.currentSrc
+    this.props.updateDataTrip({ prop: `main_photo`, value: e.target.src })
+    this.props.updateDataTrip({ prop: `other_photo`, value: { img, id: e.target.id } })
+  }
+
   renderReviewList () {
     return _.map(Array(3), (data: any, index: number) => {
       return (
-        <>
-          <Row>
-            <Col xs='12' className='mb-4'>
-              <img className='img-round' src='/static/img/test.jpg' />
-              <p className='text-hel-bold text-m' style={{ position: 'absolute', top: 0, left: 80 }}>
-                Big Smoke<br/>
-                <span className='text-s text-hel-reg'>6 August 2018</span>
-              </p>
-            </Col>
-            <Col xs='12'>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at sapien sollicitudin, sagittis neque at, sodales libero. Nulla in rutrum odio. Sed in dapibus lorem, a commodo est. Sed eu vehicula leo, in mattis orci. Nam sit amet magna suscipit, mattis erat nec, vulputate mauris. Aliquam pulvinar dolor euismod leo ornare porttitor sit amet et elit. Quisque sit amet semper lacus, ut lobortis nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc varius tempus dui a hendrerit. Suspendisse nec eleifend odio.</p>
-            </Col>
-          </Row>
-        </>
+        <Row key={index}>
+          <Col xs='12' className='mb-4'>
+            <img className='img-round' src='/static/img/test.jpg' />
+            <p className='text-hel-bold text-m' style={{ position: 'absolute', top: 0, left: 80 }}>
+              Big Smoke<br />
+              <span className='text-s text-hel-reg'>6 August 2018</span>
+            </p>
+          </Col>
+          <Col xs='12'>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at sapien sollicitudin, sagittis neque at, sodales libero. Nulla in rutrum odio. Sed in dapibus lorem, a commodo est. Sed eu vehicula leo, in mattis orci. Nam sit amet magna suscipit, mattis erat nec, vulputate mauris. Aliquam pulvinar dolor euismod leo ornare porttitor sit amet et elit. Quisque sit amet semper lacus, ut lobortis nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc varius tempus dui a hendrerit. Suspendisse nec eleifend odio.</p>
+          </Col>
+        </Row>
       )
     })
   }
@@ -128,9 +145,9 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
       return _.map(arrItinerary, (data: any, index: number) => {
         return (
           <Col xs='12' key={index}>
+            <h3>Day {index + 1}</h3>
             <Table>
               <thead>
-                <h3>Day {index + 1}</h3>
                 <tr>
                   <th className='text-ml text-hel-bold'>Time</th>
                   <th className='text-ml text-hel-bold'>Activity</th>
@@ -160,12 +177,11 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   }
 
   renderPhotoList () {
-    return _.map(Array(3), (data: any, index: any) => {
+    const { trip } = this.props
+    return _.map(trip.other_photo, (data: any, index: any) => {
       return (
         <Col key={index} xs='4' className='mb-5'>
-          <Link route={`/coffee_trip/${index}`} replace={true}>
-            <div style={{ backgroundColor: '#333', height: '150px' }} />
-          </Link>
+          <img id={index} className='img-fluid' style={{ cursor: 'pointer' }} src={data} onMouseDown={this.changeInitialPhoto}/>
         </Col>
       )
     })
@@ -193,25 +209,27 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   }
 
   renderGroupSize () {
-    const { tripPackage } = this.props
-    return _.map(tripPackage, (data: any, index: number) => {
-      return <option key={data.id} value={data.package_name.toLowerCase()}>{data.package_name}</option>
+    const { tripDetail } = this.props
+    return _.map(tripDetail.trip_package, (data: any, index: number) => {
+      return <option key={data[index].id} value={data[index].id}>{data[index].package_name}</option>
     })
   }
 
   tripDate () {
     const { tripDetail } = this.props
-    const dateCreated = `${tripDetail.trip_date}`.substring(0, 10).split('-')
-    return `${dateCreated[2]} ${arrMonth[Number(dateCreated[1])]} ${dateCreated[0]}`
+    const date = `${tripDetail.trip_date}`.substring(0, 10).split('-')
+    const startDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
+    const endDate = moment(new Date(`${date[0]}-${date[1]}-${date[2]}`)).add(tripDetail.duration - 1, 'd').format('DD MMMM YYYY')
+    return `${startDate} - ${endDate}`
   }
 
   render () {
-    const { tripDetail } = this.props
+    const { tripDetail, trip } = this.props
     return (
       <>
         <Row>
           <Col xs='6'>
-            <img className='img-fluid mb-4' src={tripDetail.main_photo} alt=''/>
+            <img className='img-fluid mb-4' src={trip.main_photo} alt='' ref={this.img}/>
             <Row>
               {this.renderPhotoList()}
             </Row>
@@ -225,17 +243,21 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
             <Row>
               <Col xs='6'>
                 <FormGroup>
-                  <Input type='select' id='group_size'>
+                  <Input type='select' id='group_size' onChange={this.onInputChange}>
                     <option defaultChecked={true}>Group Size</option>
                     {this.renderGroupSize()}
                   </Input>
                 </FormGroup>
               </Col>
               <Col xs='6'>
-                <Button block={true} onMouseDown={this.toggleModal}>See Dates</Button>
+                <p className='text-l text-black text-hel-95 pt-2'>IDR {tripDetail.price} <span className='text-s text-black text-hel-reg'> /person</span></p>
               </Col>
             </Row>
-            <p className='text-l text-black text-hel-95'>IDR {tripDetail.price} <span className='text-s text-black text-hel-reg'> /person</span></p>
+            <Row>
+              <Col xs='12'>
+                <Link route={`/coffee_trip/${tripDetail.id}/order`}><Button block={true}>Order</Button></Link>
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Row>
@@ -256,16 +278,16 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
         <Row>
           {this.renderContentDetails()}
         </Row>
-        {this.renderModalDates()}
+        {/* {this.renderModalDates()} */}
       </>
     )
   }
 }
 
 const mapStateToProps = ({ trip }: any) => {
-  const { tripDetail, tripPackage } = trip
+  const { tripDetail } = trip
 
-  return { tripDetail, tripPackage }
+  return { tripDetail, trip }
 }
 
-export default connect(mapStateToProps, { getTrip, getTripPackage })(CoffeeTripDetail)
+export default connect(mapStateToProps, { getTrip, updateDataTrip })(CoffeeTripDetail)

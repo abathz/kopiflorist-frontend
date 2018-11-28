@@ -48,11 +48,11 @@ class CoffeeTripList extends Component<PropsComponent, StateComponent> {
     return _.map(trip, (data: any, index: any) => {
       const date = `${data.trip_date}`.substring(0, 10).split('-')
       const startDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
-      const endDate = moment(`${date[0]}${date[1]}${date[2]}`).add(data.duration - 1, 'd').format('DD MMMM YYYY')
+      const endDate = moment(new Date(`${date[0]}-${date[1]}-${date[2]}`)).add(data.duration - 1, 'd').format('DD MMMM YYYY')
       return (
         <Col key={index} xs='4' className='mb-5'>
-          <Link route={`/coffee_trip/${data.id}`} replace={true}>
-            <img className='img-fluid' src={data.main_photo} alt=''/>
+          <Link route={`/coffee_trip/${data.id}`}>
+            <img className='img-fluid' src={data.main_photo} style={{ cursor: 'pointer' }}/>
           </Link>
           <div className='mt-3'>
             <p className='text-l text-hel-95 h4'>{data.title}</p>

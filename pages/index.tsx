@@ -48,7 +48,7 @@ export default class extends Component<PropsComponent, StateComponent> {
               <h3>Activity</h3>
             </Col>
             <Col xs='6' className='text-right mt-2'>
-              <Link route='/coffeetrip' replace={true}>
+              <Link route='/coffeetrip'>
                 <a className='text-yellow text-hel-reg'>See more</a>
               </Link>
             </Col>
@@ -59,7 +59,7 @@ export default class extends Component<PropsComponent, StateComponent> {
               <h3>Shop</h3>
             </Col>
             <Col xs='6' className='text-right mt-2'>
-              <Link route='/shop' replace={true}>
+              <Link route='/shop'>
                 <a className='text-yellow text-hel-reg'>See more</a>
               </Link>
             </Col>

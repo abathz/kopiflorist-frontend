@@ -14,7 +14,7 @@ export default class extends Component<{ query: any }, {}> {
       <>
         <Container>
           <Header />
-          <GuestListAddOns/>
+          <GuestListAddOns id={this.props.query.id}/>
         </Container>
         <Footer />
       </>
