@@ -12,7 +12,7 @@ export const updateDataTrip = ({ prop, value }: any) => (dispatch: Dispatch<any>
   })
 }
 
-export const orderTrip = (newData: any) => async (dispatch: Dispatch<any>) => {
+export const orderTrip = (newData: any) => async () => {
 
   let data = {
     trip_days_id: newData.trip_days_id,
@@ -27,10 +27,21 @@ export const orderTrip = (newData: any) => async (dispatch: Dispatch<any>) => {
   })
 
   _.map(newData.productAddOns, async (data: any, index: number) => {
-    await dispatch(orderProduct(data))
+    let product = {
+      product_id: data.id,
+      quantity: data.quantity
+    }
+
+    if (product.quantity > 0) {
+      await axios.post('/order_product', querystring.stringify(product), {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+    }
   })
 
-  console.log(res)
+  await orderTripSuccess()
 }
 
 export const addDataGuest = (newData: any) => (dispatch: Dispatch<any>) => {
@@ -68,6 +79,10 @@ export const getAllTrip = () => async (dispatch: Dispatch<any>) => {
 export const getTrip = (id: number) => async (dispatch: Dispatch<any>) => {
   const res = await axios.get(`/trip/${id}`)
   await getTripSuccess(dispatch, res)
+}
+
+const orderTripSuccess = () => {
+  window.location.href = '/cart'
 }
 
 const getTripPackageSuccess = (dispatch: Dispatch<any>, res: any) => {

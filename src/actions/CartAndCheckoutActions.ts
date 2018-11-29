@@ -15,6 +15,7 @@ export const getAllCart = () => async (dispatch: Dispatch<any>) => {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
   })
+
   const dataTrip = await axios.get('/order_trip', {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
