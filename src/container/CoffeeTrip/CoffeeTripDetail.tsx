@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import moment from 'moment'
 import { Col, Row, FormGroup, Input, Button, Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Table, Modal, ModalHeader, ModalBody, Form, Label } from 'reactstrap'
-import { Link } from 'routes'
+import { Link, Router } from 'routes'
 import { getTrip, updateDataTrip } from 'actions/index'
+import ModalAuth from 'container/Common/ModalAuth'
 
 interface StateProps {
   id: number
@@ -57,6 +58,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
 
     this.toggle = this.toggle.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
+    this.onOrderClicked = this.onOrderClicked.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
     this.changeInitialPhoto = this.changeInitialPhoto.bind(this)
   }
@@ -85,6 +87,17 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     }
   }
 
+  onOrderClicked () {
+    const token = localStorage.getItem('token')
+    const { tripDetail } = this.props
+
+    if (!token) {
+      this.toggleModal()
+    } else {
+      Router.pushRoute(`/coffee_trip/${tripDetail.id}/order`)
+    }
+  }
+
   onInputChange (e: ChangeEvent<HTMLInputElement>) {
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
   }
@@ -92,9 +105,10 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   changeInitialPhoto (e: any) {
     let img: any = this.img.current.currentSrc
     this.props.updateDataTrip({ prop: `main_photo`, value: e.target.src })
-    this.props.updateDataTrip({ prop: `other_photo`, value: { img, id: e.target.id } })
+    this.props.updateDataTrip({ prop: `other_photo`, value: { id: e.target.id, img } })
   }
 
+  /** STILL USE DATA DUMMY (START) */
   renderReviewList () {
     return _.map(Array(3), (data: any, index: number) => {
       return (
@@ -113,6 +127,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
       )
     })
   }
+  /** STILL USE DATA DUMMY (END) */
 
   sortItinerary () {
     const { tripDetail } = this.props
@@ -187,6 +202,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     })
   }
 
+  /** UNUSED */
   renderModalDates () {
     return (
       <Modal style={{ marginTop: '200px' }} isOpen={this.state.modal} toggle={this.toggleModal}>
@@ -207,11 +223,16 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
       </Modal>
     )
   }
+  /** UNUSED */
 
   renderGroupSize () {
     const { tripDetail } = this.props
     return _.map(tripDetail.trip_package, (data: any, index: number) => {
-      return <option key={data[index].id} value={data[index].id}>{data[index].package_name}</option>
+      return (
+        <option key={data.id} id={data.package_name} value={data.id}>
+          {`${data.package_name} ${data.max_participant === data.min_participant ? `(${data.min_participant} person)` : `(${data.min_participant}-${data.max_participant} persons)`}`}
+        </option>
+      )
     })
   }
 
@@ -220,7 +241,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     const date = `${tripDetail.trip_date}`.substring(0, 10).split('-')
     const startDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
     const endDate = moment(new Date(`${date[0]}-${date[1]}-${date[2]}`)).add(tripDetail.duration - 1, 'd').format('DD MMMM YYYY')
-    return `${startDate} - ${endDate}`
+    return tripDetail.duration !== 1 ? `${startDate} - ${endDate}` : startDate
   }
 
   render () {
@@ -255,7 +276,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
             </Row>
             <Row>
               <Col xs='12'>
-                <Link route={`/coffee_trip/${tripDetail.id}/order`}><Button block={true}>Order</Button></Link>
+                <Button block={true} onMouseDown={this.onOrderClicked}>Order</Button>
               </Col>
             </Row>
           </Col>
@@ -278,6 +299,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
         <Row>
           {this.renderContentDetails()}
         </Row>
+        <ModalAuth modal={this.state.modal} toggleModal={this.toggleModal} />
         {/* {this.renderModalDates()} */}
       </>
     )

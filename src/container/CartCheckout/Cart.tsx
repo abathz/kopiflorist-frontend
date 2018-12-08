@@ -110,7 +110,6 @@ class Cart extends Component<PropsComponent, StateComponent> {
     return _.map(dataTrip, (data: any, index: number) => {
       let arrDate = data.trip_date.substring(0, 10).split('-')
       let date = `${arrDate[2]} ${arrMonth[Number(arrDate[1])]} ${arrDate[0]}`
-      console.log(data)
       return (
         <tr key={index}>
           <td>
@@ -177,7 +176,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
         <Row>
           <Col className='text-right'>
             <Link route='home'><Button>Continue Shopping</Button></Link>
-            <Link route='#'><Button className='mx-5' style={{ width: '160px' }}>Checkout</Button></Link>
+            <Link route='checkout'><Button className='mx-5' style={{ width: '160px' }}>Checkout</Button></Link>
           </Col>
         </Row>
         {this.renderModalCoupon()}

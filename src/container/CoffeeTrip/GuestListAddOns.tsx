@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Link } from 'routes'
-import { Row, Col, Table, Button, Form, FormGroup, Label, Input } from 'reactstrap'
+import { Row, Col, Table, Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap'
 import {
   updateDataTrip,
   addDataGuest,
@@ -11,7 +11,8 @@ import {
   getAllProduct,
   incrementQuantity,
   decrementQuantity,
-  orderTrip
+  orderTrip,
+  getTripPackage
 } from 'actions/index'
 
 interface StateProps {
@@ -20,6 +21,7 @@ interface StateProps {
   tripDetail: any
   allProduct: any
   shop: any
+  tripPackage: any
 }
 
 interface DispatchProps {
@@ -31,19 +33,21 @@ interface DispatchProps {
   incrementQuantity: typeof incrementQuantity
   decrementQuantity: typeof decrementQuantity
   orderTrip: typeof orderTrip
+  getTripPackage: typeof getTripPackage
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
 
 interface StateComponent {
   form: boolean
+  alert: boolean
 }
 
 class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
-    this.state = { form: false }
+    this.state = { form: false, alert: false }
     this.toggleForm = this.toggleForm.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
     this.onSaveGuestClicked = this.onSaveGuestClicked.bind(this)
@@ -51,7 +55,9 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   componentDidMount () {
-    this.props.getTrip(this.props.id)
+    const { id, trip } = this.props
+    this.props.getTrip(id)
+    this.props.getTripPackage(trip.group_size)
     this.props.getAllProduct()
   }
 
@@ -84,7 +90,13 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   onContinueToCartClicked () {
-    const { shop, trip, allProduct } = this.props
+    const { shop, trip, allProduct, tripPackage } = this.props
+    if (trip.guestList.length < tripPackage.min_participant) {
+      this.setState((prevState) => ({
+        alert: !prevState.alert
+      }))
+      return
+    }
     const productAddOns = _.map(allProduct, (data: any, index: number) => {
       return {
         id: data.id,
@@ -135,7 +147,8 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   renderFormGuest () {
-    if (!this.state.form) return <div/>
+    const { trip } = this.props
+    if (!this.state.form) return <div />
     return (
       <>
         <div className='mb-3' style={{ borderBottom: '1px solid #ddd' }} />
@@ -183,7 +196,6 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   renderDataGuest () {
     const { trip } = this.props
     return _.map(trip.guestList, (data: any, index: number) => {
-      console.log(data)
       return (
         <tr key={index}>
           <td>{data.name}</td>
@@ -216,31 +228,39 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   render () {
-    const { tripDetail, trip } = this.props
+    const { tripDetail, tripPackage, trip } = this.props
     return (
       <>
+        {this.state.alert ? <Alert color='danger'>Min. {`${tripPackage.min_participant} guests`}</Alert> : ''}
         <Row>
           <Col xs='12'>
-            <h1 className='text-hel-95 text-black text-xl'>Guest List & Add-ons</h1>
+            <h1 className='text-hel-95 text-black text-xl'>{`${tripPackage.min_participant === tripPackage.max_participant ? 'Add-ons' : 'Guest List & add-ons' }`}</h1>
           </Col>
         </Row>
         <Row>
-          <Col xs='7'>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Guest Name</th>
-                  <th>Preference</th>
-                  <th>{''}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.renderDataGuest()}
-              </tbody>
-            </Table>
-            {this.renderFormGuest()}
-            <Button onMouseDown={this.toggleForm}>{this.state.form ? 'Cancel' : 'Add'}</Button>
-          </Col>
+          {tripPackage.min_participant === tripPackage.max_participant
+            ? <Col xs='7'>
+                <Row>
+                  {this.renderDataProduct()}
+                </Row>
+              </Col>
+            : <Col xs='7'>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Guest Name</th>
+                      <th>Preference</th>
+                      <th>{''}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.renderDataGuest()}
+                  </tbody>
+                </Table>
+                {this.renderFormGuest()}
+              {trip.guestList.length < tripPackage.max_participant ? <Button onMouseDown={this.toggleForm}>{this.state.form ? 'Cancel' : 'Add'}</Button> : ''}
+              </Col>
+          }
           <Col xs={{ size: 4, offset: 1 }}>
             <span className='text-black text-hel-reg text-m'>Total Price</span><span className='float-right text-black text-os-reg text-m'>Rp {tripDetail.price}</span>
             <div className='clearfix'/>
@@ -256,11 +276,13 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
             {/* <Link route='cart'><Button className='mt-4' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button></Link> */}
             <Button className='mt-4' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button>
           </Col>
-          <Col xs='7'>
-            <Row>
-              {this.renderDataProduct()}
-            </Row>
-          </Col>
+          {tripPackage.min_participant === tripPackage.max_participant ? ''
+            : <Col xs='7'>
+                <Row>
+                  {this.renderDataProduct()}
+                </Row>
+              </Col>
+          }
         </Row>
       </>
     )
@@ -268,10 +290,10 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
 }
 
 const mapStateToProps = ({ trip, shop }: any) => {
-  const { tripDetail } = trip
+  const { tripDetail, tripPackage } = trip
   const { allProduct } = shop
 
-  return { trip, shop, tripDetail, allProduct }
+  return { trip, shop, tripDetail, tripPackage, allProduct }
 }
 
 export default connect(mapStateToProps, {
@@ -282,5 +304,6 @@ export default connect(mapStateToProps, {
   getAllProduct,
   incrementQuantity,
   decrementQuantity,
-  orderTrip
+  orderTrip,
+  getTripPackage
 })(GuestListAddOns)
