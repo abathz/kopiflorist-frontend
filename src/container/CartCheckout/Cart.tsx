@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Table, Row, Col, Button, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, Form } from 'reactstrap'
 import { Link } from 'routes'
-import { updateCouponCode, getAllCart } from 'actions/index'
+import { getAllCart } from 'actions/index'
 
 interface StateProps {
   dataProduct: any
@@ -12,7 +12,6 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  updateCouponCode: typeof updateCouponCode
   getAllCart: typeof getAllCart
 }
 
@@ -42,16 +41,10 @@ class Cart extends Component<PropsComponent, StateComponent> {
     super(props)
 
     this.state = { modal: false, totalPrice: 0 }
-
-    this.onUseCouponMouseDowned = this.onUseCouponMouseDowned.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
-    this.onCouponSubmit = this.onCouponSubmit.bind(this)
-    this.onInputChange = this.onInputChange.bind(this)
   }
 
   componentDidMount () {
     this.props.getAllCart()
-
   }
 
   componentDidUpdate () {
@@ -62,47 +55,6 @@ class Cart extends Component<PropsComponent, StateComponent> {
     if (this.state.totalPrice !== totalPrice) {
       this.setState({ totalPrice })
     }
-  }
-
-  toggleModal () {
-    this.setState((prevState) => ({
-      modal: !prevState.modal
-    }))
-  }
-
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
-    this.props.updateCouponCode(e.target.value)
-  }
-
-  onUseCouponMouseDowned () {
-    this.setState((prevState) => ({
-      modal: !prevState.modal
-    }))
-  }
-
-  onCouponSubmit (e: FormEvent) {
-    e.preventDefault()
-    this.setState((prevState) => ({
-      modal: !prevState.modal
-    }))
-  }
-
-  renderModalCoupon () {
-    return (
-      <Modal style={{ marginTop: '200px' }} isOpen={this.state.modal} toggle={this.toggleModal}>
-        <ModalHeader>Insert Code</ModalHeader>
-        <ModalBody>
-          <Form onSubmit={this.onCouponSubmit}>
-            <FormGroup>
-              <Label>Coupon Code</Label>
-              <Input onChange={this.onInputChange} />
-            </FormGroup>
-            <Button className='float-right' style={{ width: '150px' }}>Apply</Button>
-            <div className='clearfix'/>
-          </Form>
-        </ModalBody>
-      </Modal>
-    )
   }
 
   dataTripCart () {
@@ -167,7 +119,6 @@ class Cart extends Component<PropsComponent, StateComponent> {
           <Col className='text-right'>
             <span className='float-right mr-5 text-black-light text-xl'>
               Rp {this.state.totalPrice}
-              <div className='text-yellow text-s' onMouseDown={this.onUseCouponMouseDowned}>Use Coupon Code</div>
             </span>
             <p className='float-right mr-5 pt-3 text-hel-95 text-l text-black'>Sub Total</p>
             <div className='clearfix'/>
@@ -179,7 +130,6 @@ class Cart extends Component<PropsComponent, StateComponent> {
             <Link route='checkout'><Button className='mx-5' style={{ width: '160px' }}>Checkout</Button></Link>
           </Col>
         </Row>
-        {this.renderModalCoupon()}
       </>
     )
   }
@@ -190,4 +140,4 @@ const mapStateToProps = ({ cartcheckout, shop }: any) => {
   return { dataProduct, dataTrip, shop }
 }
 
-export default connect(mapStateToProps, { updateCouponCode, getAllCart })(Cart)
+export default connect(mapStateToProps, { getAllCart })(Cart)

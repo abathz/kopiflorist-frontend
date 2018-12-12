@@ -15,16 +15,17 @@ import {
  } from 'reactstrap'
 import { Link } from 'routes'
 import ModalAuth from './ModalAuth'
-import { getProfile, logout } from 'actions/index'
+import { getProfile, getInfoMyCart, logout } from 'actions/index'
 
 interface StateProps {
   profile: any
-  session: string
+  myCart: any
 }
 
 interface DispatchProps {
   getProfile: typeof getProfile
   logout: typeof logout
+  getInfoMyCart: typeof getInfoMyCart
 }
 
 interface PropsComponent extends StateProps, DispatchProps { }
@@ -58,6 +59,7 @@ class Header extends Component<PropsComponent, StateComponent> {
     })
     if (token) {
       this.props.getProfile()
+      this.props.getInfoMyCart()
     }
   }
 
@@ -104,6 +106,7 @@ class Header extends Component<PropsComponent, StateComponent> {
   }
 
   render () {
+    const { myCart } = this.props
     return (
       <>
         <header style={{ marginTop: '10px' }}>
@@ -158,7 +161,7 @@ class Header extends Component<PropsComponent, StateComponent> {
                   ? <NavItem>
                       <NavLink>
                         <Link route='cart'>
-                          <p>Cart(0)</p>
+                          <p>Cart({myCart.item_count})</p>
                         </Link>
                       </NavLink>
                     </NavItem>
@@ -176,10 +179,11 @@ class Header extends Component<PropsComponent, StateComponent> {
   }
 }
 
-const mapStateToProps = ({ user }: any) => {
-  const { profile, session } = user
+const mapStateToProps = ({ user, cartcheckout }: any) => {
+  const { profile } = user
+  const { myCart } = cartcheckout
 
-  return { profile, session }
+  return { profile, myCart }
 }
 
-export default connect(mapStateToProps, { getProfile, logout })(Header)
+export default connect(mapStateToProps, { getProfile, getInfoMyCart, logout })(Header)

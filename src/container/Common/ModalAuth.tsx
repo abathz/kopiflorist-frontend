@@ -72,7 +72,7 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
             <Form onSubmit={this.onRegisterSubmit}>
               <FormGroup>
                 <Label for='name'>Nama</Label>
-                <Input type='text' name='name' id='name' placeholder='John Doe' onChange={this.onInputChange} />
+                <Input type='text' name='name' id='name' placeholder='John Doe' autoFocus={true} onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='email'>Email</Label>
@@ -115,7 +115,7 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
             <Form onSubmit={this.onLoginSubmit}>
               <FormGroup>
                 <Label for='email'>Email</Label>
-                <Input type='email' name='email' id='email' placeholder='example@mail.com' onChange={this.onInputChange} />
+                <Input type='email' name='email' id='email' placeholder='example@mail.com' autoFocus={true} onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='password'>Password</Label>
