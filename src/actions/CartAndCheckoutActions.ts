@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { Dispatch } from 'redux'
+import querystring from 'querystring'
 import { UPDATE_COUPON_CODE, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_CHECKOUT } from './types'
+
+let idAddress: number
 
 export const updateDataCheckout = ({ prop, value }: any) => (dispatch: Dispatch<any>) => {
   dispatch({
@@ -38,6 +41,40 @@ export const getAllCart = () => async (dispatch: Dispatch<any>) => {
 export const getAllPickupMethod = () => async (dispatch: Dispatch<any>) => {
   const res = await axios.get('/pickup_method')
   await getAllPickupMethodSuccess(dispatch, res)
+}
+
+export const createInvoice = (newData: any) => async (dispatch: Dispatch<any>) => {
+  if (newData.isAddressFill) {
+    let dataAddress = {
+      address: newData.address,
+      postal_code: newData.postal_code,
+      province_id: newData.province_id,
+      city_id: newData.city_id
+    }
+
+    const res = await axios.post('/address', querystring.stringify(dataAddress), {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    idAddress = res.data.address.id
+  }
+
+  let dataPayment = {
+    address_id: idAddress || newData.address_id,
+    pickup_method_id: newData.pickup_method_id,
+    pickup_method_service: newData.pickup_method_service,
+    cart_id: newData.cart_id
+  }
+
+  const res = await axios.post('/invoice', querystring.stringify(dataPayment), {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  window.location.href = res.data.invoice.snap_url
 }
 
 const getInfoMyCartSuccess = (dispatch: Dispatch<any>, res: any) => {

@@ -6,9 +6,12 @@ interface State {
   dataTrip: any[]
   myCart: any
   allPickupMethod: any[]
+  address: string
   province: number
-  postal_code: number
+  postal_code: string
   city: number
+  service: string
+  idAddress: number
 }
 
 const INITIAL_STATE: State = {
@@ -17,9 +20,12 @@ const INITIAL_STATE: State = {
   dataTrip: [],
   myCart: {},
   allPickupMethod: [],
+  address: '',
   province: 0,
-  postal_code: 0,
-  city: 0
+  postal_code: '',
+  city: 0,
+  service: '',
+  idAddress: 0
 }
 
 export default (state = INITIAL_STATE, action: Action) => {

@@ -11,7 +11,8 @@ import {
   getAllCities,
   updateDataCheckout,
   getDeliveryCost,
-  resetData
+  resetData,
+  createInvoice
 } from 'actions/index'
 
 interface StateProps {
@@ -34,6 +35,7 @@ interface DispatchProps {
   updateDataCheckout: typeof updateDataCheckout
   getDeliveryCost: typeof getDeliveryCost
   resetData: typeof resetData
+  createInvoice: typeof createInvoice
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
@@ -43,7 +45,8 @@ interface StateComponent {
   messageAlert: string
   codePickup: string
   idPickup: number
-  idAcitveList: number
+  idActiveList: number
+  isFormShow: boolean
 }
 
 const arrMonth: any = []
@@ -69,7 +72,8 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       messageAlert: '',
       codePickup: '',
       idPickup: 0,
-      idAcitveList: 0
+      idActiveList: 0,
+      isFormShow: false
     }
 
     this.onUseCouponClicked = this.onUseCouponClicked.bind(this)
@@ -77,6 +81,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     this.onCouponSubmit = this.onCouponSubmit.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
     this.onPayClicked = this.onPayClicked.bind(this)
+    this.onAddAddressClicked = this.onAddAddressClicked.bind(this)
   }
 
   componentDidMount () {
@@ -100,23 +105,22 @@ class Checkout extends Component<PropsComponent, StateComponent> {
         const child: any = node.querySelector('#pickup_method')
         child.selectedIndex = 0
       }
+      this.props.updateDataCheckout({ prop: 'province', value: Number(idProvince) })
       this.props.getAllCities(Number(idProvince))
       this.props.resetData('all')
       return
     }
 
     if (e.target.id === 'city') {
-      let postalCode = e.target.value.split(',')[1]
       let cityId = e.target.value.split(',')[0]
-      this.props.updateDataCheckout({ prop: 'postal_code', value: postalCode })
-      this.props.updateDataCheckout({ prop: 'city', value: cityId })
+      this.props.updateDataCheckout({ prop: 'city', value: Number(cityId) })
 
       let destination = this.props.cartcheckout.city
 
       if (destination !== Number(cityId) && destination !== 0) {
         this.setState({ codePickup: '' })
         this.props.resetData('cost')
-        const node: any = ReactDOM.findDOMNode(this)  
+        const node: any = ReactDOM.findDOMNode(this)
         if (node instanceof HTMLElement) {
           const child: any = node.querySelector('#pickup_method')
           child.selectedIndex = 0
@@ -126,6 +130,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     }
 
     if (e.target.id === 'pickup_method') {
+      let idPickupMethod = e.target.value.split(',')[0]
       switch (e.target.value.split(',')[1]) {
         case 'gojek':
           this.setState({
@@ -148,12 +153,19 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             codePickup: 'jne'
           })
 
-          this.props.getDeliveryCost(cartId, Number(destination), Number(e.target.value.split(',')[0]))
+          this.props.getDeliveryCost(cartId, Number(destination), Number(idPickupMethod))
+          this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
           return ''
       }
     }
+
+    if (e.target.id === 'postal_code') {
+      this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
+      return
+    }
+
     this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
   }
 
@@ -172,18 +184,51 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   onPayClicked () {
     const { cartcheckout } = this.props
-    console.log(cartcheckout)
+    let data: any
+    data = {
+      isAddressFill: false,
+      cart_id: cartcheckout.myCart.id,
+      address_id: cartcheckout.idAddress,
+      pickup_method_id: cartcheckout.pickup_method,
+      pickup_method_service: cartcheckout.service
+    }
+
+    if (this.state.isFormShow) {
+      if (cartcheckout.address !== '' && cartcheckout.city !== 0 && cartcheckout.province !== 0 && cartcheckout.postal_code !== '') {
+        data = {
+          isAddressFill: true,
+          address: cartcheckout.address,
+          postal_code: cartcheckout.postal_code,
+          province_id: cartcheckout.province,
+          city_id: cartcheckout.city,
+          pickup_method_id: cartcheckout.pickup_method,
+          pickup_method_service: cartcheckout.service,
+          cart_id: cartcheckout.myCart.id
+        }
+      }
+    }
+
+    this.props.createInvoice(data)
+  }
+
+  onAddAddressClicked () {
+    this.setState(prevState => ({ isFormShow: !prevState.isFormShow }))
   }
 
   onAddressClicked (id: number, index: number) {
-    const { profile, cartcheckout } = this.props
-    let cartId = cartcheckout.myCart.id
+    const { profile } = this.props
     let address = profile.address[index]
     let destination = address.city_id
 
     this.setState({ idActiveList: id })
+    this.setState({ codePickup: '' })
+    const node: any = ReactDOM.findDOMNode(this)
+    if (node instanceof HTMLElement) {
+      const child: any = node.querySelector('#pickup_method')
+      child.selectedIndex = 0
+    }
     this.props.updateDataCheckout({ prop: 'city', value: destination })
-
+    this.props.updateDataCheckout({ prop: 'idAddress', value: address.id })
   }
 
   dataTripCart () {
@@ -250,12 +295,13 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   renderDataAddress () {
     const { profile, cartcheckout } = this.props
     if (!profile.address) return <div/>
-    if (profile.address.length === 0) {
+    if (profile.address.length === 0 || this.state.isFormShow) {
       return (
         <Form>
+          <Button color='primary' className='text-s text-os-reg mt-2 mb-4' onMouseDown={this.onAddAddressClicked}>Cancel</Button>
           <FormGroup>
             <Label for='address'>Address</Label>
-            <Input type='text' id='address' />
+            <Input type='text' id='address' onChange={this.onInputChange}/>
           </FormGroup>
           <FormGroup>
             <Label for='province'>Province</Label>
@@ -273,7 +319,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           </FormGroup>
           <FormGroup>
             <Label for='postal_code'>Postal Code</Label>
-            <Input type='text' id='postal_code' defaultValue={cartcheckout.postal_code || ''} />
+            <Input type='text' id='postal_code' onChange={this.onInputChange} />
           </FormGroup>
           <FormGroup>
             <Label for='pickup_method'>Pickup Method</Label>
@@ -288,13 +334,14 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     }
     return (
       <>
-        <ListGroup className='mb-4'>
+        <ListGroup>
           {
             _.map(profile.address, (data: any, index: number) => {
               return <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked.bind(this, data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
             })
           }
         </ListGroup>
+        <Button color='primary' className='text-s text-os-reg mt-2 mb-4' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
         <FormGroup>
           <Label for='pickup_method'>Pickup Method</Label>
           <Input type='select' id='pickup_method' onChange={this.onInputChange}>
@@ -335,10 +382,10 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       return (
         <FormGroup>
           <Label for='service'>Service</Label>
-          <Input type='select' id='service'>
+          <Input type='select' id='service' onChange={this.onInputChange}>
             <option defaultChecked={true}>Choose Service</option>
             {_.map(this.props.deliveryCost.costs, (data: any, index: number) => {
-              return <option key={index}>{data.service}</option>
+              return <option key={index} value={data.service}>{data.service}</option>
             })}
           </Input>
         </FormGroup>
@@ -424,5 +471,6 @@ export default connect(mapStateToProps, {
   getAllCities,
   updateDataCheckout,
   getDeliveryCost,
-  resetData
+  resetData,
+  createInvoice
 })(Checkout)

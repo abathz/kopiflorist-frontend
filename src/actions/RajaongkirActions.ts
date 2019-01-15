@@ -18,7 +18,6 @@ export const getAllCities = (idProvince: number) => async (dispatch: Dispatch<an
 }
 
 export const getDeliveryCost = (cartId: number, destination: number, courier: number) => async (dispatch: Dispatch<any>) => {
-  console.log(`/cost/${cartId}?destination=${destination}&courier=${courier}`)
   const res = await axios.get(`/cost/${cartId}?destination=${destination}&courier=${courier}`)
   await getDeliveryCostSuccess(dispatch, res)
 }
