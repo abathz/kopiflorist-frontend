@@ -16,10 +16,10 @@ export const orderTrip = (newData: any) => async () => {
   let data = {
     trip_days_id: newData.trip_days_id,
     trip_package_type_id: newData.trip_package_id,
-    trip_booked_participants: JSON.stringify(newData.guest_list)
+    trip_booked_participants: JSON.stringify(newData.guest_list) || ''
   }
 
-  const res = await axios.post('/order_trip', querystring.stringify(data), {
+  await axios.post('/order_trip', querystring.stringify(data), {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }

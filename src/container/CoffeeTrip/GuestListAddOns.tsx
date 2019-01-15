@@ -1,7 +1,6 @@
 import React, { Component, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { Link } from 'routes'
 import { Row, Col, Table, Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap'
 import {
   updateDataTrip,
@@ -91,11 +90,12 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
 
   onContinueToCartClicked () {
     const { shop, trip, allProduct, tripPackage } = this.props
-    if (trip.guestList.length < tripPackage.min_participant) {
+    // tslint:disable-next-line:no-empty
+    if (tripPackage.max_participant === 1) {
+    } else {
       this.setState((prevState) => ({
         alert: !prevState.alert
       }))
-      return
     }
     const productAddOns = _.map(allProduct, (data: any, index: number) => {
       return {

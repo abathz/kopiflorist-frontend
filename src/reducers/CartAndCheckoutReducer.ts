@@ -1,4 +1,4 @@
-import { Action, UPDATE_COUPON_CODE, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_CHECKOUT } from 'actions/types'
+import { Action, UPDATE_COUPON_CODE, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_CHECKOUT, RESET_STATE_RAJAONGKIR_ALL } from 'actions/types'
 
 interface State {
   coupon_code: string
@@ -8,6 +8,7 @@ interface State {
   allPickupMethod: any[]
   province: number
   postal_code: number
+  city: number
 }
 
 const INITIAL_STATE: State = {
@@ -17,7 +18,8 @@ const INITIAL_STATE: State = {
   myCart: {},
   allPickupMethod: [],
   province: 0,
-  postal_code: 0
+  postal_code: 0,
+  city: 0
 }
 
 export default (state = INITIAL_STATE, action: Action) => {
@@ -36,6 +38,8 @@ export default (state = INITIAL_STATE, action: Action) => {
       return { ...state, myCart: action.payload.cart }
     case GET_ALL_PICKUP_METHOD:
       return { ...state, allPickupMethod: action.payload.data }
+    case RESET_STATE_RAJAONGKIR_ALL:
+      return { ...state, postal_code: 0 }
     default:
       return state
   }

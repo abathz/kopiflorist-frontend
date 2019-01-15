@@ -1,14 +1,17 @@
 import React, { Component, ChangeEvent, FormEvent } from 'react'
+import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import _ from 'lodash'
-import { Row, Col, FormGroup, Label, Input, Form, Modal, ModalHeader, ModalBody, Button, Table, Alert } from 'reactstrap'
+import { Row, Col, FormGroup, Label, Input, Form, Modal, ModalHeader, ModalBody, Button, Table, Alert, ListGroupItem, ListGroup } from 'reactstrap'
 import {
   getProfile,
   getAllPickupMethod,
   getAllCart,
   getAllProvince,
   getAllCities,
-  updateDataCheckout
+  updateDataCheckout,
+  getDeliveryCost,
+  resetData
 } from 'actions/index'
 
 interface StateProps {
@@ -19,6 +22,7 @@ interface StateProps {
   provinces: any
   cities: any
   cartcheckout: any
+  deliveryCost: any
 }
 
 interface DispatchProps {
@@ -28,6 +32,8 @@ interface DispatchProps {
   getAllProvince: typeof getAllProvince
   getAllCities: typeof getAllCities
   updateDataCheckout: typeof updateDataCheckout
+  getDeliveryCost: typeof getDeliveryCost
+  resetData: typeof resetData
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
@@ -35,6 +41,9 @@ interface PropsComponent extends StateProps, DispatchProps {}
 interface StateComponent {
   modal: boolean
   messageAlert: string
+  codePickup: string
+  idPickup: number
+  idAcitveList: number
 }
 
 const arrMonth: any = []
@@ -57,13 +66,17 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
     this.state = {
       modal: false,
-      messageAlert: ''
+      messageAlert: '',
+      codePickup: '',
+      idPickup: 0,
+      idAcitveList: 0
     }
 
     this.onUseCouponClicked = this.onUseCouponClicked.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.onCouponSubmit = this.onCouponSubmit.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
+    this.onPayClicked = this.onPayClicked.bind(this)
   }
 
   componentDidMount () {
@@ -79,34 +92,69 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   onInputChange (e: ChangeEvent<HTMLInputElement>) {
-    this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
     if (e.target.id === 'province') {
-      this.props.getAllCities(Number(e.target.value))
+      let idProvince = e.target.value
+      this.setState({ codePickup: '' })
+      const node: any = ReactDOM.findDOMNode(this)
+      if (node instanceof HTMLElement) {
+        const child: any = node.querySelector('#pickup_method')
+        child.selectedIndex = 0
+      }
+      this.props.getAllCities(Number(idProvince))
+      this.props.resetData('all')
       return
     }
 
     if (e.target.id === 'city') {
       let postalCode = e.target.value.split(',')[1]
+      let cityId = e.target.value.split(',')[0]
       this.props.updateDataCheckout({ prop: 'postal_code', value: postalCode })
+      this.props.updateDataCheckout({ prop: 'city', value: cityId })
+
+      let destination = this.props.cartcheckout.city
+
+      if (destination !== Number(cityId) && destination !== 0) {
+        this.setState({ codePickup: '' })
+        this.props.resetData('cost')
+        const node: any = ReactDOM.findDOMNode(this)  
+        if (node instanceof HTMLElement) {
+          const child: any = node.querySelector('#pickup_method')
+          child.selectedIndex = 0
+        }
+      }
       return
     }
 
     if (e.target.id === 'pickup_method') {
-      switch (e.target.value.toLowerCase()) {
+      switch (e.target.value.split(',')[1]) {
         case 'gojek':
           this.setState({
+            codePickup: 'gojek',
             messageAlert: 'Biaya antar ditanggung oleh customer'
           })
           return
-        case 'dakota ekspedisi':
+        case 'dakota':
           this.setState({
+            codePickup: 'dakota',
             messageAlert: 'Untuk pengiriman via DAKOTA harap hubungi +62 813-1375-5587 via Whatsapp'
           })
+          return
+        case 'jne':
+          let cartId = this.props.cartcheckout.myCart.id
+          let destination = this.props.cartcheckout.city
+
+          this.setState({
+            idPickup: Number(e.target.value.split(',')[0]),
+            codePickup: 'jne'
+          })
+
+          this.props.getDeliveryCost(cartId, Number(destination), Number(e.target.value.split(',')[0]))
           return
         default:
           return ''
       }
     }
+    this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
   }
 
   onUseCouponClicked () {
@@ -120,6 +168,22 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     this.setState((prevState) => ({
       modal: !prevState.modal
     }))
+  }
+
+  onPayClicked () {
+    const { cartcheckout } = this.props
+    console.log(cartcheckout)
+  }
+
+  onAddressClicked (id: number, index: number) {
+    const { profile, cartcheckout } = this.props
+    let cartId = cartcheckout.myCart.id
+    let address = profile.address[index]
+    let destination = address.city_id
+
+    this.setState({ idActiveList: id })
+    this.props.updateDataCheckout({ prop: 'city', value: destination })
+
   }
 
   dataTripCart () {
@@ -184,16 +248,69 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderDataAddress () {
-    const { profile } = this.props
-    return _.map(profile.address, (data: any, index: number) => {
-      return <option key={index} value={index}>{data.address}</option>
-    })
+    const { profile, cartcheckout } = this.props
+    if (!profile.address) return <div/>
+    if (profile.address.length === 0) {
+      return (
+        <Form>
+          <FormGroup>
+            <Label for='address'>Address</Label>
+            <Input type='text' id='address' />
+          </FormGroup>
+          <FormGroup>
+            <Label for='province'>Province</Label>
+            <Input type='select' id='province' onChange={this.onInputChange}>
+              <option defaultChecked={true}>{}</option>
+              {this.renderProvinces()}
+            </Input>
+          </FormGroup>
+          <FormGroup>
+            <Label for='city'>City</Label>
+            <Input type='select' id='city' onChange={this.onInputChange}>
+              <option defaultChecked={true}>{}</option>
+              {this.renderCities()}
+            </Input>
+          </FormGroup>
+          <FormGroup>
+            <Label for='postal_code'>Postal Code</Label>
+            <Input type='text' id='postal_code' defaultValue={cartcheckout.postal_code || ''} />
+          </FormGroup>
+          <FormGroup>
+            <Label for='pickup_method'>Pickup Method</Label>
+            <Input type='select' id='pickup_method' onChange={this.onInputChange}>
+              <option defaultChecked={true}>Choose Pickup Method</option>
+              {this.renderDataPickupMethod()}
+            </Input>
+          </FormGroup>
+          {this.renderAlertPickup()}
+        </Form>
+      )
+    }
+    return (
+      <>
+        <ListGroup className='mb-4'>
+          {
+            _.map(profile.address, (data: any, index: number) => {
+              return <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked.bind(this, data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
+            })
+          }
+        </ListGroup>
+        <FormGroup>
+          <Label for='pickup_method'>Pickup Method</Label>
+          <Input type='select' id='pickup_method' onChange={this.onInputChange}>
+            <option defaultChecked={true}>Choose Pickup Method</option>
+            {this.renderDataPickupMethod()}
+          </Input>
+        </FormGroup>
+        {this.renderAlertPickup()}
+      </>
+    )
   }
 
   renderDataPickupMethod () {
     const { allPickupMethod } = this.props
     return _.map(allPickupMethod, (data: any, index: number) => {
-      return <option key={index} value={data.pickup_method_name}>{data.pickup_method_name}</option>
+      return <option key={index} value={`${data.id},${data.code}`}>{data.pickup_method_name}</option>
     })
   }
 
@@ -212,8 +329,23 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderAlertPickup () {
-    if (this.state.messageAlert === '') return <div/>
-    return <Alert color='info'>{this.state.messageAlert}</Alert>
+    if (this.state.codePickup === 'dakota' || this.state.codePickup === 'gojek') {
+      return <Alert color='info'>{this.state.messageAlert}</Alert>
+    } else if (this.state.codePickup === 'jne') {
+      return (
+        <FormGroup>
+          <Label for='service'>Service</Label>
+          <Input type='select' id='service'>
+            <option defaultChecked={true}>Choose Service</option>
+            {_.map(this.props.deliveryCost.costs, (data: any, index: number) => {
+              return <option key={index}>{data.service}</option>
+            })}
+          </Input>
+        </FormGroup>
+      )
+    } else {
+      return <div/>
+    }
   }
 
   render () {
@@ -225,38 +357,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             <p className='text-hel-95 text-xl'>Checkout</p>
           </Col>
           <Col xs='6'>
-            <Form>
-              <FormGroup>
-                <Label for='address'>Address</Label>
-                <Input type='text' id='address'/>
-              </FormGroup>
-              <FormGroup>
-                <Label for='province'>Province</Label>
-                <Input type='select' id='province' onChange={this.onInputChange}>
-                  <option defaultChecked={true}>{}</option>
-                  {this.renderProvinces()}
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for='city'>City</Label>
-                <Input type='select' id='city' onChange={this.onInputChange}>
-                  <option defaultChecked={true}>{}</option>
-                  {this.renderCities()}
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for='postal_code'>Postal Code</Label>
-                <Input type='text' id='postal_code' defaultValue={cartcheckout.postal_code || ''}/>
-              </FormGroup>
-              <FormGroup>
-                <Label for='pickup_method'>Pickup Method</Label>
-                <Input type='select' id='pickup_method' onChange={this.onInputChange}>
-                  <option defaultChecked={true}>Choose Pickup Method</option>
-                  {this.renderDataPickupMethod()}
-                </Input>
-              </FormGroup>
-              {this.renderAlertPickup()}
-            </Form>
+            {this.renderDataAddress()}
           </Col>
           <Col xs={{ size: 5, offset: 1 }}>
             <p>Summary</p>
@@ -269,7 +370,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             <div className='clearfix' />
             <div className='text-yellow text-s float-right' style={{ cursor: 'pointer' }} onMouseDown={this.onUseCouponClicked}>Use Coupon Code</div>
             <div className='clearfix' />
-            <Button className='mt-4' block={true}>Pay</Button>
+            <Button className='mt-4' block={true} onMouseDown={this.onPayClicked}>Pay</Button>
           </Col>
         </Row>
         <Row className='mt-4'>
@@ -301,7 +402,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 const mapStateToProps = ({ user, cartcheckout, rajaongkir }: any) => {
   const { profile } = user
   const { allPickupMethod, dataProduct, dataTrip } = cartcheckout
-  const { provinces, cities } = rajaongkir
+  const { provinces, cities, deliveryCost } = rajaongkir
 
   return {
     profile,
@@ -310,7 +411,8 @@ const mapStateToProps = ({ user, cartcheckout, rajaongkir }: any) => {
     dataTrip,
     provinces,
     cities,
-    cartcheckout
+    cartcheckout,
+    deliveryCost
   }
 }
 
@@ -320,5 +422,7 @@ export default connect(mapStateToProps, {
   getAllCart,
   getAllProvince,
   getAllCities,
-  updateDataCheckout
+  updateDataCheckout,
+  getDeliveryCost,
+  resetData
 })(Checkout)
