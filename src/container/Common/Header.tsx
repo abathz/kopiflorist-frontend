@@ -83,9 +83,14 @@ class Header extends Component<PropsComponent, StateComponent> {
             {profile.name}
           </DropdownToggle>
           <DropdownMenu right={true}>
-            <Link route='/profile'>
+            <Link route='profile'>
               <DropdownItem>
                 My Account
+              </DropdownItem>
+            </Link>
+            <Link route='review'>
+              <DropdownItem>
+                Review
               </DropdownItem>
             </Link>
             <DropdownItem divider={true} />

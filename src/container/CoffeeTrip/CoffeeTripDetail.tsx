@@ -4,18 +4,20 @@ import _ from 'lodash'
 import moment from 'moment'
 import { Col, Row, FormGroup, Input, Button, Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Table, Modal, ModalHeader, ModalBody, Form, Label } from 'reactstrap'
 import { Link, Router } from 'routes'
-import { getTrip, updateDataTrip } from 'actions/index'
+import { getTrip, updateDataTrip, getTripReviews } from 'actions/index'
 import ModalAuth from 'container/Common/ModalAuth'
 
 interface StateProps {
   id: number
   tripDetail: any
+  tripReviews: any
   trip: any
 }
 
 interface DispatchProps {
   getTrip: typeof getTrip
   updateDataTrip: typeof updateDataTrip
+  getTripReviews: typeof getTripReviews
 }
 
 interface PropsComponent extends StateProps, DispatchProps { }
@@ -65,6 +67,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
 
   componentDidMount () {
     this.props.getTrip(this.props.id)
+    this.props.getTripReviews(this.props.id)
   }
 
   toggle () {
@@ -108,26 +111,28 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     this.props.updateDataTrip({ prop: `other_photo`, value: { id: e.target.id, img } })
   }
 
-  /** STILL USE DATA DUMMY (START) */
   renderReviewList () {
-    return _.map(Array(3), (data: any, index: number) => {
+    const { tripReviews } = this.props
+    return _.map(tripReviews, (data: any, index: number) => {
+      let date = data.createdAt.split(' ')[0].split('-')
+      let formatedDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
+      let time = data.createdAt.split(' ')[1]
       return (
-        <Row key={index}>
+        <div key={index}>
           <Col xs='12' className='mb-4'>
-            <img className='img-round' src='/static/img/test.jpg' />
-            <p className='text-hel-bold text-m' style={{ position: 'absolute', top: 0, left: 80 }}>
-              Big Smoke<br />
-              <span className='text-s text-hel-reg'>6 August 2018</span>
+            <img className='img-round' src='/static/img/person.png' />
+            <p className='text-hel-bold text-m' style={{ position: 'absolute', top: 0, left: 80, width: '100%' }}>
+              {data.user.name}<br />
+              <span className='text-s text-hel-reg'>{`${formatedDate} ${time}`}</span>
             </p>
           </Col>
-          <Col xs='12'>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at sapien sollicitudin, sagittis neque at, sodales libero. Nulla in rutrum odio. Sed in dapibus lorem, a commodo est. Sed eu vehicula leo, in mattis orci. Nam sit amet magna suscipit, mattis erat nec, vulputate mauris. Aliquam pulvinar dolor euismod leo ornare porttitor sit amet et elit. Quisque sit amet semper lacus, ut lobortis nulla. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc varius tempus dui a hendrerit. Suspendisse nec eleifend odio.</p>
+          <Col xs='12' className='mb-5'>
+            <p>{data.message}</p>
           </Col>
-        </Row>
+        </div>
       )
     })
   }
-  /** STILL USE DATA DUMMY (END) */
 
   sortItinerary () {
     const { tripDetail } = this.props
@@ -203,26 +208,26 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   }
 
   /** UNUSED */
-  renderModalDates () {
-    return (
-      <Modal style={{ marginTop: '200px' }} isOpen={this.state.modal} toggle={this.toggleModal}>
-        <ModalHeader>Available Dates</ModalHeader>
-        <ModalBody>
-          <Row className='scroll-overflow'>
-          {_.map(Array(10), (data: any, index: number) => {
-            return (
-              <Col key={index} xs='12' className='mb-3'>
-                <span style={{ verticalAlign: '-7px' }}>25 August 2018 - 27 August 2018</span>
-                <Link route={`/coffee_trip/${this.props.id}/order`}><Button className='float-right'>Choose</Button></Link>
-              </Col>
-            )
-          })}
-          </Row>
-          <div className='clearfix'/>
-        </ModalBody>
-      </Modal>
-    )
-  }
+  // renderModalDates () {
+  //   return (
+  //     <Modal style={{ marginTop: '200px' }} isOpen={this.state.modal} toggle={this.toggleModal}>
+  //       <ModalHeader>Available Dates</ModalHeader>
+  //       <ModalBody>
+  //         <Row className='scroll-overflow'>
+  //         {_.map(Array(10), (data: any, index: number) => {
+  //           return (
+  //             <Col key={index} xs='12' className='mb-3'>
+  //               <span style={{ verticalAlign: '-7px' }}>25 August 2018 - 27 August 2018</span>
+  //               <Link route={`/coffee_trip/${this.props.id}/order`}><Button className='float-right'>Choose</Button></Link>
+  //             </Col>
+  //           )
+  //         })}
+  //         </Row>
+  //         <div className='clearfix'/>
+  //       </ModalBody>
+  //     </Modal>
+  //   )
+  // }
   /** UNUSED */
 
   renderGroupSize () {
@@ -307,9 +312,9 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
 }
 
 const mapStateToProps = ({ trip }: any) => {
-  const { tripDetail } = trip
+  const { tripDetail, tripReviews } = trip
 
-  return { tripDetail, trip }
+  return { tripDetail, tripReviews, trip }
 }
 
-export default connect(mapStateToProps, { getTrip, updateDataTrip })(CoffeeTripDetail)
+export default connect(mapStateToProps, { getTrip, updateDataTrip, getTripReviews })(CoffeeTripDetail)

@@ -1,4 +1,4 @@
-import { Action, UPDATE_DATA_TRIP, ADD_DATA_GUEST, GET_ALL_TRIP, GET_TRIP, GET_TRIP_PACKAGE, REMOVE_DATA_GUEST, GET_ALL_TRIP_PACKAGE } from 'actions/types'
+import { Action, UPDATE_DATA_TRIP, ADD_DATA_GUEST, GET_ALL_TRIP, GET_TRIP, GET_TRIP_PACKAGE, REMOVE_DATA_GUEST, GET_ALL_TRIP_PACKAGE, GET_TRIP_REVIEWS } from 'actions/types'
 
 interface State {
   name: string
@@ -15,6 +15,7 @@ interface State {
   main_photo: string
   other_photo: any[]
   total_price: number
+  tripReviews: any[]
 }
 
 const INITIAL_STATE: State = {
@@ -31,7 +32,8 @@ const INITIAL_STATE: State = {
   tripPackage: {},
   main_photo: '',
   other_photo: [],
-  total_price: 0
+  total_price: 0,
+  trip_reviews: []
 }
 
 export default (state = INITIAL_STATE, action: Action) => {
@@ -60,6 +62,8 @@ export default (state = INITIAL_STATE, action: Action) => {
       return { ...state, allTripPackage: action.payload.data }
     case GET_TRIP_PACKAGE:
       return { ...state, tripPackage: action.payload.data }
+    case GET_TRIP_REVIEWS:
+      return { ...state, tripReviews: action.payload.reviews }
     default:
       return state
   }

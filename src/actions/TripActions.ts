@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Dispatch } from 'redux'
 import _ from 'lodash'
 import querystring from 'querystring'
-import { UPDATE_DATA_TRIP, ADD_DATA_GUEST, GET_ALL_TRIP, GET_TRIP, GET_TRIP_PACKAGE, REMOVE_DATA_GUEST, INCREMENT_QUANTITY, DECREMENT_QUANTITY, GET_ALL_TRIP_PACKAGE } from './types'
+import { UPDATE_DATA_TRIP, ADD_DATA_GUEST, GET_ALL_TRIP, GET_TRIP, GET_TRIP_PACKAGE, REMOVE_DATA_GUEST, INCREMENT_QUANTITY, DECREMENT_QUANTITY, GET_ALL_TRIP_PACKAGE, GET_TRIP_REVIEWS } from './types'
 
 export const updateDataTrip = ({ prop, value }: any) => (dispatch: Dispatch<any>) => {
   dispatch({
@@ -85,6 +85,11 @@ export const getTrip = (id: number) => async (dispatch: Dispatch<any>) => {
   await getTripSuccess(dispatch, res)
 }
 
+export const getTripReviews = (id: number) => async (dispatch: Dispatch<any>) => {
+  const res = await axios.get(`/trip/${id}/reviews`)
+  await getTripReviewsSuccess(dispatch, res)
+}
+
 const orderTripSuccess = () => {
   window.location.href = '/cart'
 }
@@ -113,6 +118,13 @@ const getAllTripSuccess = (dispatch: Dispatch<any>, res: any) => {
 const getTripSuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
     type: GET_TRIP,
+    payload: res.data
+  })
+}
+
+const getTripReviewsSuccess = (dispatch: Dispatch<any>, res: any) => {
+  dispatch({
+    type: GET_TRIP_REVIEWS,
     payload: res.data
   })
 }
