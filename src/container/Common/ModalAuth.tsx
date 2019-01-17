@@ -20,6 +20,8 @@ interface PropsComponent extends StateProps, DispatchProps { }
 
 interface StateComponent {
   register: boolean
+  organization: boolean
+  errorMessage: string
 }
 
 class ModalAuth extends Component<PropsComponent, StateComponent> {
@@ -27,7 +29,9 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
     super(props)
 
     this.state = {
-      register: false
+      register: false,
+      organization: false,
+      errorMessage: ''
     }
 
     this.onInputChange = this.onInputChange.bind(this)
@@ -37,17 +41,40 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
   }
 
   onInputChange (e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.id === 'organization') {
+      if (e.target.value === 'company') {
+        this.setState({ organization: true })
+        return
+      }
+      if (e.target.value === 'personal') {
+        this.setState({ organization: false })
+        return
+      }
+    }
     this.props.updateDataSignUp({ prop: e.target.id, value: e.target.value })
   }
 
   onRegisterSubmit (e: FormEvent) {
     e.preventDefault()
-    this.props.signUp(this.props.auth)
+    const { auth } = this.props
+    if (auth.name !== '' && auth.email !== '' && auth.password !== '' && auth.phone !== 0 && auth.gender !== '' && this.state.organization && auth.company_name !== '') {
+      this.props.signUp(this.props.auth)
+      return
+    }
+
+    this.setState({ errorMessage: 'Please fill all blank field' })
   }
 
   onLoginSubmit (e: FormEvent) {
     e.preventDefault()
-    this.props.signIn(this.props.auth)
+    const { auth } = this.props
+
+    if (auth.email !== '' && auth.password !== '') {
+      this.props.signIn(this.props.auth)
+      return
+    }
+
+    this.setState({ errorMessage: 'Please fill all blank field' })
   }
 
   changeModal () {
@@ -57,15 +84,14 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
   }
 
   renderModalBody (register: boolean) {
-    const { auth } = this.props
     if (register) {
       return (
         <>
           <ModalHeader>Sign up</ModalHeader>
           <ModalBody>
-            {auth.error.message
+            {this.state.errorMessage !== ''
               ? <div className='alert alert-danger' role='alert'>
-                  {auth.error.message}
+                  {this.state.errorMessage}
                 </div>
               : <div/>
             }
@@ -75,16 +101,27 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
                 <Input type='text' name='name' id='name' placeholder='John Doe' autoFocus={true} onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
+                <Label for='organization'>Organization</Label>
+                <Input type='select' id='organization' onChange={this.onInputChange}>
+                  <option value='personal'>Personal</option>
+                  <option value='company'>Company</option>
+                </Input>
+              </FormGroup>
+              {
+                this.state.organization
+                ? <FormGroup>
+                    <Label for='company_name'>Company Name</Label>
+                    <Input type='text' name='company_name' id='company_name' onChange={this.onInputChange} />
+                  </FormGroup>
+                : <div/>
+              }
+              <FormGroup>
                 <Label for='email'>Email</Label>
                 <Input type='email' name='email' id='email' placeholder='example@mail.com' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='password'>Password</Label>
                 <Input type='password' name='password' id='password' placeholder='********' onChange={this.onInputChange} />
-              </FormGroup>
-              <FormGroup>
-                <Label for='address'>Address</Label>
-                <Input type='text' name='address' id='address' placeholder='Route 66' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='phone'>Phone</Label>

@@ -7,6 +7,7 @@ interface State {
   phone: number
   gender: string
   error: string
+  company_name: string
 }
 
 const INITIAL_STATE: State = {
@@ -15,7 +16,8 @@ const INITIAL_STATE: State = {
   password: '',
   phone: 0,
   gender: '',
-  error: ''
+  error: '',
+  company_name: ''
 }
 
 export default (state = INITIAL_STATE, action: Action) => {

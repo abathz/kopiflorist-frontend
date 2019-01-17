@@ -17,7 +17,7 @@ export const signUp = (newData: any) => async (dispatch: Dispatch<any>) => {
     password: newData.password,
     phone: newData.phone,
     gender: newData.gender,
-    address: newData.address
+    company_name: newData.company_name
   }
   try {
     const res = await axios.post('/signup', querystring.stringify(data))
