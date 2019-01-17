@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Row, Col } from 'reactstrap'
+import { getUserReviews } from 'actions/index'
 
 interface StateProps {}
 
-interface DispatchProps {}
+interface DispatchProps {
+  getUserReviews: typeof getUserReviews
+}
 
 interface PropsComponent extends StateProps, DispatchProps {}
 
@@ -25,8 +29,10 @@ class ReviewList extends Component<PropsComponent, StateComponent> {
     this.state = {
       isReviewItemClicked: false
     }
+  }
 
-    // this.onReviewItemClicked = this.onReviewItemClicked.bind(this)
+  componentDidMount () {
+    this.props.getUserReviews()
   }
 
   onReviewItemClicked = () => {
@@ -49,4 +55,8 @@ class ReviewList extends Component<PropsComponent, StateComponent> {
   }
 }
 
-export default ReviewList
+// const mapStateToProps = ({ }) => {
+
+// }
+
+export default connect(null, { getUserReviews })(ReviewList)

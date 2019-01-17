@@ -33,7 +33,7 @@ const INITIAL_STATE: State = {
   main_photo: '',
   other_photo: [],
   total_price: 0,
-  trip_reviews: []
+  tripReviews: []
 }
 
 export default (state = INITIAL_STATE, action: Action) => {
