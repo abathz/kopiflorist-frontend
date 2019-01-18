@@ -112,7 +112,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             </Row>
             <Row>
               <Col xs='9'>
-                <Button block={true} onClick={this.onBuyClicked}>Buy</Button>
+                <Button block={true} className='button-yellow' onClick={this.onBuyClicked}>Buy</Button>
               </Col>
             </Row>
           </Col>

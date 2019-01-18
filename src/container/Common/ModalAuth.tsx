@@ -135,7 +135,7 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
                   <option value={'female'}>Female</option>
                 </Input>
               </FormGroup>
-              <Button color='primary' className='float-right pr-5 pl-5'>Sign Up</Button>
+              <Button className='float-right pr-5 pl-5 button-yellow'>Sign Up</Button>
             </Form>
             <div className='clearfix' />
             <div className='float-right clearfix'>
@@ -163,7 +163,7 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
                   <a className='float-right'>Forgot Password</a>
                 </Link>
               </FormGroup>
-              <Button color='primary' className='float-right pr-5 pl-5'>Sign in</Button>
+              <Button className='float-right pr-5 pl-5 button-yellow'>Sign in</Button>
             </Form>
             <div className='clearfix' />
             <div className='float-right clearfix'>

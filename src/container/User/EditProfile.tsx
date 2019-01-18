@@ -157,9 +157,6 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
           <Col xs='10'>
             <h1 className='text-reg-95 text-black text-xl'>My Account</h1>
           </Col>
-          <Col xs='2'>
-            <Link route='editprofile'><Button color='primary'>Edit Profile</Button></Link>
-          </Col>
         </Row>
         <Row>
           <Col xs='3'>
@@ -199,7 +196,7 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
                 </ListGroup>
                 {this.renderFormAddress()}
               </FormGroup>
-              <Button block={true} color='primary' id='submit'>Save</Button>
+              <Button block={true} className='button-yellow' id='submit'>Save</Button>
             </Form>
           </Col>
         </Row>

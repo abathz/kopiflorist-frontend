@@ -281,7 +281,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
             </Row>
             <Row>
               <Col xs='12'>
-                <Button block={true} onMouseDown={this.onOrderClicked}>Order</Button>
+                <Button className='button-yellow' block={true} onMouseDown={this.onOrderClicked}>Order</Button>
               </Col>
             </Row>
           </Col>

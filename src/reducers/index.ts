@@ -6,6 +6,7 @@ import BlogReducer from './BlogReducer'
 import CartAndCheckoutReducer from './CartAndCheckoutReducer'
 import TripReducer from './TripReducer'
 import RajaongkirReducer from './RajaongkirReducer'
+import ReviewReducer from './ReviewReducer'
 
 const rootReducer = combineReducers({
   shop: ShopReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   blog: BlogReducer,
   cartcheckout: CartAndCheckoutReducer,
   trip: TripReducer,
-  rajaongkir: RajaongkirReducer
+  rajaongkir: RajaongkirReducer,
+  review: ReviewReducer
 })
 
 export default rootReducer

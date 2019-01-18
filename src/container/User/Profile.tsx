@@ -137,7 +137,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
             </FormGroup>
           </Col>
         </Row>
-        <Button>Add</Button>
+        <Button className='button-yellow'>Add</Button>
       </Form>
     )
   }
@@ -152,7 +152,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
             <h1 className='text-reg-95 text-black text-xl'>My Account</h1>
           </Col>
           <Col xs='2'>
-            <Link route='editprofile'><Button color='primary'>Edit Profile</Button></Link>
+            <Link route='editprofile'><Button className='button-yellow'>Edit Profile</Button></Link>
           </Col>
         </Row>
         <Row>
@@ -177,7 +177,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
                 })
               }
             </ListGroup>
-            <Button color='primary' className='text-s text-os-reg mt-2' onMouseDown={this.onAddAddressClicked}>{this.state.isFormShow ? 'Cancel' : '+ Add Address'}</Button>
+            <Button className='text-s text-os-reg mt-2 button-yellow' onMouseDown={this.onAddAddressClicked}>{this.state.isFormShow ? 'Cancel' : '+ Add Address'}</Button>
             {this.state.isFormShow ? this.renderFormAddress() : <div/>}
           </Col>
         </Row>

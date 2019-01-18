@@ -88,15 +88,24 @@ footer {
 }
 
 .review-item {
-  margin-bottom: 10px;
-  padding: 10px;
+  display: block;
   border: 1px solid #ddd;
+  padding: 10px 0;
+  margin-bottom: 10px;
   box-shadow: 3px 3px 5px rgba($color: #000000, $alpha: 0.1);
   border-radius: 5px;
-  height: 40px;
-  transition: height 1s ease-out;
+  height: 84px;
+  transition: height .5s ease-out;
   &.review-item-active {
     height: 200px;
+  }
+}
+
+.button-yellow {
+  background-color: $yellow;
+  border: 0;
+  &:hover {
+    background-color: $yellow-light;
   }
 }
 

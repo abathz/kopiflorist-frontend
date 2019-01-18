@@ -186,7 +186,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
             </Form>
           </Col>
           <Col xs='12' className='mb-4'>
-            <Button block={true} onMouseDown={this.onSaveGuestClicked}>Add</Button>
+            <Button block={true} className='button-yellow' onMouseDown={this.onSaveGuestClicked}>Add</Button>
           </Col>
         </Row>
       </>
@@ -200,7 +200,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
         <tr key={index}>
           <td>{data.name}</td>
           <td>{data.food_preference.charAt(0).toUpperCase() + data.food_preference.slice(1)}</td>
-          <td><Button onMouseDown={this.onRemoveGuestClicked.bind(this, index)}>Remove</Button></td>
+          <td><Button color='danger' onMouseDown={this.onRemoveGuestClicked.bind(this, index)}>Remove</Button></td>
         </tr>
       )
     })
@@ -274,7 +274,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
             <span className='text-black text-hel-bold text-m'>Total Price</span><span className='float-right text-black text-os-reg text-l'>Rp {this.totalPrice()}</span>
             <div className='clearfix' />
             {/* <Link route='cart'><Button className='mt-4' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button></Link> */}
-            <Button className='mt-4' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button>
+            <Button className='mt-4 button-yellow' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button>
           </Col>
           {tripPackage.min_participant === tripPackage.max_participant ? ''
             : <Col xs='7'>

@@ -127,7 +127,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
         <Row>
           <Col className='text-right'>
             <Link route='home'><Button>Continue Shopping</Button></Link>
-            <Link route='checkout'><Button className='mx-5' style={{ width: '160px' }}>Checkout</Button></Link>
+            <Link route='checkout'><Button className='mx-5 button-yellow' style={{ width: '160px' }}>Checkout</Button></Link>
           </Col>
         </Row>
       </>

@@ -1,4 +1,4 @@
-import { Action, UPDATE_COUPON_CODE, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_CHECKOUT, RESET_STATE_RAJAONGKIR_ALL } from 'actions/types'
+import { Action, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_CHECKOUT, RESET_STATE_RAJAONGKIR_ALL } from 'actions/types'
 
 interface State {
   coupon_code: string
@@ -32,8 +32,6 @@ export default (state = INITIAL_STATE, action: Action) => {
   switch (action.type) {
     case UPDATE_DATA_CHECKOUT:
       return { ...state, [action.payload.prop]: action.payload.value }
-    case UPDATE_COUPON_CODE:
-      return { ...state, coupon_code: action.payload }
     case GET_ALL_CART:
       return {
         ...state,
@@ -45,7 +43,7 @@ export default (state = INITIAL_STATE, action: Action) => {
     case GET_ALL_PICKUP_METHOD:
       return { ...state, allPickupMethod: action.payload.data }
     case RESET_STATE_RAJAONGKIR_ALL:
-      return { ...state, postal_code: 0 }
+      return { ...state, postal_code: '' }
     default:
       return state
   }

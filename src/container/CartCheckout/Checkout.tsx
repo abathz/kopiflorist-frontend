@@ -284,7 +284,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
               <Label for='coupon_code'>Coupon Code</Label>
               <Input type='text' id='coupon_code' onChange={this.onInputChange} />
             </FormGroup>
-            <Button className='float-right' style={{ width: '150px' }}>Apply</Button>
+            <Button className='float-right button-yellow' style={{ width: '150px' }}>Apply</Button>
             <div className='clearfix' />
           </Form>
         </ModalBody>
@@ -298,7 +298,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     if (profile.address.length === 0 || this.state.isFormShow) {
       return (
         <Form>
-          <Button color='primary' className='text-s text-os-reg mt-2 mb-4' onMouseDown={this.onAddAddressClicked}>Cancel</Button>
+          <Button color='danger' className='text-s text-os-reg mt-2 mb-4' onMouseDown={this.onAddAddressClicked}>Cancel</Button>
           <FormGroup>
             <Label for='address'>Address</Label>
             <Input type='text' id='address' onChange={this.onInputChange}/>
@@ -341,7 +341,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             })
           }
         </ListGroup>
-        <Button color='primary' className='text-s text-os-reg mt-2 mb-4' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
+        <Button className='text-s text-os-reg mt-2 mb-4 button-yellow' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
         <FormGroup>
           <Label for='pickup_method'>Pickup Method</Label>
           <Input type='select' id='pickup_method' onChange={this.onInputChange}>
@@ -417,7 +417,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             <div className='clearfix' />
             <div className='text-yellow text-s float-right' style={{ cursor: 'pointer' }} onMouseDown={this.onUseCouponClicked}>Use Coupon Code</div>
             <div className='clearfix' />
-            <Button className='mt-4' block={true} onMouseDown={this.onPayClicked}>Pay</Button>
+            <Button className='mt-4 button-yellow' block={true} onMouseDown={this.onPayClicked}>Pay</Button>
           </Col>
         </Row>
         <Row className='mt-4'>

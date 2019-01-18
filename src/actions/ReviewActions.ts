@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Dispatch } from 'redux'
+import { GET_USER_REVIEWS } from './types'
 
 export const getUserReviews = () => async (dispatch: Dispatch<any>) => {
   const res = await axios.get('/my_reviews', {
@@ -8,5 +9,12 @@ export const getUserReviews = () => async (dispatch: Dispatch<any>) => {
     }
   })
 
-  console.log(res)
+  getUserReviewsSuccess(dispatch, res)
+}
+
+const getUserReviewsSuccess = (dispatch: Dispatch<any>, res: any) => {
+  dispatch({
+    type: GET_USER_REVIEWS,
+    payload: res.data
+  })
 }
