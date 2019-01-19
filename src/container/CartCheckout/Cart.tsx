@@ -49,9 +49,10 @@ class Cart extends Component<PropsComponent, StateComponent> {
 
   componentDidUpdate () {
     const { dataProduct, dataTrip } = this.props
-    const totalPriceTrip = _.map(dataTrip, (data: any) => data.price).reduce((a: number, b: number) => a + b, 0)
-    const totalPriceProduct = _.map(dataProduct, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
+    const totalPriceTrip = _.map(dataTrip.cart_trip, (data: any) => data.price).reduce((a: number, b: number) => a + b, 0)
+    const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
     let totalPrice = totalPriceProduct + totalPriceTrip
+    console.log(totalPrice)
     if (this.state.totalPrice !== totalPrice) {
       this.setState({ totalPrice })
     }
@@ -78,7 +79,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
 
   dataProductCart () {
     const { dataProduct } = this.props
-    return _.map(dataProduct, (data: any, index: number) => {
+    return _.map(dataProduct.cart_product, (data: any, index: number) => {
       return (
         <tr key={index}>
           <td>
