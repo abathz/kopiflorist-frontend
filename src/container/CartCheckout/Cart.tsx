@@ -49,8 +49,8 @@ class Cart extends Component<PropsComponent, StateComponent> {
 
   componentDidUpdate () {
     const { dataProduct, dataTrip } = this.props
-    const totalPriceTrip = _.map(dataTrip, (data: any) => data.price).reduce((a: number, b: number) => a + b, 0)
-    const totalPriceProduct = _.map(dataProduct, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
+    const totalPriceTrip = _.map(dataTrip.cart_trip, (data: any) => data.package.price).reduce((a: number, b: number) => a + b, 0)
+    const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
     let totalPrice = totalPriceProduct + totalPriceTrip
     if (this.state.totalPrice !== totalPrice) {
       this.setState({ totalPrice })
@@ -59,7 +59,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
 
   dataTripCart () {
     const { dataTrip } = this.props
-    return _.map(dataTrip, (data: any, index: number) => {
+    return _.map(dataTrip.cart_trip, (data: any, index: number) => {
       let arrDate = data.trip_date.substring(0, 10).split('-')
       let date = `${arrDate[2]} ${arrMonth[Number(arrDate[1])]} ${arrDate[0]}`
       return (
@@ -68,9 +68,9 @@ class Cart extends Component<PropsComponent, StateComponent> {
             <img className='img-fluid mr-3' src={data.photo} width='80' />
             <span className='text-os-reg text-ml text-black-light'>{`${data.title} (${date} : ${data.duration_in_days} ${data.duration_in_days > 1 ? 'days' : 'day'})`}</span>
           </td>
-          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.price}</td>
+          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.package.price}</td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>{data.quantity}</td>
-          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.price}</td>
+          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.package.price}</td>
         </tr>
       )
     })
@@ -78,7 +78,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
 
   dataProductCart () {
     const { dataProduct } = this.props
-    return _.map(dataProduct, (data: any, index: number) => {
+    return _.map(dataProduct.cart_product, (data: any, index: number) => {
       return (
         <tr key={index}>
           <td>

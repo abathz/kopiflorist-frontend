@@ -4,14 +4,14 @@ interface State {
   quantity: number
   allProduct: any[]
   product: any[]
-  quantityAddOns: any[]
+  addOns: any[]
 }
 
 const INITIAL_STATE: State = {
   quantity: 0,
   allProduct: [],
   product: [],
-  quantityAddOns: []
+  addOns: []
 }
 
 export default (state = INITIAL_STATE, action: Action) => {
@@ -20,17 +20,26 @@ export default (state = INITIAL_STATE, action: Action) => {
       return { ...state, [action.payload.prop]: action.payload.value }
     case GET_ALL_PRODUCT:
       action.payload.data.map((data: any) => {
-        state.quantityAddOns.push(0)
+        let product = {
+          name: data.name,
+          quantity: 0,
+          price: data.price
+        }
+        state.addOns.push(product)
       })
       return { ...state, allProduct: action.payload.data }
     case GET_PRODUCT:
       return { ...state, product: action.payload.data }
     case INCREMENT_QUANTITY:
-      state.quantityAddOns[action.payload] += 1
+
+      state.addOns[action.payload].quantity += 1
       return { ...state }
     case DECREMENT_QUANTITY:
-      if (state.quantityAddOns[action.payload] <= 0) state.quantityAddOns[action.payload] = 0
-      state.quantityAddOns[action.payload] -= 1
+      if (state.addOns[action.payload].quantity <= 0) {
+        state.addOns[action.payload].quantity = 0
+        return { ...state }
+      }
+      state.addOns[action.payload].quantity -= 1
       return { ...state }
     case RESET_STATE_PRODUCT:
       return { ...state, product: [] }

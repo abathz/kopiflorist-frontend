@@ -15,7 +15,7 @@ export const orderTrip = (newData: any) => async () => {
 
   let data = {
     trip_days_id: newData.trip_days_id,
-    trip_package_type_id: newData.trip_package_id,
+    trip_allowed_package_id: newData.trip_allowed_package_id,
     trip_booked_participants: JSON.stringify(newData.guest_list) || ''
   }
 

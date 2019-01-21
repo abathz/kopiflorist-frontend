@@ -102,6 +102,13 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   }
 
   onInputChange (e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.id === 'group_size') {
+      let idTripPackage = e.target.value.split('-')[0]
+      let priceTripPackage = e.target.value.split('-')[1]
+      this.props.updateDataTrip({ prop: 'group_size', value: Number(idTripPackage) })
+      this.props.updateDataTrip({ prop: 'price', value: Number(priceTripPackage) })
+      return
+    }
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
   }
 
@@ -207,34 +214,11 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     })
   }
 
-  /** UNUSED */
-  // renderModalDates () {
-  //   return (
-  //     <Modal style={{ marginTop: '200px' }} isOpen={this.state.modal} toggle={this.toggleModal}>
-  //       <ModalHeader>Available Dates</ModalHeader>
-  //       <ModalBody>
-  //         <Row className='scroll-overflow'>
-  //         {_.map(Array(10), (data: any, index: number) => {
-  //           return (
-  //             <Col key={index} xs='12' className='mb-3'>
-  //               <span style={{ verticalAlign: '-7px' }}>25 August 2018 - 27 August 2018</span>
-  //               <Link route={`/coffee_trip/${this.props.id}/order`}><Button className='float-right'>Choose</Button></Link>
-  //             </Col>
-  //           )
-  //         })}
-  //         </Row>
-  //         <div className='clearfix'/>
-  //       </ModalBody>
-  //     </Modal>
-  //   )
-  // }
-  /** UNUSED */
-
   renderGroupSize () {
     const { tripDetail } = this.props
     return _.map(tripDetail.trip_package, (data: any, index: number) => {
       return (
-        <option key={data.id} id={data.package_name} value={data.id}>
+        <option key={data.id} id={data.package_name} value={`${data.trip_package_id}-${data.price}`}>
           {`${data.package_name} ${data.max_participant === data.min_participant ? `(${data.min_participant} person)` : `(${data.min_participant}-${data.max_participant} persons)`}`}
         </option>
       )
@@ -276,7 +260,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
                 </FormGroup>
               </Col>
               <Col xs='6'>
-                <p className='text-l text-black text-hel-95 pt-2'>IDR {tripDetail.price} <span className='text-s text-black text-hel-reg'> /person</span></p>
+                <p className='text-l text-black text-hel-95 pt-2'>IDR {trip.price} <span className='text-s text-black text-hel-reg'> /package</span></p>
               </Col>
             </Row>
             <Row>

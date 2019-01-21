@@ -48,7 +48,6 @@ export default (state = INITIAL_STATE, action: Action) => {
         }
         return { ...state }
       }
-      console.log({ ...state, [action.payload.prop]: action.payload.value })
       return { ...state, [action.payload.prop]: action.payload.value }
     case GET_PROFILE:
       return { ...state,

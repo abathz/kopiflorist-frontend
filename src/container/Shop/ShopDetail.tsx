@@ -51,7 +51,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
   }
 
   onInputChange (e: ChangeEvent<HTMLInputElement>) {
-    this.props.updateDataShop({ prop: 'quantity', value: Number(e.target.value) })
+    this.props.updateDataShop({ prop: 'quantity', value: e.target.value })
   }
 
   onBuyClicked () {
@@ -83,15 +83,25 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { product } = this.props
+    console.log(product)
     if (!product) return ''
     return (
       <>
         <Row>
           <Col xs='6'>
-            <img className='img-fluid' src={product.photo} alt={product.name} />
+            <img className='img-fluid mb-4' src={product.photo} alt={product.name} />
             <Row className='mb-4'>
               {this.renderListPhoto()}
             </Row>
+          </Col>
+          <Col xs={{ size: 5, offset: 1 }}>
+            <p className='text-xl text-black text-hel-95'>{product.name}</p>
+            <p className='text-ml text-black text-hel-95'>Product Description</p>
+            <p className='text-m text-black text-hel-reg'>{product.description}</p>
+            <div className='mb-4' style={{ borderBottom: '1pt solid #979797' }} />
+            <p className='text-ml text-black text-hel-95'>Detail</p>
+            <p className='text-m text-black text-hel-reg'>{product.detail}</p>
+            <div className='mb-4' style={{ borderBottom: '1pt solid #979797' }} />
             <Row>
               <Col xs='4'>
                 <FormGroup>
@@ -105,25 +115,17 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
                   </Input>
                 </FormGroup>
               </Col>
-              <Col xs='4' className='pt-2'>
+              <Col className='pt-2'>
                 <span className='text-black text-hel-95 text-l'>IDR {product.price}</span>
                 <span className='text-s text-black'> / {product.weight_in}</span>
+                <span className='text-ml text-black' style={{ marginLeft: '45px' }}>Stock: <span className='text-black text-hel-95 text-l'>{product.quantity}</span></span>
               </Col>
             </Row>
             <Row>
-              <Col xs='9'>
+              <Col xs='12'>
                 <Button block={true} className='button-yellow' onClick={this.onBuyClicked}>Buy</Button>
               </Col>
             </Row>
-          </Col>
-          <Col xs={{ size: 5, offset: 1 }}>
-            <p className='text-xl text-black text-hel-95'>{product.name}</p>
-            <p className='text-ml text-black text-hel-95'>Product Description</p>
-            <p className='text-m text-black text-hel-reg'>{product.description}</p>
-            <div className='mb-4' style={{ borderBottom: '1pt solid #979797' }} />
-            <p className='text-ml text-black text-hel-95'>Detail</p>
-            <p className='text-m text-black text-hel-reg'>{product.detail}</p>
-            <div className='mb-4' style={{ borderBottom: '1pt solid #979797' }} />
           </Col>
         </Row>
         <ModalAuth modal={this.state.modal} toggleModal={this.toggleModal} />
