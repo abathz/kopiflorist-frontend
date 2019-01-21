@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Dispatch } from 'redux'
 import querystring from 'querystring'
-import { UPDATE_COUPON_CODE, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_CHECKOUT } from './types'
+import { GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_CHECKOUT } from './types'
 
 let idAddress: number
 
@@ -13,7 +13,7 @@ export const updateDataCheckout = ({ prop, value }: any) => (dispatch: Dispatch<
 }
 
 export const getInfoMyCart = () => async (dispatch: Dispatch<any>) => {
-  const res = await axios.get('/my_cart', {
+  const res = await axios.get('/cart', {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
