@@ -7,7 +7,9 @@ interface State {
   age: number
   phone: number
   group_size: string
+  guest_list: number
   guestList: any[]
+  price: number
   allTrip: any[]
   tripDetail: any[]
   allTripPackage: any[]
@@ -25,6 +27,8 @@ const INITIAL_STATE: State = {
   age: 0,
   phone: 0,
   group_size: '',
+  price: 0,
+  guest_list: 0,
   guestList: [],
   allTrip: [],
   tripDetail: [],

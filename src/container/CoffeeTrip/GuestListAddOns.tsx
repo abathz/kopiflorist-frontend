@@ -47,10 +47,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     super(props)
 
     this.state = { form: false, alert: false }
-    this.toggleForm = this.toggleForm.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
-    this.onSaveGuestClicked = this.onSaveGuestClicked.bind(this)
-    this.onContinueToCartClicked = this.onContinueToCartClicked.bind(this)
   }
 
   componentDidMount () {
@@ -60,7 +57,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     this.props.getAllProduct()
   }
 
-  toggleForm () {
+  toggleForm = () => {
     this.setState((prevState) => ({
       form: !prevState.form
     }))
@@ -70,7 +67,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
   }
 
-  onSaveGuestClicked () {
+  onSaveGuestClicked = () => {
     const { trip } = this.props
     let data = {
       name: trip.name,
@@ -84,11 +81,11 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     this.toggleForm()
   }
 
-  onRemoveGuestClicked (id: number) {
+  onRemoveGuestClicked = (id: number) => () => {
     this.props.removeDataGuest(id)
   }
 
-  onContinueToCartClicked () {
+  onContinueToCartClicked = () => {
     const { shop, trip, allProduct, tripPackage } = this.props
     // tslint:disable-next-line:no-empty
     if (tripPackage.max_participant === 1) {
@@ -96,21 +93,22 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
       this.setState((prevState) => ({
         alert: !prevState.alert
       }))
+      return
     }
     const productAddOns = _.map(allProduct, (data: any, index: number) => {
       return {
         id: data.id,
-        quantity: shop.quantityAddOns[index]
+        quantity: shop.addOns[index].quantity
       }
     })
 
     let data = {
       trip_days_id: trip.tripDetail.trip_days_id,
-      trip_package_id: trip.group_size,
+      trip_allowed_package_id: trip.tripDetail.trip_package[tripPackage.id - 1].trip_package_id === tripPackage.id ? trip.tripDetail.trip_package[tripPackage.id - 1].id : null,
       guest_list: trip.guestList,
       productAddOns
     }
-
+    console.log(data)
     this.props.orderTrip(data)
   }
 
@@ -118,7 +116,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     const { allProduct, shop } = this.props
     let res: number = 0
 
-    let totalProductAddOns: number = _.map(allProduct, (data: any, index: number) => data.price * shop.quantityAddOns[index]).reduce((a: number, b: number) => a + b, 0)
+    let totalProductAddOns: number = _.map(allProduct, (data: any, index: number) => data.price * shop.addOns[index].quantity).reduce((a: number, b: number) => a + b, 0)
 
     res += totalProductAddOns
 
@@ -126,11 +124,11 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   totalPrice () {
-    const { tripDetail, allProduct, shop } = this.props
+    const { trip, allProduct, shop } = this.props
     let res: number = 0
-    res += tripDetail.price
+    res += trip.price
 
-    let totalPrice: number = _.map(allProduct, (data: any, index: number) => data.price * shop.quantityAddOns[index]).reduce((a: number, b: number) => a + b, 0)
+    let totalPrice: number = _.map(allProduct, (data: any, index: number) => data.price * shop.addOns[index].quantity).reduce((a: number, b: number) => a + b, 0)
     res += totalPrice
 
     return res
@@ -147,7 +145,6 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   renderFormGuest () {
-    const { trip } = this.props
     if (!this.state.form) return <div />
     return (
       <>
@@ -200,7 +197,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
         <tr key={index}>
           <td>{data.name}</td>
           <td>{data.food_preference.charAt(0).toUpperCase() + data.food_preference.slice(1)}</td>
-          <td><Button color='danger' onMouseDown={this.onRemoveGuestClicked.bind(this, index)}>Remove</Button></td>
+          <td><Button color='danger' onMouseDown={this.onRemoveGuestClicked(index)}>Remove</Button></td>
         </tr>
       )
     })
@@ -214,11 +211,12 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
         <Col key={index} xs='3'>
           <img className='img-fluid' src={data.photo} alt=''/>
           <p>{data.name}</p>
+          <p className='text-m text-hel-95'>Stock: {data.quantity}</p>
           <p>Rp {data.price}</p>
           <Row>
             <Col xs='12'>
               <div className='d-inline-block px-3 py-1 text-white decrement' onMouseDown={this.decrementQuantity.bind(this, index)}>-</div>
-              <div className='d-inline-block py-1 text-center quantity'>{shop.quantityAddOns[index]}</div>
+              <div className='d-inline-block py-1 text-center quantity'>{shop.addOns[index].quantity}</div>
               <div className='d-inline-block px-3 py-1 text-white increment' onMouseDown={this.incrementQuantity.bind(this, index)}>+</div>
             </Col>
           </Row>
@@ -227,8 +225,53 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     })
   }
 
+  renderGuestAddons () {
+    const { tripPackage, trip } = this.props
+
+    if (tripPackage.min_participant === tripPackage.max_participant) {
+      return (
+        <Col xs='7'>
+          <Row>
+            {this.renderDataProduct()}
+          </Row>
+        </Col>
+      )
+    }
+    return (
+      <Col xs='7'>
+        <Row>
+          <Col xs='3'>
+            <FormGroup>
+              <Input type='select' id='guest_list' onChange={this.onInputChange}>
+                <option defaultChecked={true}>Group Size</option>
+                {_.map(Array(tripPackage.max_participant), (data: any, index: number) => {
+                  return <option key={index} value={index + 1}>{index + 1}</option>
+                })}
+              </Input>
+            </FormGroup>
+          </Col>
+        </Row>
+        <Table>
+          <thead>
+            <tr>
+              <th>Guest Name</th>
+              <th>Preference</th>
+              <th>{''}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.renderDataGuest()}
+          </tbody>
+        </Table>
+        {this.renderFormGuest()}
+        {trip.guestList.length !== Number(trip.guest_list) ? <Button onMouseDown={this.toggleForm}>{this.state.form ? 'Cancel' : 'Add'}</Button> : ''}
+      </Col>
+    )
+  }
+
   render () {
-    const { tripDetail, tripPackage, trip } = this.props
+    const { tripDetail, tripPackage, trip, shop } = this.props
+    if (!tripDetail.trip_package[tripPackage.id - 1]) return ''
     return (
       <>
         {this.state.alert ? <Alert color='danger'>Min. {`${tripPackage.min_participant} guests`}</Alert> : ''}
@@ -238,46 +281,32 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
           </Col>
         </Row>
         <Row>
-          {tripPackage.min_participant === tripPackage.max_participant
-            ? <Col xs='7'>
-                <Row>
-                  {this.renderDataProduct()}
-                </Row>
-              </Col>
-            : <Col xs='7'>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Guest Name</th>
-                      <th>Preference</th>
-                      <th>{''}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.renderDataGuest()}
-                  </tbody>
-                </Table>
-                {this.renderFormGuest()}
-              {trip.guestList.length < tripPackage.max_participant ? <Button onMouseDown={this.toggleForm}>{this.state.form ? 'Cancel' : 'Add'}</Button> : ''}
-              </Col>
-          }
+          {this.renderGuestAddons()}
           <Col xs={{ size: 4, offset: 1 }}>
-            <span className='text-black text-hel-reg text-m'>Total Price</span><span className='float-right text-black text-os-reg text-m'>Rp {tripDetail.price}</span>
+            <span className='text-black text-hel-reg text-m'>{tripDetail.title}</span><span className='float-right text-black text-os-reg text-m'>
+              Rp {tripDetail.trip_package[tripPackage.id - 1].trip_package_id === tripPackage.id ? tripDetail.trip_package[tripPackage.id - 1].price : 0}
+            </span>
             <div className='clearfix'/>
             {this.totalAddOns() === 0 ? <div/>
             : <>
-                <span className='text-black text-hel-reg text-m'>Add-ons</span> <span className='float-right text-black text-os-reg text-m'>Rp {this.totalAddOns()}</span>
+                <p className='text-black text-hel-reg text-m mt-4 mb-0'>(Add-ons)</p>
+                {
+                  _.map(shop.addOns, (data: any, index: number) => {
+                    return (
+                      <p key={index} className='mb-1'><span className='text-black text-hel-reg text-m'>{data.name} x{data.quantity}</span><span className='float-right text-black text-os-reg text-m'>Rp {data.quantity * data.price}</span></p>
+                    )
+                  })
+                }
                 <div className='clearfix' />
               </>
             }
             <div className='my-4' style={{ borderBottom: '1px solid #ddd' }} />
             <span className='text-black text-hel-bold text-m'>Total Price</span><span className='float-right text-black text-os-reg text-l'>Rp {this.totalPrice()}</span>
             <div className='clearfix' />
-            {/* <Link route='cart'><Button className='mt-4' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button></Link> */}
             <Button className='mt-4 button-yellow' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button>
           </Col>
           {tripPackage.min_participant === tripPackage.max_participant ? ''
-            : <Col xs='7'>
+            : <Col xs='7' className='mt-5'>
                 <Row>
                   {this.renderDataProduct()}
                 </Row>

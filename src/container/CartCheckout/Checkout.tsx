@@ -145,15 +145,10 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           })
           return
         case 'jne':
-          let cartId = this.props.cartcheckout.myCart.id
-          let destination = this.props.cartcheckout.city
-
           this.setState({
-            idPickup: Number(e.target.value.split(',')[0]),
+            idPickup: Number(idPickupMethod),
             codePickup: 'jne'
           })
-
-          this.props.getDeliveryCost(cartId, Number(destination), Number(idPickupMethod))
           this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
@@ -219,21 +214,17 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     const { profile } = this.props
     let address = profile.address[index]
     let destination = address.city_id
+    let cartId = this.props.cartcheckout.myCart.id
 
     this.setState({ idActiveList: id })
-    this.setState({ codePickup: '' })
-    const node: any = ReactDOM.findDOMNode(this)
-    if (node instanceof HTMLElement) {
-      const child: any = node.querySelector('#pickup_method')
-      child.selectedIndex = 0
-    }
+    this.props.getDeliveryCost(cartId, Number(destination), this.state.idPickup)
     this.props.updateDataCheckout({ prop: 'city', value: destination })
     this.props.updateDataCheckout({ prop: 'idAddress', value: address.id })
   }
 
   dataTripCart () {
     const { dataTrip } = this.props
-    return _.map(dataTrip, (data: any, index: number) => {
+    return _.map(dataTrip.cart_trip, (data: any, index: number) => {
       let arrDate = data.trip_date.substring(0, 10).split('-')
       let date = `${arrDate[2]} ${arrMonth[Number(arrDate[1])]} ${arrDate[0]}`
       return (
@@ -243,7 +234,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             <span className='text-os-reg text-ml text-black-light'>{`${data.title} (${date} : ${data.duration_in_days} ${data.duration_in_days > 1 ? 'days' : 'day'})`}</span>
           </td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light text-center'>{data.quantity}</td>
-          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.price}</td>
+          <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.package.price}</td>
         </tr>
       )
     })
@@ -251,7 +242,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   dataProductCart () {
     const { dataProduct } = this.props
-    return _.map(dataProduct, (data: any, index: number) => {
+    return _.map(dataProduct.cart_product, (data: any, index: number) => {
       return (
         <tr key={index}>
           <td>
@@ -267,8 +258,8 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   renderTotalPrice () {
     const { dataProduct, dataTrip } = this.props
-    const totalPriceTrip = _.map(dataTrip, (data: any) => data.price).reduce((a: number, b: number) => a + b, 0)
-    const totalPriceProduct = _.map(dataProduct, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
+    const totalPriceTrip = _.map(dataTrip.cart_trip, (data: any) => data.package.price).reduce((a: number, b: number) => a + b, 0)
+    const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
     let totalPrice = totalPriceProduct + totalPriceTrip
 
     return totalPrice
@@ -334,14 +325,6 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     }
     return (
       <>
-        <ListGroup>
-          {
-            _.map(profile.address, (data: any, index: number) => {
-              return <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked.bind(this, data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
-            })
-          }
-        </ListGroup>
-        <Button className='text-s text-os-reg mt-2 mb-4 button-yellow' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
         <FormGroup>
           <Label for='pickup_method'>Pickup Method</Label>
           <Input type='select' id='pickup_method' onChange={this.onInputChange}>
@@ -349,6 +332,20 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             {this.renderDataPickupMethod()}
           </Input>
         </FormGroup>
+        {
+          this.state.codePickup === 'jne'
+            ? <>
+              <ListGroup>
+                {
+                  _.map(profile.address, (data: any, index: number) => {
+                    return <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked.bind(this, data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
+                  })
+                }
+              </ListGroup>
+              <Button className='text-s text-os-reg mt-2 mb-4 button-yellow' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
+            </>
+            : ''
+        }
         {this.renderAlertPickup()}
       </>
     )
@@ -406,21 +403,6 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           <Col xs='6'>
             {this.renderDataAddress()}
           </Col>
-          <Col xs={{ size: 5, offset: 1 }}>
-            <p>Summary</p>
-            <span className='text-black text-hel-reg text-m'>Total Price</span><span className='float-right text-black text-os-reg text-m'>Rp {this.renderTotalPrice()}</span>
-            <div className='clearfix' />
-            <span className='text-black text-hel-reg text-m'>Applied Promo</span><span className='float-right text-black text-os-reg text-m'>Rp -</span>
-            <div className='clearfix' />
-            <div className='my-4' style={{ borderBottom: '1px solid #ddd' }} />
-            <span className='text-black text-hel-bold text-m'>Total Price</span><span className='float-right text-black text-os-reg text-l'>Rp {this.renderTotalPrice()}</span>
-            <div className='clearfix' />
-            <div className='text-yellow text-s float-right' style={{ cursor: 'pointer' }} onMouseDown={this.onUseCouponClicked}>Use Coupon Code</div>
-            <div className='clearfix' />
-            <Button className='mt-4 button-yellow' block={true} onMouseDown={this.onPayClicked}>Pay</Button>
-          </Col>
-        </Row>
-        <Row className='mt-4'>
           <Col xs='6'>
             <h5>My Cart</h5>
             <Table>
@@ -438,6 +420,9 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             </Table>
             <p className='float-right text-hel-95 text-ml'>Total <span className='text-hel-reg text-l'>Rp {this.renderTotalPrice()}</span></p>
             <div className='clearfix' />
+            <div className='text-yellow text-s float-right' style={{ cursor: 'pointer' }} onMouseDown={this.onUseCouponClicked}>Use Coupon Code</div>
+            <div className='clearfix' />
+            <Button className='mt-4 button-yellow' block={true} onMouseDown={this.onPayClicked}>Pay</Button>
           </Col>
         </Row>
         {this.renderModalCoupon()}
