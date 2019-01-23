@@ -166,7 +166,7 @@ class Header extends Component<PropsComponent, StateComponent> {
                   ? <NavItem>
                       <NavLink>
                         <Link route='cart'>
-                          <p>Cart({myCart.item_count})</p>
+                          <p>Cart({myCart !== null ? myCart.item_count : 0})</p>
                         </Link>
                       </NavLink>
                     </NavItem>

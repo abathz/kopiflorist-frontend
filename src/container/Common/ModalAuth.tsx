@@ -34,13 +34,13 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
       errorMessage: ''
     }
 
-    this.onInputChange = this.onInputChange.bind(this)
-    this.onRegisterSubmit = this.onRegisterSubmit.bind(this)
-    this.onLoginSubmit = this.onLoginSubmit.bind(this)
-    this.changeModal = this.changeModal.bind(this)
+    // this.onInputChange = this.onInputChange.bind(this)
+    // this.onRegisterSubmit = this.onRegisterSubmit.bind(this)
+    // this.onLoginSubmit = this.onLoginSubmit.bind(this)
+    // this.changeModal = this.changeModal.bind(this)
   }
 
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === 'organization') {
       if (e.target.value === 'company') {
         this.setState({ organization: true })
@@ -54,10 +54,14 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
     this.props.updateDataSignUp({ prop: e.target.id, value: e.target.value })
   }
 
-  onRegisterSubmit (e: FormEvent) {
+  onRegisterSubmit = (e: FormEvent) => {
     e.preventDefault()
     const { auth } = this.props
-    if (auth.name !== '' && auth.email !== '' && auth.password !== '' && auth.phone !== 0 && auth.gender !== '' && this.state.organization && auth.company_name !== '') {
+    if (auth.name !== '' && auth.email !== '' && auth.password !== '' && auth.phone !== 0 && auth.gender !== '') {
+      if (this.state.organization && auth.company_name !== '') {
+        this.props.signUp(this.props.auth)
+        return
+      }
       this.props.signUp(this.props.auth)
       return
     }
@@ -65,10 +69,9 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
     this.setState({ errorMessage: 'Please fill all blank field' })
   }
 
-  onLoginSubmit (e: FormEvent) {
+  onLoginSubmit = (e: FormEvent) => {
     e.preventDefault()
     const { auth } = this.props
-
     if (auth.email !== '' && auth.password !== '') {
       this.props.signIn(this.props.auth)
       return
@@ -77,7 +80,7 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
     this.setState({ errorMessage: 'Please fill all blank field' })
   }
 
-  changeModal () {
+  changeModal = () => {
     this.setState((previousState) => ({
       register: !previousState.register
     }))
@@ -149,6 +152,12 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
         <>
           <ModalHeader>Sign in</ModalHeader>
           <ModalBody>
+            {this.state.errorMessage !== ''
+              ? <div className='alert alert-danger' role='alert'>
+                {this.state.errorMessage}
+              </div>
+              : <div />
+            }
             <Form onSubmit={this.onLoginSubmit}>
               <FormGroup>
                 <Label for='email'>Email</Label>
@@ -160,15 +169,16 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
               </FormGroup>
               <FormGroup className='clearfix mb-5'>
                 <Link route='#'>
-                  <a className='float-right'>Forgot Password</a>
+                  <a className='float-right text-yellow'>Forgot Password</a>
                 </Link>
               </FormGroup>
               <Button className='float-right pr-5 pl-5 button-yellow'>Sign in</Button>
             </Form>
             <div className='clearfix' />
-            <div className='float-right clearfix'>
+            <div className='float-right'>
               or <span className='text-black' onMouseDown={this.changeModal}>Sign Up</span> here
-          </div>
+            </div>
+            <div className='clearfix'/>
           </ModalBody>
         </>
       )

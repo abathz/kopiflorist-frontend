@@ -91,6 +91,8 @@ export const getTripReviews = (id: number) => async (dispatch: Dispatch<any>) =>
 }
 
 const orderTripSuccess = () => {
+  localStorage.removeItem('group_size')
+  localStorage.removeItem('price_trip')
   window.location.href = '/cart'
 }
 

@@ -40,20 +40,29 @@ interface PropsComponent extends StateProps, DispatchProps {}
 interface StateComponent {
   form: boolean
   alert: boolean
+  priceTrip: number
 }
 
 class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
-    this.state = { form: false, alert: false }
-    this.onInputChange = this.onInputChange.bind(this)
+    this.state = {
+      form: false,
+      alert: false,
+      priceTrip: 0
+    }
+    // this.onInputChange = this.onInputChange.bind(this)
   }
 
   componentDidMount () {
-    const { id, trip } = this.props
+    const { id } = this.props
+    const groupSize: string | null = localStorage.getItem('group_size')
+    const priceTrip: string | null = localStorage.getItem('price_trip')
+    this.setState({ priceTrip: Number(priceTrip) })
+
     this.props.getTrip(id)
-    this.props.getTripPackage(trip.group_size)
+    this.props.getTripPackage(Number(groupSize))
     this.props.getAllProduct()
   }
 
@@ -63,7 +72,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     }))
   }
 
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
   }
 
@@ -108,7 +117,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
       guest_list: trip.guestList,
       productAddOns
     }
-    console.log(data)
+
     this.props.orderTrip(data)
   }
 
@@ -124,9 +133,9 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   totalPrice () {
-    const { trip, allProduct, shop } = this.props
+    const { allProduct, shop } = this.props
     let res: number = 0
-    res += trip.price
+    res += this.state.priceTrip
 
     let totalPrice: number = _.map(allProduct, (data: any, index: number) => data.price * shop.addOns[index].quantity).reduce((a: number, b: number) => a + b, 0)
     res += totalPrice
@@ -270,8 +279,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   render () {
-    const { tripDetail, tripPackage, trip, shop } = this.props
-    if (!tripDetail.trip_package[tripPackage.id - 1]) return ''
+    const { tripDetail, tripPackage, shop } = this.props
     return (
       <>
         {this.state.alert ? <Alert color='danger'>Min. {`${tripPackage.min_participant} guests`}</Alert> : ''}
@@ -284,7 +292,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
           {this.renderGuestAddons()}
           <Col xs={{ size: 4, offset: 1 }}>
             <span className='text-black text-hel-reg text-m'>{tripDetail.title}</span><span className='float-right text-black text-os-reg text-m'>
-              Rp {tripDetail.trip_package[tripPackage.id - 1].trip_package_id === tripPackage.id ? tripDetail.trip_package[tripPackage.id - 1].price : 0}
+              Rp {this.state.priceTrip || 0}
             </span>
             <div className='clearfix'/>
             {this.totalAddOns() === 0 ? <div/>

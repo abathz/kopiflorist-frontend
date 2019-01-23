@@ -1,9 +1,9 @@
-import React, { Component, ChangeEvent, MouseEvent, createRef } from 'react'
+import React, { Component, ChangeEvent, createRef } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import moment from 'moment'
-import { Col, Row, FormGroup, Input, Button, Nav, NavItem, NavLink, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Table, Modal, ModalHeader, ModalBody, Form, Label } from 'reactstrap'
-import { Link, Router } from 'routes'
+import { Col, Row, FormGroup, Input, Button, Nav, NavItem, NavLink, Table, Alert } from 'reactstrap'
+import { Router } from 'routes'
 import { getTrip, updateDataTrip, getTripReviews } from 'actions/index'
 import ModalAuth from 'container/Common/ModalAuth'
 
@@ -28,6 +28,7 @@ interface StateComponent {
   modal: boolean
   mainPhoto: string
   selectedPhoto: string
+  errorMessage: string
 }
 
 const arrMonth: any = []
@@ -55,7 +56,8 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
       dropdownOpen: false,
       modal: false,
       mainPhoto: '',
-      selectedPhoto: ''
+      selectedPhoto: '',
+      errorMessage: ''
     }
 
     this.toggle = this.toggle.bind(this)
@@ -91,13 +93,18 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   }
 
   onOrderClicked () {
-    const token = localStorage.getItem('token')
+    const token: string | null = localStorage.getItem('token')
+    const isTripPackageChosen: boolean = localStorage.getItem('group_size') !== null ? true : false
     const { tripDetail } = this.props
 
     if (!token) {
       this.toggleModal()
     } else {
-      Router.pushRoute(`/coffee_trip/${tripDetail.id}/order`)
+      if (isTripPackageChosen) {
+        Router.pushRoute(`/coffee_trip/${tripDetail.id}/order`)
+      } else {
+        this.setState({ errorMessage: 'Choose group size!' })
+      }
     }
   }
 
@@ -105,8 +112,8 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     if (e.target.id === 'group_size') {
       let idTripPackage = e.target.value.split('-')[0]
       let priceTripPackage = e.target.value.split('-')[1]
-      this.props.updateDataTrip({ prop: 'group_size', value: Number(idTripPackage) })
-      this.props.updateDataTrip({ prop: 'price', value: Number(priceTripPackage) })
+      localStorage.setItem('group_size', idTripPackage)
+      localStorage.setItem('price_trip', priceTripPackage)
       return
     }
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
@@ -265,6 +272,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
             </Row>
             <Row>
               <Col xs='12'>
+                {this.state.errorMessage !== '' ? <Alert color='danger'>{this.state.errorMessage}</Alert> : ''}
                 <Button className='button-yellow' block={true} onMouseDown={this.onOrderClicked}>Order</Button>
               </Col>
             </Row>

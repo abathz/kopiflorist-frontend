@@ -1,7 +1,7 @@
 import React, { Component, ChangeEvent } from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { Col, Row, FormGroup, Input, Button } from 'reactstrap'
+import { Col, Row, FormGroup, Input, Button, Alert } from 'reactstrap'
 import { Link } from 'routes'
 import { getProduct, resetStateProduct, updateDataShop, orderProduct } from 'actions/index'
 import ModalAuth from 'container/Common/ModalAuth'
@@ -24,13 +24,18 @@ interface PropsComponent extends StateProps, DispatchProps { }
 interface StateComponent {
   quality: string
   modal: boolean
+  errorMessage: string
 }
 
 class ShopDetail extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
-    this.state = { quality: '', modal: false }
+    this.state = {
+      quality: '',
+      modal: false,
+      errorMessage: ''
+    }
     this.toggleModal = this.toggleModal.bind(this)
     this.onInputChange = this.onInputChange.bind(this)
     this.onBuyClicked = this.onBuyClicked.bind(this)
@@ -55,18 +60,22 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
   }
 
   onBuyClicked () {
-    const token = localStorage.getItem('token')
     const { product, shop } = this.props
+    const isUserNotLoggedin: boolean = localStorage.getItem('token') === null ? true : false
 
     let data = {
       id: product.id,
       quantity: shop.quantity
     }
 
-    if (!token) {
+    if (isUserNotLoggedin) {
       this.toggleModal()
     } else {
-      this.props.orderProduct(data)
+      if (shop.quantity > 0) {
+        this.props.orderProduct(data)
+      } else {
+        this.setState({ errorMessage: 'Min. order 1 quantity' })
+      }
     }
   }
 
@@ -83,7 +92,6 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { product } = this.props
-    console.log(product)
     if (!product) return ''
     return (
       <>
@@ -123,6 +131,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             </Row>
             <Row>
               <Col xs='12'>
+                {this.state.errorMessage !== '' ? <Alert color='danger'>{this.state.errorMessage}</Alert> : ''}
                 <Button block={true} className='button-yellow' onClick={this.onBuyClicked}>Buy</Button>
               </Col>
             </Row>

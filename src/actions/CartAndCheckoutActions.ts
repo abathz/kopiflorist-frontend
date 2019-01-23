@@ -13,7 +13,7 @@ export const updateDataCheckout = ({ prop, value }: any) => (dispatch: Dispatch<
 }
 
 export const getInfoMyCart = () => async (dispatch: Dispatch<any>) => {
-  const res = await axios.get('/cart', {
+  const res = await axios.get('/my_cart', {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
