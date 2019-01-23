@@ -52,6 +52,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
     const totalPriceTrip = _.map(dataTrip.cart_trip, (data: any) => data.package.price).reduce((a: number, b: number) => a + b, 0)
     const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
     let totalPrice = totalPriceProduct + totalPriceTrip
+    console.log(totalPrice)
     if (this.state.totalPrice !== totalPrice) {
       this.setState({ totalPrice })
     }
