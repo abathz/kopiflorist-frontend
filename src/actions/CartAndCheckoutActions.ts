@@ -77,6 +77,28 @@ export const createInvoice = (newData: any) => async (dispatch: Dispatch<any>) =
   window.location.href = res.data.invoice.snap_url
 }
 
+export const deleteOrderProduct = (idCartProduct: number) => async () => {
+  await axios.delete('/order_product', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    },
+    data: { cart_product_id: idCartProduct }
+  })
+
+  await deleteOrderProductSuccess()
+}
+
+export const deleteOrderTrip = (idCartTrip: number) => async () => {
+  await axios.delete('/order_trip', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    },
+    data: { cart_trip_id: idCartTrip }
+  })
+
+  await deleteOrderTripSuccess()
+}
+
 const getInfoMyCartSuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
     type: GET_INFO_MY_CART,
@@ -96,4 +118,12 @@ const getAllPickupMethodSuccess = (dispatch: Dispatch<any>, res: any) => {
     type: GET_ALL_PICKUP_METHOD,
     payload: res.data
   })
+}
+
+const deleteOrderProductSuccess = () => {
+  window.location.reload()
+}
+
+const deleteOrderTripSuccess = () => {
+  window.location.reload()
 }

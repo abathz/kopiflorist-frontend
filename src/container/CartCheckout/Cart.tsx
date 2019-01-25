@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Table, Row, Col, Button, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, Form } from 'reactstrap'
 import { Link } from 'routes'
-import { getAllCart } from 'actions/index'
+import { getAllCart, deleteOrderProduct, deleteOrderTrip } from 'actions/index'
 
 interface StateProps {
   dataProduct: any
@@ -13,6 +13,8 @@ interface StateProps {
 
 interface DispatchProps {
   getAllCart: typeof getAllCart
+  deleteOrderProduct: typeof deleteOrderProduct
+  deleteOrderTrip: typeof deleteOrderTrip
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
@@ -52,10 +54,19 @@ class Cart extends Component<PropsComponent, StateComponent> {
     const totalPriceTrip = _.map(dataTrip.cart_trip, (data: any) => data.package.price).reduce((a: number, b: number) => a + b, 0)
     const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
     let totalPrice = totalPriceProduct + totalPriceTrip
-    console.log(totalPrice)
     if (this.state.totalPrice !== totalPrice) {
       this.setState({ totalPrice })
     }
+  }
+
+  onProductCartDeleted = (idCartProduct: number) => () => {
+    console.log('​Cart -> onProductCartDeleted -> idCartProduct', idCartProduct)
+    this.props.deleteOrderProduct(idCartProduct)
+  }
+
+  onTripCartDeleted = (idCartTrip: number) => () => {
+    console.log('​Cart -> onTripCartDeleted -> idTrip', idCartTrip)
+    this.props.deleteOrderTrip(idCartTrip)
   }
 
   dataTripCart () {
@@ -72,6 +83,9 @@ class Cart extends Component<PropsComponent, StateComponent> {
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.package.price}</td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>{data.quantity}</td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.package.price}</td>
+          <td style={{ paddingTop: '30px' }}>
+            <Button color='danger' onMouseDown={this.onTripCartDeleted(data.id)}>Delete</Button>
+          </td>
         </tr>
       )
     })
@@ -89,6 +103,9 @@ class Cart extends Component<PropsComponent, StateComponent> {
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.price}</td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>{data.quantity}</td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.total_price}</td>
+          <td style={{ paddingTop: '30px' }}>
+            <Button color='danger' onMouseDown={this.onProductCartDeleted(data.id)}>Delete</Button>
+          </td>
         </tr>
       )
     })
@@ -106,7 +123,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
                   <th>Activity/Product</th>
                   <th>Price</th>
                   <th>Quantity</th>
-                  <th>Total</th>
+                  <th colSpan={2}>Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,4 +158,4 @@ const mapStateToProps = ({ cartcheckout, shop }: any) => {
   return { dataProduct, dataTrip, shop }
 }
 
-export default connect(mapStateToProps, { getAllCart })(Cart)
+export default connect(mapStateToProps, { getAllCart, deleteOrderProduct, deleteOrderTrip })(Cart)
