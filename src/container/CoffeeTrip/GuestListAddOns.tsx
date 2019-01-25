@@ -52,7 +52,6 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
       alert: false,
       priceTrip: 0
     }
-    // this.onInputChange = this.onInputChange.bind(this)
   }
 
   componentDidMount () {

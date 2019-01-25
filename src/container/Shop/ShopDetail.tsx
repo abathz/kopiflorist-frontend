@@ -36,9 +36,6 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
       modal: false,
       errorMessage: ''
     }
-    this.toggleModal = this.toggleModal.bind(this)
-    this.onInputChange = this.onInputChange.bind(this)
-    this.onBuyClicked = this.onBuyClicked.bind(this)
   }
 
   componentDidMount () {
@@ -49,17 +46,17 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
     this.props.resetStateProduct()
   }
 
-  toggleModal () {
+  toggleModal = () => {
     this.setState((prevState) => ({
       modal: !prevState.modal
     }))
   }
 
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     this.props.updateDataShop({ prop: 'quantity', value: e.target.value })
   }
 
-  onBuyClicked () {
+  onBuyClicked = () => {
     const { product, shop } = this.props
     const isUserNotLoggedin: boolean = localStorage.getItem('token') === null ? true : false
 
@@ -132,7 +129,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             <Row>
               <Col xs='12'>
                 {this.state.errorMessage !== '' ? <Alert color='danger'>{this.state.errorMessage}</Alert> : ''}
-                <Button block={true} className='button-yellow' onClick={this.onBuyClicked}>Buy</Button>
+                <Button block={true} className='button-yellow' onMouseDown={this.onBuyClicked}>Buy</Button>
               </Col>
             </Row>
           </Col>

@@ -46,9 +46,6 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
       indexAddress: 0,
       isLoading: false
     }
-
-    this.onInputChange = this.onInputChange.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
   }
 
   componentDidMount () {
@@ -57,7 +54,7 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
     this.props.getAllProvince()
   }
 
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === 'province') {
       let province: any[] = _.filter(this.props.provinces, (data: any) => {
         if (data.province_id === e.target.value) return data
@@ -78,7 +75,7 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
     this.props.updateDataProfile({ prop: e.target.id, value: e.target.value })
   }
 
-  onSubmit (e: FormEvent) {
+  onSubmit = (e: FormEvent) => {
     e.preventDefault()
     this.props.editProfile(this.props.user)
   }

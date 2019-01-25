@@ -21,25 +21,23 @@ class ListArchive extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
-    this.toggle = this.toggle.bind(this)
-    this.select = this.select.bind(this)
     this.state = {
       dropdownOpen: false,
       year: moment().format('YYYY')
     }
   }
 
-  toggle () {
+  toggle = () => {
     this.setState({
       dropdownOpen: !this.state.dropdownOpen
     })
   }
 
-  select (e: any) {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
+  select = (e: any) => {
+    this.setState(prevState => ({
+      dropdownOpen: !prevState.dropdownOpen,
       year: e.target.innerText
-    })
+    }))
   }
 
   sortMonth () {

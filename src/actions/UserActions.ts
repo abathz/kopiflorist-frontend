@@ -1,7 +1,7 @@
 import axios from 'axios'
 import querystring from 'querystring'
 import { Dispatch } from 'redux'
-import { GET_PROFILE, UPDATE_DATA_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS } from './types'
+import { GET_PROFILE, UPDATE_DATA_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS, GET_USER_TRANSACTION } from './types'
 import _ from 'lodash'
 import { logout } from './AuthActions'
 
@@ -85,6 +85,16 @@ export const editProfile = (newData: any) => async (dispatch: Dispatch<any>) => 
   await editProfileSuccess()
 }
 
+export const getUserTransaction = () => async (dispatch: Dispatch<any>) => {
+  const res = await axios.get('/my_invoices', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  await getUserTransactionSuccess(dispatch, res)
+}
+
 const getProfileSuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
     type: GET_PROFILE,
@@ -112,4 +122,11 @@ const getUserAddressSuccess = (dispatch: Dispatch<any>, res: any) => {
 
 const editProfileSuccess = () => {
   window.location.reload()
+}
+
+const getUserTransactionSuccess = (dispatch: Dispatch<any>, res: any) => {
+  dispatch({
+    type: GET_USER_TRANSACTION,
+    payload: res.data
+  })
 }

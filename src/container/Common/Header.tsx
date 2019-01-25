@@ -46,9 +46,6 @@ class Header extends Component<PropsComponent, StateComponent> {
       active: '',
       token: ''
     }
-
-    this.toggleModal = this.toggleModal.bind(this)
-    this.logout = this.logout.bind(this)
   }
 
   componentDidMount () {
@@ -63,11 +60,11 @@ class Header extends Component<PropsComponent, StateComponent> {
     }
   }
 
-  logout () {
+  logout = () => {
     this.props.logout()
   }
 
-  toggleModal () {
+  toggleModal = () => {
     this.setState({
       modal: !this.state.modal
     })

@@ -31,38 +31,33 @@ class HomeBanner extends Component<PropsComponent, StateComponent> {
         { caption: 'Slide 3' }
       ]
     }
-    this.next = this.next.bind(this)
-    this.previous = this.previous.bind(this)
-    this.goToIndex = this.goToIndex.bind(this)
-    this.onExiting = this.onExiting.bind(this)
-    this.onExited = this.onExited.bind(this)
   }
 
-  onExiting () {
+  onExiting = () => {
     this.setState({
       animating: true
     })
   }
 
-  onExited () {
+  onExited = () => {
     this.setState({
       animating: false
     })
   }
 
-  next () {
+  next = () => {
     if (this.state.animating) return
     const index = this.state.activeIndex === this.state.items.length - 1 ? 0 : this.state.activeIndex + 1
     this.setState({ activeIndex: index })
   }
 
-  previous () {
+  previous = () => {
     if (this.state.animating) return
     const index = this.state.activeIndex === 0 ? this.state.items.length - 1 : this.state.activeIndex - 1
     this.setState({ activeIndex: index })
   }
 
-  goToIndex (newIndex: number) {
+  goToIndex = (newIndex: number) => {
     if (this.state.animating) return
     this.setState({ activeIndex: newIndex })
   }

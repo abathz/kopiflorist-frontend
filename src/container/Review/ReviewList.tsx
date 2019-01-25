@@ -70,6 +70,7 @@ const ReviewItem = ({ data, isClicked, onPress, ratingChanged }: any) => (
 class ReviewList extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
+
     this.state = {
       isReviewItemClicked: false
     }

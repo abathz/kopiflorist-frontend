@@ -29,15 +29,13 @@ class ShopList extends Component<PropsComponent, StateComponent> {
     this.state = {
       activeTab: 1
     }
-
-    this.onCatClicked = this.onCatClicked.bind(this)
   }
 
   componentDidMount () {
     this.props.getAllProduct()
   }
 
-  onCatClicked (value: number) {
+  onCatClicked = (value: number) => {
     if (this.state.activeTab !== value) {
       this.setState({
         activeTab: value

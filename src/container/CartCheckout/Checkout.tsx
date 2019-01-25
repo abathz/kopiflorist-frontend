@@ -75,13 +75,6 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       idActiveList: 0,
       isFormShow: false
     }
-
-    this.onUseCouponClicked = this.onUseCouponClicked.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
-    this.onCouponSubmit = this.onCouponSubmit.bind(this)
-    this.onInputChange = this.onInputChange.bind(this)
-    this.onPayClicked = this.onPayClicked.bind(this)
-    this.onAddAddressClicked = this.onAddAddressClicked.bind(this)
   }
 
   componentDidMount () {
@@ -90,13 +83,13 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     this.props.getAllProvince()
   }
 
-  toggleModal () {
+  toggleModal = () => {
     this.setState((prevState) => ({
       modal: !prevState.modal
     }))
   }
 
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === 'province') {
       let idProvince = e.target.value
       this.setState({ codePickup: '' })
@@ -164,20 +157,20 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
   }
 
-  onUseCouponClicked () {
+  onUseCouponClicked = () => {
     this.setState((prevState) => ({
       modal: !prevState.modal
     }))
   }
 
-  onCouponSubmit (e: FormEvent) {
+  onCouponSubmit = (e: FormEvent) => {
     e.preventDefault()
     this.setState((prevState) => ({
       modal: !prevState.modal
     }))
   }
 
-  onPayClicked () {
+  onPayClicked = () => {
     const { cartcheckout } = this.props
     let data: any
     data = {
@@ -206,11 +199,11 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     this.props.createInvoice(data)
   }
 
-  onAddAddressClicked () {
+  onAddAddressClicked = () => {
     this.setState(prevState => ({ isFormShow: !prevState.isFormShow }))
   }
 
-  onAddressClicked (id: number, index: number) {
+  onAddressClicked = (id: number, index: number) => () => {
     const { profile } = this.props
     let address = profile.address[index]
     let destination = address.city_id
@@ -338,7 +331,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
               <ListGroup>
                 {
                   _.map(profile.address, (data: any, index: number) => {
-                    return <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked.bind(this, data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
+                    return <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked(data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
                   })
                 }
               </ListGroup>

@@ -59,12 +59,6 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
       selectedPhoto: '',
       errorMessage: ''
     }
-
-    this.toggle = this.toggle.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
-    this.onOrderClicked = this.onOrderClicked.bind(this)
-    this.onInputChange = this.onInputChange.bind(this)
-    this.changeInitialPhoto = this.changeInitialPhoto.bind(this)
   }
 
   componentDidMount () {
@@ -72,19 +66,19 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     this.props.getTripReviews(this.props.id)
   }
 
-  toggle () {
+  toggleDropdown = () => {
     this.setState((prevState) => ({
       dropdownOpen: !prevState.dropdownOpen
     }))
   }
 
-  toggleModal () {
+  toggleModal = () => {
     this.setState((prevState) => ({
       modal: !prevState.modal
     }))
   }
 
-  onDetailsTripClicked (value: number) {
+  onDetailsTripClicked = (value: number) => {
     if (this.state.activeTab !== value) {
       this.setState({
         activeTab: value
@@ -92,7 +86,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     }
   }
 
-  onOrderClicked () {
+  onOrderClicked = () => {
     const token: string | null = localStorage.getItem('token')
     const isTripPackageChosen: boolean = localStorage.getItem('group_size') !== null ? true : false
     const { tripDetail } = this.props
@@ -108,7 +102,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     }
   }
 
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === 'group_size') {
       let idTripPackage = e.target.value.split('-')[0]
       let priceTripPackage = e.target.value.split('-')[1]
@@ -119,7 +113,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
   }
 
-  changeInitialPhoto (e: any) {
+  changeInitialPhoto = (e: any) => {
     let img: any = this.img.current.currentSrc
     this.props.updateDataTrip({ prop: `main_photo`, value: e.target.src })
     this.props.updateDataTrip({ prop: `other_photo`, value: { id: e.target.id, img } })

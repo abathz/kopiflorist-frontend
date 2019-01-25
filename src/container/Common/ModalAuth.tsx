@@ -33,11 +33,6 @@ class ModalAuth extends Component<PropsComponent, StateComponent> {
       organization: false,
       errorMessage: ''
     }
-
-    // this.onInputChange = this.onInputChange.bind(this)
-    // this.onRegisterSubmit = this.onRegisterSubmit.bind(this)
-    // this.onLoginSubmit = this.onLoginSubmit.bind(this)
-    // this.changeModal = this.changeModal.bind(this)
   }
 
   onInputChange = (e: ChangeEvent<HTMLInputElement>) => {

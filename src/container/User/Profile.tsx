@@ -43,10 +43,6 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
       isFormShow: false,
       active: ''
     }
-
-    this.onInputChange = this.onInputChange.bind(this)
-    this.onAddAddressClicked = this.onAddAddressClicked.bind(this)
-    this.onAddressSubmit = this.onAddressSubmit.bind(this)
   }
 
   componentDidMount () {
@@ -55,7 +51,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
     this.props.getUserAddresses()
   }
 
-  onInputChange (e: ChangeEvent<HTMLInputElement>) {
+  onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === 'province') {
       let province: any[] = _.filter(this.props.provinces, (data: any) => {
         if (data.province_id === e.target.value) return data
@@ -75,12 +71,12 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
     }
   }
 
-  onAddAddressClicked () {
+  onAddAddressClicked = () => {
     this.setState(prevState => ({ isFormShow: !prevState.isFormShow }))
     this.props.getAllProvince()
   }
 
-  onAddressSubmit (e: FormEvent) {
+  onAddressSubmit = (e: FormEvent) => {
     e.preventDefault()
 
     let { user } = this.props
@@ -149,7 +145,6 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { profile } = this.props
-    if (!profile) return ''
     return (
       <>
         <Row>
@@ -164,7 +159,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
           <Col xs='3'>
             <ul className='list-profile'>
               <Link route='profile'><li className={this.state.active.includes('/profile') ? 'text-yellow' : ''}>Account</li></Link>
-              <li>Order History</li>
+              <Link route='orderhistory'><li className={this.state.active.includes('/order_history') ? 'text-yellow' : ''}>Order History</li></Link>
             </ul>
           </Col>
           <Col xs='5'>

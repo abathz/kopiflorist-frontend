@@ -190,7 +190,7 @@ function (_App) {
 /*!******************************!*\
   !*** ./src/actions/types.ts ***!
   \******************************/
-/*! exports provided: UPDATE_DATA_SIGNUP, SIGNUP_FAILED, UPDATE_DATA_SHOP, GET_ALL_PRODUCT, GET_PRODUCT, RESET_STATE_PRODUCT, UPDATE_DATA_PROFILE, GET_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS, GET_ALL_BLOG, GET_BLOG, UPDATE_DATA_CHECKOUT, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_TRIP, ADD_DATA_GUEST, REMOVE_DATA_GUEST, GET_ALL_TRIP_PACKAGE, GET_TRIP_PACKAGE, GET_ALL_TRIP, GET_TRIP, INCREMENT_QUANTITY, DECREMENT_QUANTITY, RESET_STATE_RAJAONGKIR_ALL, RESET_STATE_RAJAONGKIR_COST, GET_ALL_PROVINCES, GET_ALL_CITIES, GET_DEIVERY_COST, GET_TRIP_REVIEWS, GET_USER_REVIEWS */
+/*! exports provided: UPDATE_DATA_SIGNUP, SIGNUP_FAILED, UPDATE_DATA_SHOP, GET_ALL_PRODUCT, GET_PRODUCT, RESET_STATE_PRODUCT, UPDATE_DATA_PROFILE, GET_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS, GET_USER_TRANSACTION, GET_ALL_BLOG, GET_BLOG, UPDATE_DATA_CHECKOUT, GET_ALL_CART, GET_INFO_MY_CART, GET_ALL_PICKUP_METHOD, UPDATE_DATA_TRIP, ADD_DATA_GUEST, REMOVE_DATA_GUEST, GET_ALL_TRIP_PACKAGE, GET_TRIP_PACKAGE, GET_ALL_TRIP, GET_TRIP, INCREMENT_QUANTITY, DECREMENT_QUANTITY, RESET_STATE_RAJAONGKIR_ALL, RESET_STATE_RAJAONGKIR_COST, GET_ALL_PROVINCES, GET_ALL_CITIES, GET_DEIVERY_COST, GET_TRIP_REVIEWS, GET_USER_REVIEWS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -205,6 +205,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_PROFILE", function() { return GET_PROFILE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_USER_ADDRESSES", function() { return GET_USER_ADDRESSES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_USER_ADDRESS", function() { return GET_USER_ADDRESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_USER_TRANSACTION", function() { return GET_USER_TRANSACTION; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_ALL_BLOG", function() { return GET_ALL_BLOG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GET_BLOG", function() { return GET_BLOG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UPDATE_DATA_CHECKOUT", function() { return UPDATE_DATA_CHECKOUT; });
@@ -243,7 +244,8 @@ var RESET_STATE_PRODUCT = 'RESET_STATE_PRODUCT'; // PROFILE
 var UPDATE_DATA_PROFILE = 'UPDATE_DATA_PROFILE';
 var GET_PROFILE = 'GET_PROFILE';
 var GET_USER_ADDRESSES = 'GET_USER_ADDRESSES';
-var GET_USER_ADDRESS = 'GET_USER_ADDRESS'; // BLOG
+var GET_USER_ADDRESS = 'GET_USER_ADDRESS';
+var GET_USER_TRANSACTION = 'GET_USER_TRANSACTION'; // BLOG
 
 var GET_ALL_BLOG = 'GET_ALL_BLOG';
 var GET_BLOG = 'GET_BLOG'; // CART & CHECKOUT
@@ -739,7 +741,8 @@ var INITIAL_STATE = {
   city_id: 0,
   province_id: 0,
   userAddresses: [],
-  editedUserAddress: []
+  editedUserAddress: [],
+  userTransaction: []
 };
 /* harmony default export */ __webpack_exports__["default"] = (function () {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
@@ -798,6 +801,11 @@ var INITIAL_STATE = {
         postal_code: action.payload.address.postal_code,
         city_id: action.payload.address.city_id,
         province_id: action.payload.address.province_id
+      });
+
+    case actions_types__WEBPACK_IMPORTED_MODULE_1__["GET_USER_TRANSACTION"]:
+      return _objectSpread({}, state, {
+        userTransaction: action.payload.invoices
       });
 
     default:
