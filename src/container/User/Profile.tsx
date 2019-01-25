@@ -32,13 +32,17 @@ interface PropsComponent extends StateProps, DispatchProps {}
 
 interface StateComponent {
   isFormShow: boolean
+  active: string
 }
 
 class MyAccount extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
-    this.state = { isFormShow: false }
+    this.state = {
+      isFormShow: false,
+      active: ''
+    }
 
     this.onInputChange = this.onInputChange.bind(this)
     this.onAddAddressClicked = this.onAddAddressClicked.bind(this)
@@ -46,6 +50,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
   }
 
   componentDidMount () {
+    this.setState({ active: window.location.pathname })
     this.props.getProfile()
     this.props.getUserAddresses()
   }
@@ -158,7 +163,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
         <Row>
           <Col xs='3'>
             <ul className='list-profile'>
-              <li>Account</li>
+              <Link route='profile'><li className={this.state.active.includes('/profile') ? 'text-yellow' : ''}>Account</li></Link>
               <li>Order History</li>
             </ul>
           </Col>

@@ -60,12 +60,10 @@ class Cart extends Component<PropsComponent, StateComponent> {
   }
 
   onProductCartDeleted = (idCartProduct: number) => () => {
-    console.log('​Cart -> onProductCartDeleted -> idCartProduct', idCartProduct)
     this.props.deleteOrderProduct(idCartProduct)
   }
 
   onTripCartDeleted = (idCartTrip: number) => () => {
-    console.log('​Cart -> onTripCartDeleted -> idTrip', idCartTrip)
     this.props.deleteOrderTrip(idCartTrip)
   }
 
