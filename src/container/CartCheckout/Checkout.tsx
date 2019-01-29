@@ -276,8 +276,29 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     )
   }
 
+  listUserAddress () {
+    const { profile } = this.props
+    if (this.state.codePickup === 'jne') {
+      return (
+        <>
+          <ListGroup>
+            {_.map(profile.address, (data: any, index: number) => {
+              return (
+                <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked(data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>
+                  {`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}
+                </ListGroupItem>
+              )
+            })}
+          </ListGroup>
+          <Button className='text-s text-os-reg mt-2 mb-4 button-yellow' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
+        </>
+      )
+    }
+    return <div/>
+  }
+
   renderDataAddress () {
-    const { profile, cartcheckout } = this.props
+    const { profile } = this.props
     if (!profile.address) return <div/>
     if (profile.address.length === 0 || this.state.isFormShow) {
       return (
@@ -325,20 +346,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             {this.renderDataPickupMethod()}
           </Input>
         </FormGroup>
-        {
-          this.state.codePickup === 'jne'
-            ? <>
-              <ListGroup>
-                {
-                  _.map(profile.address, (data: any, index: number) => {
-                    return <ListGroupItem key={index} value={data.id} active={this.state.idActiveList === data.id} onMouseDown={this.onAddressClicked(data.id, index)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
-                  })
-                }
-              </ListGroup>
-              <Button className='text-s text-os-reg mt-2 mb-4 button-yellow' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
-            </>
-            : ''
-        }
+        {this.listUserAddress()}
         {this.renderAlertPickup()}
       </>
     )
@@ -386,7 +394,6 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   render () {
-    const { cartcheckout } = this.props
     return (
       <>
         <Row>

@@ -108,6 +108,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
       let priceTripPackage = e.target.value.split('-')[1]
       localStorage.setItem('group_size', idTripPackage)
       localStorage.setItem('price_trip', priceTripPackage)
+      this.props.updateDataTrip({ prop: 'price', value: priceTripPackage })
       return
     }
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })

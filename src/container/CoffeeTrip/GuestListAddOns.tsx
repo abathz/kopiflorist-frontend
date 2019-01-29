@@ -252,8 +252,9 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
             <FormGroup>
               <Input type='select' id='guest_list' onChange={this.onInputChange}>
                 <option defaultChecked={true}>Group Size</option>
-                {_.map(Array(tripPackage.max_participant), (data: any, index: number) => {
-                  return <option key={index} value={index + 1}>{index + 1}</option>
+                {_.map(Array((tripPackage.max_participant - tripPackage.min_participant) + 1), (data: any, index: number) => {
+                  let size = index + tripPackage.min_participant
+                  return <option key={index} value={size}>{size}</option>
                 })}
               </Input>
             </FormGroup>
