@@ -41,9 +41,9 @@ class PaymentMidtrans extends Component<PropsComponent, StateComponent> {
     if (query.transaction_status === 'capture' || query.transaction_status === 'settlement') {
       return <Alert color='success'>Thank You</Alert>
     } else if (query.transaction_status === 'pending') {
-      return <Alert color='success'>Proceed payment as instructed</Alert>
+      return <Alert color='info'>Proceed payment as instructed</Alert>
     } else if (query.transaction_status === 'deny') {
-      return <Alert color='success'>We could not receive your payment</Alert>
+      return <Alert color='danger'>We could not receive your payment</Alert>
     }
   }
 
