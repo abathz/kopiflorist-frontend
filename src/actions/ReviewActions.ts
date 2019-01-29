@@ -9,7 +9,7 @@ export const getUserReviews = () => async (dispatch: Dispatch<any>) => {
     }
   })
 
-  getUserReviewsSuccess(dispatch, res)
+  await getUserReviewsSuccess(dispatch, res)
 }
 
 const getUserReviewsSuccess = (dispatch: Dispatch<any>, res: any) => {

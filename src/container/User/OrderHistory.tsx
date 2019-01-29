@@ -24,9 +24,7 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
 
-    this.state = {
-      active: ''
-    }
+    this.state = { active: '' }
   }
 
   componentDidMount () {

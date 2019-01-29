@@ -97,7 +97,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     const { shop, trip, allProduct, tripPackage } = this.props
     // tslint:disable-next-line:no-empty
     if (tripPackage.max_participant === 1) {
-    } else {
+    } else if (tripPackage.min_participant < trip.guestList.length) {
       this.setState((prevState) => ({
         alert: !prevState.alert
       }))
