@@ -97,7 +97,15 @@ footer {
   height: 84px;
   transition: height .5s ease-out;
   &.review-item-active {
-    height: 200px;
+    height: 250px;
+  }
+}
+
+.review-input {
+  opacity: 0;
+  transition: opacity 1.5s ease-out;
+  &.review-input-active {
+    opacity: 1;
   }
 }
 

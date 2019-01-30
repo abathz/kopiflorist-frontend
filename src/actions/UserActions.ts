@@ -21,8 +21,8 @@ export const getProfile = () => async (dispatch: Dispatch<any>) => {
     })
     await getProfileSuccess(dispatch, res)
   } catch (err) {
-    if (err.response.status === 401) {
-      dispatch(logout())
+    if (err && err.response.status === 401) {
+      await logout()
     }
   }
 }
