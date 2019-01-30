@@ -12,6 +12,7 @@ interface State {
   city: number
   service: string
   idAddress: number
+  priceService: number
 }
 
 const INITIAL_STATE: State = {
@@ -25,7 +26,8 @@ const INITIAL_STATE: State = {
   postal_code: '',
   city: 0,
   service: '',
-  idAddress: 0
+  idAddress: 0,
+  priceService: 0
 }
 
 export default (state = INITIAL_STATE, action: Action) => {

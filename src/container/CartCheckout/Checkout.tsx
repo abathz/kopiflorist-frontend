@@ -24,6 +24,7 @@ interface StateProps {
   cities: any
   cartcheckout: any
   deliveryCost: any
+  myCart: any
 }
 
 interface DispatchProps {
@@ -44,6 +45,8 @@ interface StateComponent {
   modal: boolean
   messageAlert: string
   codePickup: string
+  pickupMethodSelected: boolean
+  addressSelected: boolean,
   idPickup: number
   idActiveList: number
   isFormShow: boolean
@@ -71,6 +74,8 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       modal: false,
       messageAlert: '',
       codePickup: '',
+      pickupMethodSelected: false,
+      addressSelected: false,
       idPickup: 0,
       idActiveList: 0,
       isFormShow: false
@@ -128,29 +133,36 @@ class Checkout extends Component<PropsComponent, StateComponent> {
         case 'gojek':
           this.setState({
             codePickup: 'gojek',
+            pickupMethodSelected: true,
             messageAlert: 'Biaya antar ditanggung oleh customer'
           })
           return
         case 'dakota':
           this.setState({
             codePickup: 'dakota',
+            pickupMethodSelected: true,
             messageAlert: 'Untuk pengiriman via DAKOTA harap hubungi +62 813-1375-5587 via Whatsapp'
           })
           return
         case 'jne':
           this.setState({
-            idPickup: Number(idPickupMethod),
-            codePickup: 'jne'
+            codePickup: 'jne',
+            pickupMethodSelected: true,
+            idPickup: Number(idPickupMethod)
           })
           this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
+          this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
           return ''
       }
     }
 
-    if (e.target.id === 'postal_code') {
-      this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
+    if (e.target.id === 'service') {
+      let serviceName = e.target.value.split('-')[0]
+      let priceService = e.target.value.split('-')[1]
+      this.props.updateDataCheckout({ prop: 'service', value: serviceName })
+      this.props.updateDataCheckout({ prop: 'priceService', value: Number(priceService) })
       return
     }
 
@@ -209,7 +221,10 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     let destination = address.city_id
     let cartId = this.props.cartcheckout.myCart.id
 
-    this.setState({ idActiveList: id })
+    this.setState({
+      idActiveList: id,
+      addressSelected: true
+    })
     this.props.getDeliveryCost(cartId, Number(destination), this.state.idPickup)
     this.props.updateDataCheckout({ prop: 'city', value: destination })
     this.props.updateDataCheckout({ prop: 'idAddress', value: address.id })
@@ -250,10 +265,10 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderTotalPrice () {
-    const { dataProduct, dataTrip } = this.props
+    const { dataProduct, dataTrip, cartcheckout } = this.props
     const totalPriceTrip = _.map(dataTrip.cart_trip, (data: any) => data.package.price).reduce((a: number, b: number) => a + b, 0)
     const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
-    let totalPrice = totalPriceProduct + totalPriceTrip
+    let totalPrice = totalPriceProduct + totalPriceTrip + cartcheckout.priceService
 
     return totalPrice
   }
@@ -278,7 +293,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   listUserAddress () {
     const { profile } = this.props
-    if (this.state.codePickup === 'jne') {
+    if (this.state.pickupMethodSelected) {
       return (
         <>
           <ListGroup>
@@ -311,14 +326,14 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           <FormGroup>
             <Label for='province'>Province</Label>
             <Input type='select' id='province' onChange={this.onInputChange}>
-              <option defaultChecked={true}>{}</option>
+              <option defaultChecked={true}/>
               {this.renderProvinces()}
             </Input>
           </FormGroup>
           <FormGroup>
             <Label for='city'>City</Label>
             <Input type='select' id='city' onChange={this.onInputChange}>
-              <option defaultChecked={true}>{}</option>
+              <option defaultChecked={true}/>
               {this.renderCities()}
             </Input>
           </FormGroup>
@@ -353,7 +368,17 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderDataPickupMethod () {
-    const { allPickupMethod } = this.props
+    const { allPickupMethod, myCart } = this.props
+    if (myCart.self_pickup_enabled) {
+      return (
+        <>
+          <option value='self_pickup'>Ambil ditempat</option>
+          {_.map(allPickupMethod, (data: any, index: number) => {
+            return <option key={index} value={`${data.id},${data.code}`}>{data.pickup_method_name}</option>
+          })}
+        </>
+      )
+    }
     return _.map(allPickupMethod, (data: any, index: number) => {
       return <option key={index} value={`${data.id},${data.code}`}>{data.pickup_method_name}</option>
     })
@@ -374,26 +399,35 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderAlertPickup () {
+    const { deliveryCost } = this.props
     if (this.state.codePickup === 'dakota' || this.state.codePickup === 'gojek') {
       return <Alert color='info'>{this.state.messageAlert}</Alert>
-    } else if (this.state.codePickup === 'jne') {
+    } else if (this.state.codePickup === 'jne' && this.state.addressSelected) {
+      if (deliveryCost === null) return <p>Loading...</p>
       return (
         <FormGroup>
           <Label for='service'>Service</Label>
           <Input type='select' id='service' onChange={this.onInputChange}>
             <option defaultChecked={true}>Choose Service</option>
             {_.map(this.props.deliveryCost.costs, (data: any, index: number) => {
-              return <option key={index} value={data.service}>{data.service}</option>
+              let minEstimateDeliveryDay = data.cost[0].etd.split('-')[0]
+              let maxEstimateDeliveryDay = data.cost[0].etd.split('-')[1]
+              if (minEstimateDeliveryDay === maxEstimateDeliveryDay) {
+                return <option key={index} value={`${data.service}-${data.cost[0].value}`}>{data.service} (One Day)</option>
+              }
+              return <option key={index} value={`${data.service}-${data.cost[0].value}`}>{data.service} ({`${minEstimateDeliveryDay}-${maxEstimateDeliveryDay} days`})</option>
             })}
           </Input>
         </FormGroup>
       )
-    } else {
-      return <div/>
     }
+
+    return <div />
   }
 
   render () {
+    const { cartcheckout } = this.props
+    console.log(cartcheckout)
     return (
       <>
         <Row>
@@ -418,6 +452,12 @@ class Checkout extends Component<PropsComponent, StateComponent> {
                 {this.dataProductCart()}
               </tbody>
             </Table>
+            {
+              cartcheckout.priceService !== 0
+                ? <p className='float-right text-hel-95 text-ml'>Biaya Pengiriman <span className='text-hel-reg text-l'>Rp {cartcheckout.priceService}</span></p>
+                : <div/>
+            }
+            <div className='clearfix' />
             <p className='float-right text-hel-95 text-ml'>Total <span className='text-hel-reg text-l'>Rp {this.renderTotalPrice()}</span></p>
             <div className='clearfix' />
             <div className='text-yellow text-s float-right' style={{ cursor: 'pointer' }} onMouseDown={this.onUseCouponClicked}>Use Coupon Code</div>
@@ -433,7 +473,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
 const mapStateToProps = ({ user, cartcheckout, rajaongkir }: any) => {
   const { profile } = user
-  const { allPickupMethod, dataProduct, dataTrip } = cartcheckout
+  const { allPickupMethod, dataProduct, dataTrip, myCart } = cartcheckout
   const { provinces, cities, deliveryCost } = rajaongkir
 
   return {
@@ -444,7 +484,8 @@ const mapStateToProps = ({ user, cartcheckout, rajaongkir }: any) => {
     provinces,
     cities,
     cartcheckout,
-    deliveryCost
+    deliveryCost,
+    myCart
   }
 }
 

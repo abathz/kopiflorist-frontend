@@ -9,7 +9,7 @@ interface State {
 const INITIAL_STATE: State = {
   provinces: [],
   cities: [],
-  deliveryCost: []
+  deliveryCost: null
 }
 
 export default (state= INITIAL_STATE, action: Action) => {
