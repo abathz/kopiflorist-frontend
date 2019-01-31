@@ -89,6 +89,17 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
     this.props.createAddress(data)
   }
 
+  listUserAddress () {
+    const { profile } = this.props
+    return _.map(profile.address, (data: any, index: number) => {
+      return (
+        <>
+          <ListGroupItem key={index} className='text-ml text-os-reg text-black-light'>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
+        </>
+      )
+    })
+  }
+
   renderProvinces () {
     const { provinces } = this.props
     return _.map(provinces, (data: any) => {
@@ -171,11 +182,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
             <p className='text-ml text-os-reg text-black-light'>{profile.phone}</p>
             <span className='text-m text-hel-reg'>Address</span>
             <ListGroup>
-              {
-                _.map(profile.address, (data: any, index: number) => {
-                  return <ListGroupItem key={index} className='text-ml text-os-reg text-black-light'>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
-                })
-              }
+              {this.listUserAddress()}
             </ListGroup>
             <Button className='text-s text-os-reg mt-2 button-yellow' onMouseDown={this.onAddAddressClicked}>{this.state.isFormShow ? 'Cancel' : '+ Add Address'}</Button>
             {this.state.isFormShow ? this.renderFormAddress() : <div/>}
