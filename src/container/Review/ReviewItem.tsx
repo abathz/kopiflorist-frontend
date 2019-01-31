@@ -73,7 +73,7 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
                     className='float-right'
                     style={{ marginTop: '-1px' }}
                     count={5}
-                    value={ratingReview || data.review.rating}
+                    value={data.review === null ? ratingReview : data.review.rating}
                     edit={data.review === null}
                     size={18}
                     color2={'#ffd700'}
@@ -83,6 +83,7 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
                 </div>
                 <div className='clearfix' />
                 <span className='text-s text-black'>{data.date}</span>
+                {data.review !== null ? <span className='text-s text-black-light mt-1'><em>"{data.review.message}"</em></span> : ''}
               </Col>
               <Col xs='2' className='d-flex align-items-center justify-content-center'>
                 {data.review === null ? <Button className='button-yellow' block={true} size='sm' onMouseDown={this.onReviewItemClicked(data)}>Review</Button> : <p className='text-yellow' style={{ margin: '0px' }}>Reviewed</p>}

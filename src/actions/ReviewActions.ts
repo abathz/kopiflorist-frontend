@@ -18,13 +18,13 @@ export const createReview = (data: any) => async (dispatch: Dispatch<any>) => {
     rating: data.rating
   }
 
-  const res = await axios.post(`/trip/${id}/reviews`, querystring.stringify(newData), {
+  await axios.post(`/trip/${id}/reviews`, querystring.stringify(newData), {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
   })
 
-  console.log(res)
+  await createReviewSuccess()
 }
 
 export const getUserReviews = () => async (dispatch: Dispatch<any>) => {
@@ -35,6 +35,10 @@ export const getUserReviews = () => async (dispatch: Dispatch<any>) => {
   })
 
   await getUserReviewsSuccess(dispatch, res)
+}
+
+const createReviewSuccess = () => {
+  window.location.reload()
 }
 
 const getUserReviewsSuccess = (dispatch: Dispatch<any>, res: any) => {
