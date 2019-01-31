@@ -1,7 +1,7 @@
 import axios from 'axios'
 const isDev = process.env.NODE_ENV !== 'production'
 
-axios.defaults.baseURL = isDev ? 'https://localhost:1337/api' : 'https://api.kopiflorist.id/api'
+axios.defaults.baseURL = 'https://api.kopiflorist.id/api'
 
 export interface Action {
   type: string,
