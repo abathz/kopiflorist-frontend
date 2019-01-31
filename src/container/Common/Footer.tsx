@@ -10,40 +10,40 @@ class Footer extends Component<{},{}> {
         <Row>
           <Col xs='4'>
             <ul className='list-footer'>
-              <Link route='/about'>
-                <li>About</li>
-              </Link>
-              <Link route='/coffeetrip'>
-                <li>Coffee Trip</li>
-              </Link>
-              <Link route='/shop'>
-                <li>Shop</li>
-              </Link>
-              <Link route='/blog'>
-                <li>Blog</li>
-              </Link>
-              <Link route='/howtoorder'>
-                <li>How To Order</li>
-              </Link>
+              <li><Link route='/about'><a>About</a></Link></li>
+              <li><Link route='/coffeetrip'><a>Coffee Trip</a></Link></li>
+              <li><Link route='/shop'><a>Shop</a></Link></li>
+              <li><Link route='/blog'><a>Blog</a></Link></li>
+              <li><Link route='/howtoorder'><a>How To Order</a></Link></li>
             </ul>
           </Col>
           <Col xs='4'>
             <h4 className='text-white'>Our Address</h4>
-            <p className='text-os-reg text-white text-m'>Jl. Gamelan No.6a, RW.09<br/>
-              Turangga, Lengkong<br/>
-              Kota Bandung, Jawa Barat 40264</p>
+            <h6 className='text-white'>Workshop</h6>
+            <p className='text-os-reg text-white text-m'>
+              Jl. Gamelan No.6a, RW.09<br />
+              Turangga, Lengkong<br />
+              Kota Bandung, Jawa Barat 40264
+            </p>
+            <h6 className='text-white'>Coffee Shop</h6>
+            <p className='text-os-reg text-white text-m'>
+              Pasar Bunga Tega Lega Kav. 6<br/>
+              Jl. Moch. Toha No.79<br/>
+              Ciateul, Regol<br/>
+              Kota Bandung, Jawa Barat 40252
+            </p>
           </Col>
           <Col xs='4'>
             <Row className='mb-3'>
-              <Col xs='2'>
-                <a href='https://www.instagram.com/kopi_florist/' target='_blank'><img className='img-fluid' src={`/static/img/instagram.png`} /></a>
+              <Col xs='6'>
+                <a href='https://www.instagram.com/kopi_florist/' target='_blank'><img className='img-fluid' src={`/static/img/instagram.png`} style={{ width: '35px' }} /><span className='text-os-reg text-white text-m ml-2'>kopi_florist</span></a>
               </Col>
-              <Col xs='2'>
+              {/* <Col xs='2'>
                 <a href='#'><img className='img-fluid' src={`/static/img/facebook.png`} /></a>
               </Col>
               <Col xs='2'>
                 <a href='https://twitter.com/kopi_florist' target='_blank'><img className='img-fluid' src={`/static/img/twitter.png`} /></a>
-              </Col>
+              </Col> */}
             </Row>
             <Row>
               <Col xs='12'>

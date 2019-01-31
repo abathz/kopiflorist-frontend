@@ -185,9 +185,11 @@ footer {
 
 .list-footer li{
   @extend %list-custom;
-  color: #fff;
-  font-family: $hel-bold;
-  padding-bottom: 13.5px;
+  margin-bottom: 13.5px;
+  & a {
+    color: #fff;
+    font-family: $hel-bold;
+  }
 }
 
 .list-archive {
