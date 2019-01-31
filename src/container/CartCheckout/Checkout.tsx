@@ -313,7 +313,8 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderDataAddress () {
-    const { profile } = this.props
+    const { profile, dataProduct, myCart } = this.props
+    if (dataProduct.cart_product && dataProduct.cart_product.length === 0) return <div/>
     if (!profile.address) return <div/>
     if (profile.address.length === 0 || this.state.isFormShow) {
       return (
