@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, Table } from 'reactstrap'
 import { Link } from 'routes'
-import { getUserTransaction } from 'actions/index'
+import { getUserInvoices } from 'actions'
 import _ from 'lodash'
 import moment from 'moment'
 
 interface StateProps {
-  userTransaction: any[]
+  userInvoice: any[]
 }
 
 interface DispatchProps {
-  getUserTransaction: typeof getUserTransaction
+  getUserInvoices: typeof getUserInvoices
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
@@ -30,12 +30,12 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
   componentDidMount () {
     this.setState({ active: window.location.pathname })
 
-    this.props.getUserTransaction()
+    this.props.getUserInvoices()
   }
 
   renderDataTable () {
-    const { userTransaction } = this.props
-    return _.map(userTransaction, (data: any, index: number) => {
+    const { userInvoice } = this.props
+    return _.map(userInvoice, (data: any, index: number) => {
       const date = moment(data.updatedAt).format('DD MMMM YYYY')
       const time = moment(data.updatedAt).format('HH:MM')
       return (
@@ -86,9 +86,9 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
 }
 
 const mapStateToProps = ({ user }: any) => {
-  const { userTransaction } = user
+  const { userInvoice } = user
 
-  return { userTransaction }
+  return { userInvoice }
 }
 
-export default connect(mapStateToProps, { getUserTransaction })(OrderHistory)
+export default connect(mapStateToProps, { getUserInvoices })(OrderHistory)

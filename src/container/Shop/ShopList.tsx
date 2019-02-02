@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Col, Row, Nav, NavItem, NavLink } from 'reactstrap'
 import { Link } from 'routes'
-import { getAllProduct } from 'actions/index'
+import { getAllProduct } from 'actions'
 
 interface StateProps {
   size?: number

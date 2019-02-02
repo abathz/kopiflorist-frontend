@@ -13,7 +13,7 @@ import {
   getDeliveryCost,
   resetData,
   createInvoice
-} from 'actions/index'
+} from 'actions'
 import moment from 'moment'
 
 interface StateProps {

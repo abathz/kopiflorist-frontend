@@ -4,7 +4,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import { Col, Row } from 'reactstrap'
 import { Link } from 'routes'
-import { getAllTrip } from 'actions/index'
+import { getAllTrip } from 'actions'
 
 interface StateProps {
   size?: number

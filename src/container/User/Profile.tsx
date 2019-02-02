@@ -3,14 +3,7 @@ import { connect } from 'react-redux'
 import { Row, Col, Button, ListGroup, ListGroupItem, Form, FormGroup, Label, Input } from 'reactstrap'
 import _ from 'lodash'
 import { Link } from 'routes'
-import {
-  getProfile,
-  getUserAddresses,
-  getAllProvince,
-  getAllCities,
-  updateDataProfile,
-  createAddress
-} from 'actions/index'
+import { getProfile, getUserAddresses, getAllProvince, getAllCities, updateDataProfile, createAddress } from 'actions'
 
 interface StateProps {
   user: any
@@ -92,11 +85,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
   listUserAddress () {
     const { profile } = this.props
     return _.map(profile.address, (data: any, index: number) => {
-      return (
-        <>
-          <ListGroupItem key={index} className='text-ml text-os-reg text-black-light'>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
-        </>
-      )
+      return <ListGroupItem key={index} className='text-ml text-os-reg text-black-light'>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
     })
   }
 

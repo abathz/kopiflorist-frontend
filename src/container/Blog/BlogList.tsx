@@ -11,7 +11,7 @@ import {
 } from 'reactstrap'
 import { Link } from 'routes'
 import ListArchive from 'container/Blog/ListArchive'
-import { getAllBlog } from 'actions/index'
+import { getAllBlog } from 'actions'
 import moment from 'moment'
 
 interface StateProps {

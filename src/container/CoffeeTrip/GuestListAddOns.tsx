@@ -12,7 +12,7 @@ import {
   decrementQuantity,
   orderTrip,
   getTripPackage
-} from 'actions/index'
+} from 'actions'
 
 interface StateProps {
   id: any

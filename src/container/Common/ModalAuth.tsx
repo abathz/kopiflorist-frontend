@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent, FormEvent } from 'react'
 import { connect } from 'react-redux'
 import { Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import { Link } from 'routes'
-import { updateDataSignUp, signUp, signIn } from 'actions/index'
+import { updateDataSignUp, signUp, signIn } from 'actions'
 
 interface StateProps {
   modal: any

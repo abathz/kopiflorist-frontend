@@ -15,7 +15,7 @@ import {
  } from 'reactstrap'
 import { Link } from 'routes'
 import ModalAuth from './ModalAuth'
-import { getProfile, getInfoMyCart, logout } from 'actions/index'
+import { getProfile, getInfoMyCart, logout } from 'actions'
 
 interface StateProps {
   profile: any

@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { connect } from 'react-redux'
 import { Col, Row, FormGroup, Input, Button, Alert } from 'reactstrap'
 import { Link } from 'routes'
-import { getProduct, resetStateProduct, updateDataShop, orderProduct } from 'actions/index'
+import { getProduct, resetStateProduct, updateDataShop, orderProduct } from 'actions'
 import ModalAuth from 'container/Common/ModalAuth'
 
 interface StateProps {

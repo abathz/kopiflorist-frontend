@@ -1,4 +1,4 @@
-import { Action, GET_PROFILE, UPDATE_DATA_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS, GET_USER_TRANSACTION } from 'actions/types'
+import { Action, GET_PROFILE, UPDATE_DATA_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS, GET_USER_INVOICES } from 'actions/types'
 import _ from 'lodash'
 
 interface State {
@@ -14,7 +14,7 @@ interface State {
   province_id: number
   userAddresses: any[]
   editedUserAddress: any[]
-  userTransaction: any[]
+  userInvoice: any[]
 }
 
 const INITIAL_STATE: State = {
@@ -30,7 +30,7 @@ const INITIAL_STATE: State = {
   province_id: 0,
   userAddresses: [],
   editedUserAddress: [],
-  userTransaction: []
+  userInvoice: []
 }
 
 export default (state = INITIAL_STATE, action: Action) => {
@@ -80,8 +80,8 @@ export default (state = INITIAL_STATE, action: Action) => {
         city_id: action.payload.address.city_id,
         province_id: action.payload.address.province_id
       }
-    case GET_USER_TRANSACTION:
-      return { ...state, userTransaction: action.payload.invoices }
+    case GET_USER_INVOICES:
+      return { ...state, userInvoice: action.payload.invoices }
     default:
       return state
   }

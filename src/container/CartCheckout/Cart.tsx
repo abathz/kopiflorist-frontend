@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import { Table, Row, Col, Button, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, Form } from 'reactstrap'
 import { Link } from 'routes'
-import { getAllCart, deleteOrderProduct, deleteOrderTrip } from 'actions/index'
+import { getAllCart, deleteOrderProduct, deleteOrderTrip } from 'actions'
 import moment from 'moment'
 
 interface StateProps {

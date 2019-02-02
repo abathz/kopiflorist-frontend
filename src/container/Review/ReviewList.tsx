@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Row, Col, Button } from 'reactstrap'
-import { getUserReviews } from 'actions/index'
+import { getUserReviews } from 'actions'
 import _ from 'lodash'
 import moment from 'moment'
 import ReviewItem from './ReviewItem'

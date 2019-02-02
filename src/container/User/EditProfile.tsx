@@ -9,7 +9,7 @@ import {
   getAllProvince,
   getAllCities,
   getUserAddress
-} from 'actions/index'
+} from 'actions'
 import _ from 'lodash'
 import { Link } from 'routes'
 
@@ -35,6 +35,7 @@ interface StateComponent {
   formAddress: boolean
   indexAddress: number
   isLoading: boolean
+  active: string
 }
 
 class EditProfile extends Component<PropsComponent, StateComponent> {
@@ -44,7 +45,8 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
     this.state = {
       formAddress: false,
       indexAddress: 0,
-      isLoading: false
+      isLoading: false,
+      active: ''
     }
   }
 
@@ -52,6 +54,7 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
     this.props.getProfile()
     this.props.getUserAddresses()
     this.props.getAllProvince()
+    this.setState({ active: window.location.pathname })
   }
 
   onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -147,7 +150,6 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { user } = this.props
-    console.log(user)
     return (
       <>
         <Row>
@@ -158,8 +160,8 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
         <Row>
           <Col xs='3'>
             <ul className='list-profile'>
-              <li>Account</li>
-              <li>Order History</li>
+              <Link route='profile'><li className={this.state.active.includes('/profile') ? 'text-yellow' : ''}>Account</li></Link>
+              <Link route='orderhistory'><li className={this.state.active.includes('/order_history') ? 'text-yellow' : ''}>Order History</li></Link>
             </ul>
           </Col>
           <Col xs='5'>

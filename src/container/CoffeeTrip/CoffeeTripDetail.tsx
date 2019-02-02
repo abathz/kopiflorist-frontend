@@ -4,7 +4,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import { Col, Row, FormGroup, Input, Button, Nav, NavItem, NavLink, Table, Alert } from 'reactstrap'
 import { Router } from 'routes'
-import { getTrip, updateDataTrip, getTripReviews } from 'actions/index'
+import { getTrip, updateDataTrip, getTripReviews } from 'actions'
 import ModalAuth from 'container/Common/ModalAuth'
 
 interface StateProps {

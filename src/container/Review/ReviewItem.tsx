@@ -2,7 +2,7 @@ import React, { Component, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import { Col, Row, Button, Input, FormGroup, Label } from 'reactstrap'
 import ReactStars from 'react-stars'
-import { updateDataReview, createReview } from 'actions/index'
+import { updateDataReview, createReview } from 'actions'
 
 interface StateProps {
   data: any

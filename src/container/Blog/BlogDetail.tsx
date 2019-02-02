@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Col, Row } from 'reactstrap'
-import { getBlog } from 'actions/index'
+import { getBlog } from 'actions'
 import moment from 'moment'
 
 interface StateProps {
