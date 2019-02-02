@@ -44,10 +44,9 @@ class ReviewList extends Component<PropsComponent, StateComponent> {
   renderReviewItem () {
     const { userReviews } = this.props
     return _.map(userReviews, (data: any, index: number) => {
-      let date = data.trip_days.trip_date.substring(0, 10).split('-')
-      const startDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
-      const endDate = moment(new Date(`${date[0]}-${date[1]}-${date[2]}`)).add(data.trip_days.duration_in_days - 1, 'd').format('DD MMMM YYYY')
-      // console.log(data)
+      let date = data.trip_days.trip_date.substring(0, 10)
+      const startDate = moment(date).format('DD MMMM YYYY')
+      const endDate = moment(date).add(data.trip_days.duration_in_days - 1, 'd').format('DD MMMM YYYY')
       let item = {
         trip_id: data.trip_id,
         trip_booked_id: data.trip_booked_id,

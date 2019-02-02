@@ -19,20 +19,6 @@ interface PropsComponent extends StateProps, DispatchProps { }
 
 interface StateComponent { }
 
-const arrMonth: any = []
-arrMonth[1] = 'January'
-arrMonth[2] = 'February'
-arrMonth[3] = 'March'
-arrMonth[4] = 'April'
-arrMonth[5] = 'May'
-arrMonth[6] = 'June'
-arrMonth[7] = 'July'
-arrMonth[8] = 'August'
-arrMonth[9] = 'September'
-arrMonth[10] = 'October'
-arrMonth[11] = 'November'
-arrMonth[12] = 'December'
-
 class CoffeeTripList extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
@@ -46,9 +32,9 @@ class CoffeeTripList extends Component<PropsComponent, StateComponent> {
     const { allTrip } = this.props
     const trip = this.props.size ? _.slice(allTrip, 0, this.props.size) : allTrip
     return _.map(trip, (data: any, index: any) => {
-      const date = `${data.trip_date}`.substring(0, 10).split('-')
-      const startDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
-      const endDate = moment(new Date(`${date[0]}-${date[1]}-${date[2]}`)).add(data.duration - 1, 'd').format('DD MMMM YYYY')
+      const date = `${data.trip_date}`.substring(0, 10)
+      const startDate = moment(date).format('DD MMMM YYYY')
+      const endDate = moment(date).add(data.duration - 1, 'd').format('DD MMMM YYYY')
       return (
         <Col key={index} xs='4' className='mb-5'>
           <Link route={`/coffee_trip/${data.id}`}>

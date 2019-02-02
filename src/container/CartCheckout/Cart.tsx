@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { Table, Row, Col, Button, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, Form } from 'reactstrap'
 import { Link } from 'routes'
 import { getAllCart, deleteOrderProduct, deleteOrderTrip } from 'actions/index'
+import moment from 'moment'
 
 interface StateProps {
   dataProduct: any
@@ -23,20 +24,6 @@ interface StateComponent {
   modal: boolean
   totalPrice: number
 }
-
-const arrMonth: any = []
-arrMonth[1] = 'January'
-arrMonth[2] = 'February'
-arrMonth[3] = 'March'
-arrMonth[4] = 'April'
-arrMonth[5] = 'May'
-arrMonth[6] = 'June'
-arrMonth[7] = 'July'
-arrMonth[8] = 'August'
-arrMonth[9] = 'September'
-arrMonth[10] = 'October'
-arrMonth[11] = 'November'
-arrMonth[12] = 'December'
 
 class Cart extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
@@ -70,8 +57,8 @@ class Cart extends Component<PropsComponent, StateComponent> {
   dataTripCart () {
     const { dataTrip } = this.props
     return _.map(dataTrip.cart_trip, (data: any, index: number) => {
-      let arrDate = data.trip_date.substring(0, 10).split('-')
-      let date = `${arrDate[2]} ${arrMonth[Number(arrDate[1])]} ${arrDate[0]}`
+      let tripDate = data.trip_date.substring(0, 10)
+      let date = moment(tripDate).format('DD MMMM YYYY')
       return (
         <tr key={index}>
           <td>

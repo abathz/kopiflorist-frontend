@@ -12,6 +12,7 @@ import {
 import { Link } from 'routes'
 import ListArchive from 'container/Blog/ListArchive'
 import { getAllBlog } from 'actions/index'
+import moment from 'moment'
 
 interface StateProps {
   allBlog: any[]
@@ -28,20 +29,6 @@ interface StateComponent {
   year: string
 }
 
-const arrMonth: any = []
-arrMonth[1] = 'January'
-arrMonth[2] = 'February'
-arrMonth[3] = 'March'
-arrMonth[4] = 'April'
-arrMonth[5] = 'May'
-arrMonth[6] = 'June'
-arrMonth[7] = 'July'
-arrMonth[8] = 'August'
-arrMonth[9] = 'September'
-arrMonth[10] = 'October'
-arrMonth[11] = 'November'
-arrMonth[12] = 'December'
-
 class BlogList extends Component<PropsComponent, StateComponent> {
   constructor (props: any) {
     super(props)
@@ -55,8 +42,8 @@ class BlogList extends Component<PropsComponent, StateComponent> {
     const { allBlog } = this.props
     if (!allBlog) return ''
     return _.map(allBlog, (data: any) => {
-      const dateCreated = data.date_created.substring(0, 10).split('-')
-      const date = `${dateCreated[2]} ${arrMonth[Number(dateCreated[1])]} ${dateCreated[0]}`
+      const dateCreated = data.date_created.substring(0, 10)
+      const date = moment(dateCreated).format('DD MMMM YYYY')
       return (
         <div key={data.id} className='mb-5'>
           <h3>{data.blog_title}</h3>

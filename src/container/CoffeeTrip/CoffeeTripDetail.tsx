@@ -31,20 +31,6 @@ interface StateComponent {
   errorMessage: string
 }
 
-const arrMonth: any = []
-arrMonth[1] = 'January'
-arrMonth[2] = 'February'
-arrMonth[3] = 'March'
-arrMonth[4] = 'April'
-arrMonth[5] = 'May'
-arrMonth[6] = 'June'
-arrMonth[7] = 'July'
-arrMonth[8] = 'August'
-arrMonth[9] = 'September'
-arrMonth[10] = 'October'
-arrMonth[11] = 'November'
-arrMonth[12] = 'December'
-
 class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   private img: any = createRef<HTMLImageElement>()
 
@@ -123,16 +109,15 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   renderReviewList () {
     const { tripReviews } = this.props
     return _.map(tripReviews, (data: any, index: number) => {
-      let date = data.createdAt.split(' ')[0].split('-')
-      let formatedDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
-      let time = data.createdAt.split(' ')[1]
+      let date = moment(data.createdAt).format('DD MMMM YYYY')
+      let time = moment(data.createdAt).format('HH:SS')
       return (
         <div key={index}>
           <Col xs='12' className='mb-4'>
             <img className='img-round' src='/static/img/person.png' />
             <p className='text-hel-bold text-m' style={{ position: 'absolute', top: 0, left: 80, width: '100%' }}>
               {data.user.name}<br />
-              <span className='text-s text-hel-reg'>{`${formatedDate} ${time}`}</span>
+              <span className='text-s text-hel-reg'>{date} {time}</span>
             </p>
           </Col>
           <Col xs='12' className='mb-5'>
@@ -230,8 +215,8 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   tripDate () {
     const { tripDetail } = this.props
     const date = `${tripDetail.trip_date}`.substring(0, 10).split('-')
-    const startDate = `${date[2]} ${arrMonth[Number(date[1])]} ${date[0]}`
-    const endDate = moment(new Date(`${date[0]}-${date[1]}-${date[2]}`)).add(tripDetail.duration - 1, 'd').format('DD MMMM YYYY')
+    const startDate = moment(date).format('DD MMMM YYYY')
+    const endDate = moment(date).add(tripDetail.duration - 1, 'd').format('DD MMMM YYYY')
     return tripDetail.duration !== 1 ? `${startDate} - ${endDate}` : startDate
   }
 

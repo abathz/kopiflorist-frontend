@@ -30,7 +30,7 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
     }
   }
 
-  onReviewItemClicked = (indexReview: any) => () => {
+  onReviewItemClicked = () => {
     this.setState(prevState => ({
       isReviewItemClicked: !prevState.isReviewItemClicked
     }))
@@ -86,7 +86,7 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
                 {data.review !== null ? <span className='text-s text-black-light mt-1'><em>"{data.review.message}"</em></span> : ''}
               </Col>
               <Col xs='2' className='d-flex align-items-center justify-content-center'>
-                {data.review === null ? <Button className='button-yellow' block={true} size='sm' onMouseDown={this.onReviewItemClicked(data)}>Review</Button> : <p className='text-yellow' style={{ margin: '0px' }}>Reviewed</p>}
+                {data.review === null ? <Button className='button-yellow' block={true} size='sm' onMouseDown={this.onReviewItemClicked}>Review</Button> : <p className='text-yellow' style={{ margin: '0px' }}>Reviewed</p>}
               </Col>
             </Row>
             <Row className='mt-3'>

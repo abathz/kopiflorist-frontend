@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Col, Row } from 'reactstrap'
 import { getBlog } from 'actions/index'
+import moment from 'moment'
 
 interface StateProps {
   id: number
@@ -16,20 +17,6 @@ interface PropsComponent extends StateProps, DispatchProps { }
 
 interface StateComponent { }
 
-const arrMonth: any = []
-arrMonth[1] = 'January'
-arrMonth[2] = 'February'
-arrMonth[3] = 'March'
-arrMonth[4] = 'April'
-arrMonth[5] = 'May'
-arrMonth[6] = 'June'
-arrMonth[7] = 'July'
-arrMonth[8] = 'August'
-arrMonth[9] = 'September'
-arrMonth[10] = 'October'
-arrMonth[11] = 'November'
-arrMonth[12] = 'December'
-
 class BlogDetail extends Component<PropsComponent, StateComponent> {
   componentDidMount () {
     this.props.getBlog(this.props.id)
@@ -37,8 +24,8 @@ class BlogDetail extends Component<PropsComponent, StateComponent> {
 
   dateFormated (value: any) {
     if (!value) return ''
-    const date = String(value).substring(0, 10).split('-')
-    const dateFormated = `${date[2]} ${arrMonth[date[1]]} ${date[0]}`
+    const date = String(value).substring(0, 10)
+    const dateFormated = moment(date).format('DD MMMM YYYY')
     return dateFormated
   }
 
