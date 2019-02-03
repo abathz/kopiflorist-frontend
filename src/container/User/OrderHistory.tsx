@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Table } from 'reactstrap'
+import { Row, Col, Table, Button } from 'reactstrap'
 import { Link } from 'routes'
 import { getUserInvoices } from 'actions'
 import _ from 'lodash'
 import moment from 'moment'
 
 interface StateProps {
-  userInvoice: any[]
+  userInvoices: any[]
 }
 
 interface DispatchProps {
@@ -34,14 +34,19 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
   }
 
   renderDataTable () {
-    const { userInvoice } = this.props
-    return _.map(userInvoice, (data: any, index: number) => {
+    const { userInvoices } = this.props
+    return _.map(userInvoices, (data: any, index: number) => {
       const date = moment(data.updatedAt).format('DD MMMM YYYY')
       const time = moment(data.updatedAt).format('HH:MM')
       return (
         <tr key={index}>
-          <td>{date} {time}</td>
-          <td>{data.invoice_code}</td>
+          <td style={{ paddingTop: '20px' }}>{data.invoice_code}</td>
+          <td style={{ paddingTop: '20px' }}>{date} ({time})</td>
+          <td style={{ paddingTop: '20px' }}>Rp {data.total_price}</td>
+          <td>
+            <Link route='detailsorderhistory' params={{ id: data.id }}><Button color='info'>Details</Button></Link>
+          </td>
+          <td style={{ paddingTop: '20px' }}>Pending</td>
         </tr>
       )
     })
@@ -52,7 +57,7 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
       <>
         <Row>
           <Col xs='10'>
-            <h1 className='text-reg-95 text-black text-xl'>My Account</h1>
+            <h1 className='text-hel-95 text-black text-xl'>Order History</h1>
           </Col>
         </Row>
         <Row>
@@ -66,11 +71,10 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
             <Table>
               <thead>
                 <tr>
-                  <th>Order Date & Time</th>
                   <th>Transaction Code</th>
-                  <th>Coffee Trip/Product</th>
-                  <th>Guest/Quantity</th>
+                  <th>Order Date & Time</th>
                   <th>Total Price</th>
+                  <th>Action</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -86,9 +90,9 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
 }
 
 const mapStateToProps = ({ user }: any) => {
-  const { userInvoice } = user
+  const { userInvoices } = user
 
-  return { userInvoice }
+  return { userInvoices }
 }
 
 export default connect(mapStateToProps, { getUserInvoices })(OrderHistory)

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import querystring from 'querystring'
 import { Dispatch } from 'redux'
-import { GET_PROFILE, UPDATE_DATA_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS, GET_USER_INVOICES } from './types'
+import { GET_PROFILE, UPDATE_DATA_PROFILE, GET_USER_ADDRESSES, GET_USER_ADDRESS, GET_USER_INVOICES, GET_INVOICE } from './types'
 import _ from 'lodash'
 import { logout } from './AuthActions'
 
@@ -95,6 +95,16 @@ export const getUserInvoices = () => async (dispatch: Dispatch<any>) => {
   await getUserInvoicesSuccess(dispatch, res)
 }
 
+export const getInvoice = (id: number) => async (dispatch: Dispatch<any>) => {
+  const res = await axios.get(`/invoice/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  await getInvoiceSuccess(dispatch, res)
+}
+
 const getProfileSuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
     type: GET_PROFILE,
@@ -127,6 +137,13 @@ const editProfileSuccess = () => {
 const getUserInvoicesSuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
     type: GET_USER_INVOICES,
+    payload: res.data
+  })
+}
+
+const getInvoiceSuccess = (dispatch: Dispatch<any>, res: any) => {
+  dispatch({
+    type: GET_INVOICE,
     payload: res.data
   })
 }

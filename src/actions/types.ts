@@ -1,7 +1,7 @@
 import axios from 'axios'
 const isDev = process.env.NODE_ENV !== 'production'
 
-axios.defaults.baseURL = 'https://api.kopiflorist.id/api'
+axios.defaults.baseURL = isDev ? 'http://localhost:1337/api' : 'https://api.kopiflorist.id/api'
 
 export interface Action {
   type: string,
@@ -23,7 +23,6 @@ export const UPDATE_DATA_PROFILE = 'UPDATE_DATA_PROFILE'
 export const GET_PROFILE = 'GET_PROFILE'
 export const GET_USER_ADDRESSES = 'GET_USER_ADDRESSES'
 export const GET_USER_ADDRESS = 'GET_USER_ADDRESS'
-export const GET_USER_INVOICES = 'GET_USER_INVOICES'
 
 // BLOG
 export const GET_ALL_BLOG = 'GET_ALL_BLOG'
@@ -57,3 +56,7 @@ export const GET_DEIVERY_COST = 'GET_DEIVERY_COST'
 export const UPDATE_DATA_REVIEW = 'UPDATE_DATA_REVIEW'
 export const GET_TRIP_REVIEWS = 'GET_TRIP_REVIEWS'
 export const GET_USER_REVIEWS = 'GET_USER_REVIEWS'
+
+// USER INVOICE
+export const GET_USER_INVOICES = 'GET_USER_INVOICES'
+export const GET_INVOICE = 'GET_INVOICE'

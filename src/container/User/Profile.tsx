@@ -149,7 +149,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
       <>
         <Row>
           <Col xs='10'>
-            <h1 className='text-reg-95 text-black text-xl'>My Account</h1>
+            <h1 className='text-hel-95 text-black text-xl'>My Account</h1>
           </Col>
           <Col xs='2'>
             <Link route='editprofile'><Button className='button-yellow'>Edit Profile</Button></Link>
