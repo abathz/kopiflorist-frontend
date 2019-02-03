@@ -30,7 +30,7 @@ class PaymentMidtrans extends Component<PropsComponent, StateComponent> {
 
       if (this.state.count === 0) {
         setTimeout(() => {
-          window.location.href = '/'
+          window.location.href = '/order_history'
         }, 500)
       }
     }, 1000)
@@ -38,12 +38,14 @@ class PaymentMidtrans extends Component<PropsComponent, StateComponent> {
 
   renderStatusPayment () {
     const { query } = this.props
-    if (query.transaction_status === 'capture' || query.transaction_status === 'settlement') {
-      return <Alert color='success'>Thank You</Alert>
-    } else if (query.transaction_status === 'pending') {
-      return <Alert color='info'>Proceed payment as instructed</Alert>
-    } else if (query.transaction_status === 'deny') {
-      return <Alert color='danger'>We could not receive your payment</Alert>
+    switch (query.transaction_status) {
+      case 'capture':
+      case 'settlement':
+        return <Alert color='success'>Thank You</Alert>
+      case 'pending':
+        return <Alert color='info'>Proceed payment as instructed</Alert>
+      case 'deny':
+        return <Alert color='danger'>We could not receive your payment</Alert>
     }
   }
 
