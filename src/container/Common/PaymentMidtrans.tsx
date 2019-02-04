@@ -56,7 +56,7 @@ class PaymentMidtrans extends Component<PropsComponent, StateComponent> {
           {this.renderStatusPayment()}
         </Col>
         <Col className='text-center'>
-          <span>Wait {this.state.count} second, or <Link route='home'><a>click here!</a></Link></span>
+          <span>Wait {this.state.count} second, or <Link route='orderhistory'><a>click here!</a></Link></span>
         </Col>
       </Row>
     )
