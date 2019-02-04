@@ -83,7 +83,7 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
     this.props.editProfile(this.props.user)
   }
 
-  async onAddressClicked (indexAddress: number, idAddress: number) {
+  onAddressClicked = (indexAddress: number, idAddress: number) => async () => {
     await this.setState({ isLoading: true })
     await this.props.getUserAddress(idAddress)
     await this.props.getAllCities(Number(this.props.user.province_id))
@@ -108,9 +108,20 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
     })
   }
 
+  renderListAddress () {
+    const { user } = this.props
+    return _.map(user.userAddresses, (data: any, index: number) => {
+      return (
+        <Col xs='6' key={index} >
+          <ListGroupItem onMouseDown={this.onAddressClicked(index, data.id)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
+        </Col>
+      )
+    })
+  }
+
   renderFormAddress () {
     const { user } = this.props
-    if (!this.state.formAddress) return null
+    if (!this.state.formAddress) return ''
     if (this.state.isLoading) return <div>Loading...</div>
     return (
       <Row>
@@ -182,20 +193,12 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
                 <Label>Address</Label>
                 <ListGroup className='mb-4'>
                   <Row>
-                    {
-                      _.map(this.props.user.userAddresses, (data: any, index: number) => {
-                        return (
-                          <Col xs='6' key={index} >
-                            <ListGroupItem onMouseDown={this.onAddressClicked.bind(this, index, data.id)} className='text-ml text-os-reg text-black-light' style={{ cursor: 'pointer' }}>{`${data.address}, ${data.city}, ${data.province}, ${data.postal_code}`}</ListGroupItem>
-                          </Col>
-                        )
-                      })
-                    }
+                    {this.renderListAddress()}
                   </Row>
                 </ListGroup>
                 {this.renderFormAddress()}
               </FormGroup>
-              <Button block={true} className='button-yellow' id='submit'>Save</Button>
+              {this.state.formAddress ? <Button block={true} className='button-yellow' id='submit'>Save</Button> : <div/>}
             </Form>
           </Col>
         </Row>
