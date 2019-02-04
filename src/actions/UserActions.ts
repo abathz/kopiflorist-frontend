@@ -105,6 +105,16 @@ export const getInvoice = (id: number) => async (dispatch: Dispatch<any>) => {
   await getInvoiceSuccess(dispatch, res)
 }
 
+export const createMidtransPayment = (idInvoice: number) => async (dispatch: Dispatch<any>) => {
+  const res = await axios.post('/invoice/payment', querystring.stringify({ invoice_id: idInvoice }), {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  window.location.href = res.data.invoice.snap_url
+}
+
 const getProfileSuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
     type: GET_PROFILE,

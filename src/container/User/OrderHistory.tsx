@@ -46,10 +46,33 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
           <td>
             <Link route='detailsorderhistory' params={{ id: data.id }}><Button color='info'>Details</Button></Link>
           </td>
-          <td style={{ paddingTop: '20px' }}>Pending</td>
+          <td style={{ paddingTop: '20px' }}>{this.transactionStatus(data)}</td>
         </tr>
       )
     })
+  }
+
+  transactionStatus (dataPayment: any) {
+    const paymentStatus = dataPayment.payment_status
+    const paymentDetails = dataPayment.payment_details
+    switch (paymentStatus) {
+      case 0:
+        if (paymentDetails !== null) {
+          if (paymentDetails.need_action) {
+            return 'Continue to Payment'
+          } else {
+            return 'Payment Pending'
+          }
+        } else {
+          return 'Continue to Payment'
+        }
+      case 1:
+        return 'Payment Success'
+      case -1:
+        return 'Payment Cancelled/Exprired'
+      default:
+        return ''
+    }
   }
 
   render () {

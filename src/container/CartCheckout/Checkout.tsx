@@ -300,7 +300,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderDataAddress () {
-    const { profile, dataProduct, myCart } = this.props
+    const { profile, dataProduct } = this.props
     if (dataProduct.cart_product && dataProduct.cart_product.length === 0) return <div/>
     if (!profile.address) return <div/>
     if (profile.address.length === 0 || this.state.isFormShow) {
@@ -357,6 +357,9 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   renderDataPickupMethod () {
     const { allPickupMethod, myCart } = this.props
+    if (myCart === null || myCart.item_count === 0) {
+      window.location.href = '/'
+    }
     if (myCart.self_pickup_enabled) {
       return (
         <>
@@ -415,7 +418,6 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { cartcheckout } = this.props
-    console.log(cartcheckout)
     return (
       <>
         <Row>

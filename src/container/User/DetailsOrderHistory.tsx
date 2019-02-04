@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getInvoice } from 'actions'
-import { Col, Row } from 'reactstrap'
+import { getInvoice, createMidtransPayment } from 'actions'
+import { Col, Row, Button } from 'reactstrap'
 import { Link } from 'routes'
 import _ from 'lodash'
 import moment from 'moment'
@@ -13,12 +13,15 @@ interface StateProps {
 
 interface DispatchProps {
   getInvoice: typeof getInvoice
+  createMidtransPayment: typeof createMidtransPayment
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
 
 interface StateComponent {
   active: string
+  isPaymentNull: boolean
+  message: string
 }
 
 class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
@@ -26,7 +29,9 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     super(props)
 
     this.state = {
-      active: ''
+      active: '',
+      isPaymentNull: false,
+      message: ''
     }
   }
 
@@ -35,6 +40,66 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     this.setState({
       active: window.location.pathname
     })
+  }
+
+  transactionStatus () {
+    const { detailsInvoice } = this.props
+    const paymentStatus = detailsInvoice.payment_status
+    const paymentDetails = detailsInvoice.payment_details
+    switch (paymentStatus) {
+      case 0:
+        if (paymentDetails !== null) {
+          if (paymentDetails.need_action) {
+            return {
+              isPaymentNull: true,
+              action: 'midtrans_success',
+              message: 'Continue to Payment'
+            }
+          } else {
+            return {
+              isPaymentNull: false,
+              action: '',
+              message: 'Payment Pending'
+            }
+          }
+        } else {
+          return {
+            isPaymentNull: true,
+            action: 'midtrans_failed',
+            message: 'Continue to Payment'
+          }
+        }
+      case 1:
+        return {
+          isPaymentNull: false,
+          action: '',
+          message: 'Payment Success'
+        }
+      case -1:
+        return {
+          isPaymentNull: false,
+          action: '',
+          message: 'Payment Cancelled/Exprired'
+        }
+      default:
+        return {
+          isPaymentNull: false,
+          action: '',
+          message: ''
+        }
+    }
+  }
+
+  onButtonClicked = (action: string) => () => {
+    const { detailsInvoice } = this.props
+    switch (action) {
+      case 'midtrans_success':
+        window.location.href = detailsInvoice.payment_details.snap_url
+        break
+      case 'midtrans_failed':
+        this.props.createMidtransPayment(detailsInvoice.id)
+        break
+    }
   }
 
   renderDataTrips () {
@@ -94,7 +159,38 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     })
   }
 
+  renderDetailsPayment () {
+    const { detailsInvoice } = this.props
+    if (!detailsInvoice.payment_details) return ''
+    switch (detailsInvoice.payment_details.payment_type) {
+      case 'bank_transfer':
+      case 'echannel':
+        return (
+          <>
+            <p>Payment Method: {detailsInvoice.payment_details.payment_type}</p>
+            <p>Bank: {detailsInvoice.payment_details.billing}</p>
+            <p>Account Number: {detailsInvoice.payment_details.billing_number}</p>
+          </>
+        )
+      case 'cstore':
+        return (
+          <>
+            <p>Payment Method: {detailsInvoice.payment_details.payment_type}</p>
+            <p>Store: {detailsInvoice.payment_details.billing}</p>
+            <p>Payment Code: {detailsInvoice.payment_details.billing_number}</p>
+          </>
+        )
+      default:
+        if (detailsInvoice.payment_details.payment_type !== '') {
+          return <p>Payment Method: {detailsInvoice.payment_details.payment_type}</p>
+        } else {
+          return ''
+        }
+    }
+  }
+
   render () {
+    const transactionStatus = this.transactionStatus()
     return (
       <>
         <Row>
@@ -110,7 +206,9 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
             </ul>
           </Col>
           <Col xs='9'>
-            <p className='text-hel-95 text-black text-l'>Status:</p>
+            <p className='text-hel-95 text-black text-l'>Status: <span className='text-hel-bold text-yellow text-ml'>{transactionStatus.message}</span></p>
+            {transactionStatus.isPaymentNull ? <Button color='info' className='mb-4' onMouseDown={this.onButtonClicked(transactionStatus.action)}>Continue to payment</Button> : ''}
+            {this.renderDetailsPayment()}
             <Row>
               {this.renderDataTrips()}
             </Row>
@@ -130,4 +228,4 @@ const mapStateToProps = ({ user }: any) => {
   return { detailsInvoice }
 }
 
-export default connect(mapStateToProps, { getInvoice })(DetailsOrderHistory)
+export default connect(mapStateToProps, { getInvoice, createMidtransPayment })(DetailsOrderHistory)
