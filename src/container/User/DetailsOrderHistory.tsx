@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getInvoice, createMidtransPayment } from 'actions'
-import { Col, Row, Button } from 'reactstrap'
+import { getInvoice, createMidtransPayment, trackDelivery } from 'actions'
+import { Col, Row, Button, Table } from 'reactstrap'
 import { Link } from 'routes'
 import _ from 'lodash'
 import moment from 'moment'
@@ -9,11 +9,13 @@ import moment from 'moment'
 interface StateProps {
   id: number
   detailsInvoice: any
+  trackingDelivery: any
 }
 
 interface DispatchProps {
   getInvoice: typeof getInvoice
   createMidtransPayment: typeof createMidtransPayment
+  trackDelivery: typeof trackDelivery
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
@@ -37,6 +39,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
 
   componentDidMount () {
     this.props.getInvoice(this.props.id)
+    this.props.trackDelivery(this.props.id)
     this.setState({
       active: window.location.pathname
     })
@@ -189,6 +192,76 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     }
   }
 
+  trackHistory () {
+    const { trackingDelivery } = this.props
+    return _.map(trackingDelivery.manifest, (data: any, index: number) => {
+      let serializeDate = `${moment(data.manifest_date).format('DD-MM-YYYY')} ${data.manifest_time}`
+      return (
+        <tr key={index}>
+          <td>{serializeDate}</td>
+          <td>{data.manifest_description} [{data.city_name}]</td>
+        </tr>
+      )
+    })
+  }
+
+  renderDataTrackingDelivery () {
+    const { trackingDelivery } = this.props
+    if (!trackingDelivery.summary) return ''
+    return (
+      <>
+        <Table bordered={true}>
+          <thead>
+            <tr>
+              <th>No. AWB</th>
+              <th>Service</th>
+              <th>Date of Shipment</th>
+              <th>Origin</th>
+              <th>Destination</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{trackingDelivery.summary.waybill_number}</td>
+              <td>{trackingDelivery.summary.service_code}</td>
+              <td>{moment(trackingDelivery.summary.waybill_date).format('DD MMMM YYYY')}</td>
+              <td>{trackingDelivery.summary.origin}</td>
+              <td>{trackingDelivery.summary.destination}</td>
+            </tr>
+          </tbody>
+        </Table>
+        <Table bordered={true}>
+          <thead>
+            <tr>
+              <th>Shipper</th>
+              <th>Consignee</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{trackingDelivery.details.shippper_name}</td>
+              <td>{trackingDelivery.details.receiver_name}</td>
+            </tr>
+            <tr>
+              <td>{trackingDelivery.details.shipper_address1}</td>
+              <td>{trackingDelivery.details.receiver_address1}</td>
+            </tr>
+          </tbody>
+        </Table>
+        <Table bordered={true}>
+          <thead>
+            <tr>
+              <th colSpan={2}>History</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.trackHistory()}
+          </tbody>
+        </Table>
+      </>
+    )
+  }
+
   render () {
     const transactionStatus = this.transactionStatus()
     return (
@@ -212,9 +285,11 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
             <Row>
               {this.renderDataTrips()}
             </Row>
-            <Row>
+            <Row className='mb-4'>
               {this.renderDataProducts()}
             </Row>
+            <h4>Tracking Delivery</h4>
+            {this.renderDataTrackingDelivery()}
           </Col>
         </Row>
       </>
@@ -222,10 +297,11 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
   }
 }
 
-const mapStateToProps = ({ user }: any) => {
+const mapStateToProps = ({ user, rajaongkir }: any) => {
   const { detailsInvoice } = user
+  const { trackingDelivery } = rajaongkir
 
-  return { detailsInvoice }
+  return { detailsInvoice, trackingDelivery }
 }
 
-export default connect(mapStateToProps, { getInvoice, createMidtransPayment })(DetailsOrderHistory)
+export default connect(mapStateToProps, { getInvoice, createMidtransPayment, trackDelivery })(DetailsOrderHistory)
