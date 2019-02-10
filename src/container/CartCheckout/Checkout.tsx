@@ -51,10 +51,11 @@ interface StateComponent {
   idPickup: number
   idActiveList: number
   isFormShow: boolean
+  isSmallDevice: boolean
 }
 
 class Checkout extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {
@@ -65,7 +66,8 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       addressSelected: false,
       idPickup: 0,
       idActiveList: 0,
-      isFormShow: false
+      isFormShow: false,
+      isSmallDevice: false
     }
   }
 
@@ -73,6 +75,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     this.props.getAllPickupMethod()
     this.props.getAllCart()
     this.props.getAllProvince()
+    this.setState({ isSmallDevice: window.outerWidth < 576 })
   }
 
   toggleModal = () => {
@@ -292,7 +295,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
               )
             })}
           </ListGroup>
-          <Button className='text-s text-os-reg mt-2 mb-4 button-yellow' onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
+          <Button className='text-s text-os-reg mt-2 mb-4 button-yellow' block={this.state.isSmallDevice} onMouseDown={this.onAddAddressClicked}>Add Address & Apply</Button>
         </>
       )
     }
@@ -424,12 +427,12 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           <Col xs='12'>
             <p className='text-hel-95 text-xl'>Checkout</p>
           </Col>
-          <Col xs='6'>
+          <Col lg='6' xs='12'>
             {this.renderDataAddress()}
           </Col>
-          <Col xs='6'>
+          <Col lg='6' xs='12'>
             <h5>My Cart</h5>
-            <Table>
+            <Table responsive={true}>
               <thead>
                 <tr>
                   <th>Activity/Product</th>

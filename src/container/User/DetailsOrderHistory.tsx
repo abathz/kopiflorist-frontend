@@ -24,16 +24,18 @@ interface StateComponent {
   active: string
   isPaymentNull: boolean
   message: string
+  isSmallDevice: boolean
 }
 
 class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {
       active: '',
       isPaymentNull: false,
-      message: ''
+      message: '',
+      isSmallDevice: false
     }
   }
 
@@ -41,7 +43,8 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     this.props.getInvoice(this.props.id)
     this.props.trackDelivery(this.props.id)
     this.setState({
-      active: window.location.pathname
+      active: window.location.pathname,
+      isSmallDevice: window.outerWidth < 576
     })
   }
 
@@ -117,11 +120,11 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
           <div className='review-item'>
             <Col xs='12'>
               <Row>
-                <Col xs='2'>
+                <Col lg='2' xs='4'>
                   <img className='img-fluid' src={data.photo} />
                 </Col>
-                <Col xs='9'>
-                  <div className='d-flex flex-column mt-3'>
+                <Col lg='9' xs='8'>
+                  <div className={`d-flex flex-column ${this.state.isSmallDevice ? 'mt-1' : ''}`}>
                     <span className='text-l text-black text-hel-95'>{data.title}</span>
                     <span className='text-m text-black'>{data.address}</span>
                     <span className='text-s text-black'>{startDate} - {endDate}</span>
@@ -144,11 +147,11 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
           <div className='review-item'>
             <Col xs='12'>
               <Row>
-                <Col xs='2'>
+                <Col lg='2' xs='4'>
                   <img className='img-fluid' src={data.photo} />
                 </Col>
-                <Col xs='9'>
-                  <div className='d-flex flex-column mt-3'>
+                <Col lg='9' xs='8'>
+                  <div className={`d-flex flex-column ${this.state.isSmallDevice ? 'mt-1' : ''}`}>
                     <span className='text-l text-black text-hel-95'>{data.name}</span>
                     <span className='text-m text-black'>{data.category}</span>
                     <span className='text-ml text-black'>Rp {data.price}</span>
@@ -210,7 +213,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     if (!trackingDelivery.summary) return ''
     return (
       <>
-        <Table bordered={true}>
+        <Table responsive={true} bordered={true}>
           <thead>
             <tr>
               <th>No. AWB</th>
@@ -230,7 +233,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
             </tr>
           </tbody>
         </Table>
-        <Table bordered={true}>
+        <Table responsive={true} bordered={true}>
           <thead>
             <tr>
               <th>Shipper</th>
@@ -248,7 +251,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
             </tr>
           </tbody>
         </Table>
-        <Table bordered={true}>
+        <Table responsive={true} bordered={true}>
           <thead>
             <tr>
               <th colSpan={2}>History</th>
@@ -267,18 +270,18 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     return (
       <>
         <Row>
-          <Col xs='10'>
+          <Col lg='10' xs='12'>
             <h1 className='text-hel-95 text-black text-xl'>Order History</h1>
           </Col>
         </Row>
         <Row>
-          <Col xs='3'>
+          <Col lg='3' xs='12'>
             <ul className='list-profile'>
               <Link route='profile'><li className={this.state.active.includes('/profile') ? 'text-yellow' : ''}>Account</li></Link>
               <Link route='orderhistory'><li className={this.state.active.includes('/order_history') ? 'text-yellow' : ''}>Order History</li></Link>
             </ul>
           </Col>
-          <Col xs='9'>
+          <Col lg='9' xs='12'>
             <p className='text-hel-95 text-black text-l'>Status: <span className='text-hel-bold text-yellow text-ml'>{transactionStatus.message}</span></p>
             {transactionStatus.isPaymentNull ? <Button color='info' className='mb-4' onMouseDown={this.onButtonClicked(transactionStatus.action)}>Continue to payment</Button> : ''}
             {this.renderDetailsPayment()}

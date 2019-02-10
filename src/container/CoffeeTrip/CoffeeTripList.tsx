@@ -20,7 +20,7 @@ interface PropsComponent extends StateProps, DispatchProps { }
 interface StateComponent { }
 
 class CoffeeTripList extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
   }
 
@@ -36,7 +36,7 @@ class CoffeeTripList extends Component<PropsComponent, StateComponent> {
       const startDate = moment(date).format('DD MMMM YYYY')
       const endDate = moment(date).add(data.duration - 1, 'd').format('DD MMMM YYYY')
       return (
-        <Col key={index} xs='4' className='mb-5'>
+        <Col key={index} lg='4' xs='12' className='mb-5'>
           <Link route={`/coffee_trip/${data.id}`}>
             <img className='img-fluid' src={data.main_photo} style={{ cursor: 'pointer' }}/>
           </Link>

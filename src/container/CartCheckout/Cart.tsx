@@ -23,17 +23,23 @@ interface PropsComponent extends StateProps, DispatchProps {}
 interface StateComponent {
   modal: boolean
   totalPrice: number
+  isSmallDevices: boolean
 }
 
 class Cart extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
-    this.state = { modal: false, totalPrice: 0 }
+    this.state = {
+      modal: false,
+      totalPrice: 0,
+      isSmallDevices: false
+    }
   }
 
   componentDidMount () {
     this.props.getAllCart()
+    this.setState({ isSmallDevices: window.outerWidth < 576 })
   }
 
   componentDidUpdate () {
@@ -102,7 +108,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
         <Row>
           <Col>
             <p className='text-hel-95 text-xl'>My Cart</p>
-            <Table>
+            <Table  responsive={true}>
               <thead>
                 <tr>
                   <th>Activity/Product</th>
@@ -120,7 +126,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
         </Row>
         <Row className='mb-4'>
           <Col className='text-right'>
-            <span className='float-right mr-5 text-black-light text-xl'>
+            <span className={`float-right ${!this.state.isSmallDevices ? 'mr-5' : '' } text-black-light text-xl`}>
               Rp {this.state.totalPrice}
             </span>
             <p className='float-right mr-5 pt-3 text-hel-95 text-l text-black'>Sub Total</p>
@@ -129,8 +135,19 @@ class Cart extends Component<PropsComponent, StateComponent> {
         </Row>
         <Row>
           <Col className='text-right'>
-            <Link route='home'><Button>Continue Shopping</Button></Link>
-            <Link route='checkout'><Button className='mx-5 button-yellow' style={{ width: '160px' }}>Checkout</Button></Link>
+            <Link route='home'><Button block={this.state.isSmallDevices}>Continue Shopping</Button></Link>
+            <Link route='checkout'>
+              <Button
+                block={this.state.isSmallDevices}
+                className='button-yellow'
+                style={{
+                  width: !this.state.isSmallDevices ? '160px' : '',
+                  marginLeft: !this.state.isSmallDevices ? '50px' : ''
+                }}
+              >
+                Checkout
+              </Button>
+            </Link>
           </Col>
         </Row>
       </>

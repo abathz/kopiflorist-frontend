@@ -7,8 +7,8 @@ class Footer extends Component<{},{}> {
   render () {
     return (
       <footer className='container-fluid'>
-        <Row>
-          <Col xs='4'>
+        <Row className='footer'>
+          <Col lg='4' xs='12'>
             <ul className='list-footer'>
               <li><Link route='/about'><a>About</a></Link></li>
               <li><Link route='/coffeetrip'><a>Coffee Trip</a></Link></li>
@@ -17,7 +17,7 @@ class Footer extends Component<{},{}> {
               <li><Link route='/howtoorder'><a>How To Order</a></Link></li>
             </ul>
           </Col>
-          <Col xs='4'>
+          <Col lg='4' xs='12'>
             <h4 className='text-white'>Our Address</h4>
             <h6 className='text-white'>Workshop</h6>
             <p className='text-os-reg text-white text-m'>
@@ -33,17 +33,11 @@ class Footer extends Component<{},{}> {
               Kota Bandung, Jawa Barat 40252
             </p>
           </Col>
-          <Col xs='4'>
+          <Col lg='4' xs='12'>
             <Row className='mb-3'>
-              <Col xs='6'>
+              <Col lg='6' xs='12'>
                 <a href='https://www.instagram.com/kopi_florist/' target='_blank'><img className='img-fluid' src={`/static/img/instagram.png`} style={{ width: '35px' }} /><span className='text-os-reg text-white text-m ml-2'>kopi_florist</span></a>
               </Col>
-              {/* <Col xs='2'>
-                <a href='#'><img className='img-fluid' src={`/static/img/facebook.png`} /></a>
-              </Col>
-              <Col xs='2'>
-                <a href='https://twitter.com/kopi_florist' target='_blank'><img className='img-fluid' src={`/static/img/twitter.png`} /></a>
-              </Col> */}
             </Row>
             <Row>
               <Col xs='12'>

@@ -23,7 +23,7 @@ interface StateComponent {
 }
 
 class ShopList extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {
@@ -53,7 +53,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
         if (!data.availability) return ''
         const slug = data.name.split(' ').join('-').toLowerCase()
         return (
-          <Col key={data.id} xs='3' className='mb-5'>
+          <Col key={data.id} lg='3' xs='12' className='mb-5'>
             <Link route={`/shop/${data.id}/${slug}`}>
               <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
             </Link>
@@ -71,7 +71,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
           if (data.category === 'Roasted Beans') {
             const slug = data.name.split(' ').join('-').toLowerCase()
             return (
-              <Col key={data.id} xs='3' className='mb-5'>
+              <Col key={data.id} lg='3' xs='12' className='mb-5'>
                 <Link route={`/shop/${data.id}/${slug}`}>
                   <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
                 </Link>
@@ -89,7 +89,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
           if (data.category === 'Green Beans') {
             const slug = data.name.split(' ').join('-').toLowerCase()
             return (
-              <Col key={data.id} xs='3' className='mb-5'>
+              <Col key={data.id} lg='3' xs='12' className='mb-5'>
                 <Link route={`/shop/${data.id}/${slug}`}>
                   <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
                 </Link>

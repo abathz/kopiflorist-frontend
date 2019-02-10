@@ -16,7 +16,7 @@ interface StateComponent {
 }
 
 class EmailConfirmation extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = { count: 10 }

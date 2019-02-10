@@ -34,7 +34,7 @@ interface StateComponent {
 class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   private img: any = createRef<HTMLImageElement>()
 
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {
@@ -160,7 +160,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
         return (
           <Col xs='12' key={index}>
             <h3>Day {index + 1}</h3>
-            <Table>
+            <Table responsive={true}>
               <thead>
                 <tr>
                   <th className='text-ml text-hel-bold'>Time</th>
@@ -224,14 +224,14 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
     const { tripDetail, trip } = this.props
     return (
       <>
-        <Row>
-          <Col xs='6'>
+        <Row className='mb-5'>
+          <Col lg='6' xs='12'>
             <img className='img-fluid mb-4' src={trip.main_photo} alt='' ref={this.img}/>
             <Row>
               {this.renderPhotoList()}
             </Row>
           </Col>
-          <Col xs={{ size: 5, offset: 1 }}>
+          <Col lg={{ size: 5, offset: 1 }} xs='12'>
             <p className='text-xl text-black text-hel-95'>{tripDetail.title}</p>
             <p className='text-m text-black text-hel-reg'>{tripDetail.description}</p>
             <p className='text-m text-black text-hel-reg'>{tripDetail.address}</p>
@@ -261,10 +261,10 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
         <Row>
           <Col xs='12'>
             <Nav className='mb-4' tabs={true}>
-              <NavItem className='mr-5'>
+              <NavItem className=''>
                 <NavLink href='#' className='px-5 text-black text-hel-95' active={this.state.activeTab === 1} onMouseDown={this.onDetailsTripClicked.bind(this, 1)}>Itinerary</NavLink>
               </NavItem>
-              <NavItem className='mr-5'>
+              <NavItem className=''>
                 <NavLink href='#' className='px-5 text-black text-hel-95' active={this.state.activeTab === 2} onMouseDown={this.onDetailsTripClicked.bind(this, 2)}>Detail</NavLink>
               </NavItem>
               <NavItem>

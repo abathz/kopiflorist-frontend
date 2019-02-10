@@ -39,7 +39,7 @@ interface StateComponent {
 }
 
 class EditProfile extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {
@@ -164,18 +164,18 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
     return (
       <>
         <Row>
-          <Col xs='10'>
+          <Col lg='10' xs='12'>
             <h1 className='text-hel-95 text-black text-xl'>My Account</h1>
           </Col>
         </Row>
         <Row>
-          <Col xs='3'>
+          <Col lg='3' xs='12'>
             <ul className='list-profile'>
               <Link route='profile'><li className={this.state.active.includes('/profile') ? 'text-yellow' : ''}>Account</li></Link>
               <Link route='orderhistory'><li className={this.state.active.includes('/order_history') ? 'text-yellow' : ''}>Order History</li></Link>
             </ul>
           </Col>
-          <Col xs='5'>
+          <Col lg='5' xs='12'>
             <Form onSubmit={this.onSubmit}>
               <FormGroup>
                 <Label for='name'>Name</Label>

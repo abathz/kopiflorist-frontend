@@ -28,7 +28,7 @@ interface StateComponent {
 }
 
 class ShopDetail extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {

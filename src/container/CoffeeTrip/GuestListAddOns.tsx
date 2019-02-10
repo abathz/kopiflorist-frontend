@@ -44,7 +44,7 @@ interface StateComponent {
 }
 
 class GuestListAddOns extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {
@@ -216,7 +216,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     return _.map(allProduct, (data: any, index: number) => {
       if (!data.availability) return ''
       return (
-        <Col key={index} xs='3'>
+        <Col key={index} lg='4' xs='6'>
           <img className='img-fluid' src={data.photo} alt=''/>
           <p>{data.name}</p>
           <p className='text-m text-hel-95'>Stock: {data.quantity}</p>
@@ -238,7 +238,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
 
     if (tripPackage.min_participant === tripPackage.max_participant) {
       return (
-        <Col xs='7'>
+        <Col xs='12'>
           <Row>
             {this.renderDataProduct()}
           </Row>
@@ -246,21 +246,17 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
       )
     }
     return (
-      <Col xs='7'>
-        <Row>
-          <Col xs='3'>
-            <FormGroup>
-              <Input type='select' id='guest_list' onChange={this.onInputChange}>
-                <option defaultChecked={true}>Group Size</option>
-                {_.map(Array((tripPackage.max_participant - tripPackage.min_participant) + 1), (data: any, index: number) => {
-                  let size = index + tripPackage.min_participant
-                  return <option key={index} value={size}>{size}</option>
-                })}
-              </Input>
-            </FormGroup>
-          </Col>
-        </Row>
-        <Table>
+      <>
+        <FormGroup>
+          <Input type='select' id='guest_list' onChange={this.onInputChange}>
+            <option defaultChecked={true}>Group Size</option>
+            {_.map(Array((tripPackage.max_participant - tripPackage.min_participant) + 1), (data: any, index: number) => {
+              let size = index + tripPackage.min_participant
+              return <option key={index} value={size}>{size}</option>
+            })}
+          </Input>
+        </FormGroup>
+        <Table responsive={true}>
           <thead>
             <tr>
               <th>Guest Name</th>
@@ -274,7 +270,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
         </Table>
         {this.renderFormGuest()}
         {trip.guestList.length !== Number(trip.guest_list) ? <Button onMouseDown={this.toggleForm}>{this.state.form ? 'Cancel' : 'Add'}</Button> : ''}
-      </Col>
+      </>
     )
   }
 
@@ -289,8 +285,17 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
           </Col>
         </Row>
         <Row>
-          {this.renderGuestAddons()}
-          <Col xs={{ size: 4, offset: 1 }}>
+          <Col lg='6' className='mb-5'>
+            {this.renderGuestAddons()}
+            {tripPackage.min_participant === tripPackage.max_participant ? ''
+              : <Col xs='12' className='mt-5'>
+                <Row>
+                  {this.renderDataProduct()}
+                </Row>
+              </Col>
+            }
+          </Col>
+          <Col lg={{ size: 5, offset: 1 }} xs='12'>
             <span className='text-black text-hel-reg text-m'>{tripDetail.title}</span><span className='float-right text-black text-os-reg text-m'>
               Rp {this.state.priceTrip || 0}
             </span>
@@ -313,13 +318,6 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
             <div className='clearfix' />
             <Button className='mt-4 button-yellow' block={true} onMouseDown={this.onContinueToCartClicked}>Continue to cart</Button>
           </Col>
-          {tripPackage.min_participant === tripPackage.max_participant ? ''
-            : <Col xs='7' className='mt-5'>
-                <Row>
-                  {this.renderDataProduct()}
-                </Row>
-              </Col>
-          }
         </Row>
       </>
     )

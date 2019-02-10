@@ -18,7 +18,7 @@ interface StateComponent {
 }
 
 class ListArchive extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {

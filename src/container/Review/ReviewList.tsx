@@ -33,7 +33,7 @@ arrMonth[11] = 'November'
 arrMonth[12] = 'December'
 
 class ReviewList extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
   }
 

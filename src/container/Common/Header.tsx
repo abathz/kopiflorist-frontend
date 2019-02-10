@@ -38,7 +38,7 @@ interface StateComponent {
 }
 
 class Header extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
     this.state = {
       isOpen: false,
@@ -75,7 +75,7 @@ class Header extends Component<PropsComponent, StateComponent> {
     if (!profile) return ''
     if (this.state.token) {
       return (
-        <UncontrolledDropdown className='ml-auto' nav={true} inNavbar={true}>
+        <UncontrolledDropdown className='ml-auto login' nav={true} inNavbar={true}>
           <DropdownToggle nav={true} caret={true}>
             {profile.name}
           </DropdownToggle>
@@ -157,7 +157,7 @@ class Header extends Component<PropsComponent, StateComponent> {
                   </Link>
                 </NavItem>
               </Nav>
-              <Nav className='ml-auto mt-3' navbar={true}>
+              <Nav className='ml-auto mt-3 signup_login' navbar={true}>
                 {
                   this.state.token
                   ? <NavItem>

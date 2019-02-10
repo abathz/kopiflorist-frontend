@@ -26,20 +26,25 @@ interface PropsComponent extends StateProps, DispatchProps {}
 interface StateComponent {
   isFormShow: boolean
   active: string
+  isSmallDevice: boolean
 }
 
 class MyAccount extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = {
       isFormShow: false,
-      active: ''
+      active: '',
+      isSmallDevice: false
     }
   }
 
   componentDidMount () {
-    this.setState({ active: window.location.pathname })
+    this.setState({
+      active: window.location.pathname,
+      isSmallDevice: window.outerWidth < 576
+    })
     this.props.getProfile()
     this.props.getUserAddresses()
   }
@@ -138,7 +143,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
             </FormGroup>
           </Col>
         </Row>
-        <Button className='button-yellow'>Add</Button>
+        <Button className='button-yellow' block={this.state.isSmallDevice}>Add</Button>
       </Form>
     )
   }
@@ -148,21 +153,21 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
     return (
       <>
         <Row>
-          <Col xs='10'>
+          <Col lg='10' xs='12'>
             <h1 className='text-hel-95 text-black text-xl'>My Account</h1>
           </Col>
-          <Col xs='2'>
-            <Link route='editprofile'><Button className='button-yellow'>Edit Profile</Button></Link>
+          <Col lg='2' xs='12'>
+            <Link route='editprofile'><Button className='button-yellow' block={this.state.isSmallDevice}>Edit Profile</Button></Link>
           </Col>
         </Row>
         <Row>
-          <Col xs='3'>
+          <Col lg='3' xs='12'>
             <ul className='list-profile'>
               <Link route='profile'><li className={this.state.active.includes('/profile') ? 'text-yellow' : ''}>Account</li></Link>
               <Link route='orderhistory'><li className={this.state.active.includes('/order_history') ? 'text-yellow' : ''}>Order History</li></Link>
             </ul>
           </Col>
-          <Col xs='5'>
+          <Col lg='5' xs='12'>
             <span className='text-m text-hel-reg'>Name</span>
             <p className='text-ml text-os-reg text-black-light'>{profile.name}</p>
             <span className='text-m text-hel-reg'>Email</span>
@@ -173,7 +178,7 @@ class MyAccount extends Component<PropsComponent, StateComponent> {
             <ListGroup>
               {this.listUserAddress()}
             </ListGroup>
-            <Button className='text-s text-os-reg mt-2 button-yellow' onMouseDown={this.onAddAddressClicked}>{this.state.isFormShow ? 'Cancel' : '+ Add Address'}</Button>
+            <Button className='text-s text-os-reg mt-2 button-yellow' block={this.state.isSmallDevice} onMouseDown={this.onAddAddressClicked}>{this.state.isFormShow ? 'Cancel' : '+ Add Address'}</Button>
             {this.state.isFormShow ? this.renderFormAddress() : <div/>}
           </Col>
         </Row>

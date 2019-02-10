@@ -22,7 +22,7 @@ interface StateComponent {
 }
 
 export default class extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
     this.state = {
       modal: false
@@ -42,7 +42,11 @@ export default class extends Component<PropsComponent, StateComponent> {
       <>
         <Container>
           <Header />
-          <HomeBanner/>
+          <Row>
+            <Col xs='12'>
+              <HomeBanner />
+            </Col>
+          </Row>
           <Row>
             <Col xs='6'>
               <h3>Activity</h3>

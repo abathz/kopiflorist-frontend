@@ -21,7 +21,7 @@ interface StateComponent {
 }
 
 class OrderHistory extends Component<PropsComponent, StateComponent> {
-  constructor (props: any) {
+  constructor (props: PropsComponent) {
     super(props)
 
     this.state = { active: '' }
@@ -79,19 +79,19 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
     return (
       <>
         <Row>
-          <Col xs='10'>
+          <Col lg='10' xs='12'>
             <h1 className='text-hel-95 text-black text-xl'>Order History</h1>
           </Col>
         </Row>
         <Row>
-          <Col xs='3'>
+          <Col lg='3' xs='12'>
             <ul className='list-profile'>
               <Link route='profile'><li className={this.state.active.includes('/profile') ? 'text-yellow' : ''}>Account</li></Link>
               <Link route='orderhistory'><li className={this.state.active.includes('/order_history') ? 'text-yellow' : ''}>Order History</li></Link>
             </ul>
           </Col>
-          <Col xs='9'>
-            <Table>
+          <Col lg='9' xs='12'>
+            <Table responsive={true}>
               <thead>
                 <tr>
                   <th>Transaction Code</th>
