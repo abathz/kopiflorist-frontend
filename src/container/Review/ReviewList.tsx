@@ -19,9 +19,6 @@ interface PropsComponent extends StateProps, DispatchProps {}
 interface StateComponent {}
 
 class ReviewList extends Component<PropsComponent, StateComponent> {
-  constructor (props: PropsComponent) {
-    super(props)
-  }
 
   componentDidMount () {
     this.props.getUserReviews()

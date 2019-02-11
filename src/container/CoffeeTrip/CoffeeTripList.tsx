@@ -20,9 +20,6 @@ interface PropsComponent extends StateProps, DispatchProps { }
 interface StateComponent { }
 
 class CoffeeTripList extends Component<PropsComponent, StateComponent> {
-  constructor (props: PropsComponent) {
-    super(props)
-  }
 
   componentDidMount () {
     this.props.getAllTrip()

@@ -30,10 +30,6 @@ interface StateComponent {
 }
 
 class BlogList extends Component<PropsComponent, StateComponent> {
-  constructor (props: PropsComponent) {
-    super(props)
-  }
-
   componentDidMount () {
     this.props.getAllBlog()
   }

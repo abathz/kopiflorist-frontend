@@ -40,6 +40,7 @@ interface StateComponent {
 class Header extends Component<PropsComponent, StateComponent> {
   constructor (props: PropsComponent) {
     super(props)
+
     this.state = {
       isOpen: false,
       modal: false,

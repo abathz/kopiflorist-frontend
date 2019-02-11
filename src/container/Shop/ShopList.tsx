@@ -26,9 +26,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
   constructor (props: PropsComponent) {
     super(props)
 
-    this.state = {
-      activeTab: 1
-    }
+    this.state = { activeTab: 1 }
   }
 
   componentDidMount () {
