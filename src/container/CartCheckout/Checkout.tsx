@@ -15,6 +15,7 @@ import {
   createInvoice
 } from 'actions'
 import moment from 'moment'
+import Loading from 'container/Common/Loading'
 
 interface StateProps {
   profile: any
@@ -100,7 +101,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     }
 
     if (e.target.id === 'city') {
-      let cityId = e.target.value.split(',')[0]
+      let [ cityId ] = e.target.value.split(',')
       this.props.updateDataCheckout({ prop: 'city', value: Number(cityId) })
 
       let destination = this.props.cartcheckout.city
@@ -143,7 +144,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
-          this.props.updateDataCheckout({ prop: e.target.id, value: e.target.value })
+          this.props.updateDataCheckout({ prop: e.target.id, value: idPickupMethod })
           return ''
       }
     }
@@ -358,18 +359,12 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   renderDataPickupMethod () {
     const { allPickupMethod, myCart } = this.props
+    let pickupMethod = allPickupMethod
     if (myCart === null || myCart.item_count === 0) window.location.href = '/'
-    if (myCart.self_pickup_enabled) {
-      return (
-        <>
-          <option value='self_pickup'>Ambil ditempat</option>
-          {_.map(allPickupMethod, (data: any, index: number) => {
-            return <option key={index} value={`${data.id},${data.code}`}>{data.pickup_method_name}</option>
-          })}
-        </>
-      )
+    if (!myCart.self_pickup_enabled) {
+      pickupMethod = _.filter(pickupMethod, (data: any) => !data.self_pickup)
     }
-    return _.map(allPickupMethod, (data: any, index: number) => {
+    return _.map(pickupMethod, (data: any, index: number) => {
       return <option key={index} value={`${data.id},${data.code}`}>{data.pickup_method_name}</option>
     })
   }
@@ -393,7 +388,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     if (this.state.codePickup === 'dakota' || this.state.codePickup === 'gojek') {
       return <Alert color='info'>{this.state.messageAlert}</Alert>
     } else if (this.state.codePickup === 'jne' && this.state.addressSelected) {
-      if (deliveryCost === null) return <p>Loading...</p>
+      if (deliveryCost === null) return <Loading/>
       return (
         <FormGroup>
           <Label for='service'>Service</Label>

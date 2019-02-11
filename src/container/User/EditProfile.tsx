@@ -12,6 +12,7 @@ import {
 } from 'actions'
 import _ from 'lodash'
 import { Link } from 'routes'
+import Loading from 'container/Common/Loading'
 
 interface StateProps {
   user: any
@@ -151,7 +152,7 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
   renderFormAddress () {
     const { user } = this.props
     if (!this.state.formAddress) return ''
-    if (this.state.isLoading) return <div>Loading...</div>
+    if (this.state.isLoading) return <Loading/>
     return (
       <Row>
         <Col xs='6'>
