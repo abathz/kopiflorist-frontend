@@ -30,7 +30,7 @@ const INITIAL_STATE: State = {
   priceService: 0
 }
 
-export default (state = INITIAL_STATE, action: Action) => {
+const CartAndCheckoutReducer = (state = INITIAL_STATE, action: Action) => {
   switch (action.type) {
     case UPDATE_DATA_CHECKOUT:
       return { ...state, [action.payload.prop]: action.payload.value }
@@ -50,3 +50,5 @@ export default (state = INITIAL_STATE, action: Action) => {
       return state
   }
 }
+
+export default CartAndCheckoutReducer

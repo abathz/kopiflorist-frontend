@@ -35,7 +35,7 @@ const INITIAL_STATE: State = {
   detailsInvoice: {}
 }
 
-export default (state = INITIAL_STATE, action: Action) => {
+const UserReducer = (state = INITIAL_STATE, action: Action) => {
   switch (action.type) {
     case UPDATE_DATA_PROFILE:
       if (action.payload.prop === 'userAddress') {
@@ -90,3 +90,5 @@ export default (state = INITIAL_STATE, action: Action) => {
       return state
   }
 }
+
+export default UserReducer

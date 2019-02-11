@@ -12,7 +12,7 @@ const INITIAL_STATE: State = {
   ratingReview: 0
 }
 
-export default (state = INITIAL_STATE, action: Action) => {
+const ReviewReducer = (state = INITIAL_STATE, action: Action) => {
   switch (action.type) {
     case UPDATE_DATA_REVIEW:
       return { ...state, [action.payload.prop]: action.payload.value }
@@ -22,3 +22,5 @@ export default (state = INITIAL_STATE, action: Action) => {
       return state
   }
 }
+
+export default ReviewReducer

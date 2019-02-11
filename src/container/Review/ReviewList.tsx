@@ -18,20 +18,6 @@ interface PropsComponent extends StateProps, DispatchProps {}
 
 interface StateComponent {}
 
-const arrMonth: any = []
-arrMonth[1] = 'January'
-arrMonth[2] = 'February'
-arrMonth[3] = 'March'
-arrMonth[4] = 'April'
-arrMonth[5] = 'May'
-arrMonth[6] = 'June'
-arrMonth[7] = 'July'
-arrMonth[8] = 'August'
-arrMonth[9] = 'September'
-arrMonth[10] = 'October'
-arrMonth[11] = 'November'
-arrMonth[12] = 'December'
-
 class ReviewList extends Component<PropsComponent, StateComponent> {
   constructor (props: PropsComponent) {
     super(props)

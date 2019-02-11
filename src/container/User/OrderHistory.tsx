@@ -36,12 +36,11 @@ class OrderHistory extends Component<PropsComponent, StateComponent> {
   renderDataTable () {
     const { userInvoices } = this.props
     return _.map(userInvoices, (data: any, index: number) => {
-      const date = moment(data.updatedAt).format('DD MMMM YYYY')
-      const time = moment(data.updatedAt).format('HH:MM')
+      const dateTime = moment(data.updatedAt).format('DD MMMM YYYY (HH:MM)')
       return (
         <tr key={index}>
           <td style={{ paddingTop: '20px' }}>{data.invoice_code}</td>
-          <td style={{ paddingTop: '20px' }}>{date} ({time})</td>
+          <td style={{ paddingTop: '20px' }}>{dateTime}</td>
           <td style={{ paddingTop: '20px' }}>Rp {data.total_price}</td>
           <td>
             <Link route='detailsorderhistory' params={{ id: data.id }}><Button color='info'>Details</Button></Link>

@@ -118,8 +118,8 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     }
 
     if (e.target.id === 'pickup_method') {
-      let idPickupMethod = e.target.value.split(',')[0]
-      switch (e.target.value.split(',')[1]) {
+      let [ idPickupMethod, codePickupMethod ] = e.target.value.split(',')
+      switch (codePickupMethod) {
         case 'gojek':
           this.setState({
             codePickup: 'gojek',
@@ -149,8 +149,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     }
 
     if (e.target.id === 'service') {
-      let serviceName = e.target.value.split('-')[0]
-      let priceService = e.target.value.split('-')[1]
+      let [ serviceName, priceService ] = e.target.value.split('-')
       this.props.updateDataCheckout({ prop: 'service', value: serviceName })
       this.props.updateDataCheckout({ prop: 'priceService', value: Number(priceService) })
       return
@@ -207,17 +206,16 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   onAddressClicked = (id: number, index: number) => () => {
     const { profile } = this.props
-    let address = profile.address[index]
-    let destination = address.city_id
+    let { id: idAddress, city_id } = profile.address[index]
     let cartId = this.props.cartcheckout.myCart.id
 
     this.setState({
       idActiveList: id,
       addressSelected: true
     })
-    this.props.getDeliveryCost(cartId, Number(destination), this.state.idPickup)
-    this.props.updateDataCheckout({ prop: 'city', value: destination })
-    this.props.updateDataCheckout({ prop: 'idAddress', value: address.id })
+    this.props.getDeliveryCost(cartId, Number(city_id), this.state.idPickup)
+    this.props.updateDataCheckout({ prop: 'city', value: city_id })
+    this.props.updateDataCheckout({ prop: 'idAddress', value: idAddress })
   }
 
   dataTripCart () {
@@ -360,9 +358,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   renderDataPickupMethod () {
     const { allPickupMethod, myCart } = this.props
-    if (myCart === null || myCart.item_count === 0) {
-      window.location.href = '/'
-    }
+    if (myCart === null || myCart.item_count === 0) window.location.href = '/'
     if (myCart.self_pickup_enabled) {
       return (
         <>
@@ -404,8 +400,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           <Input type='select' id='service' onChange={this.onInputChange}>
             <option defaultChecked={true}>Choose Service</option>
             {_.map(this.props.deliveryCost.costs, (data: any, index: number) => {
-              let minEstimateDeliveryDay = data.cost[0].etd.split('-')[0]
-              let maxEstimateDeliveryDay = data.cost[0].etd.split('-')[1]
+              let [ minEstimateDeliveryDay, maxEstimateDeliveryDay ] = data.cost[0].etd.split('-')
               if (minEstimateDeliveryDay === maxEstimateDeliveryDay) {
                 return <option key={index} value={`${data.service}-${data.cost[0].value}`}>{data.service} (One Day)</option>
               }
@@ -447,7 +442,9 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             </Table>
             {
               cartcheckout.priceService !== 0
-                ? <p className='float-right text-hel-95 text-ml'>Biaya Pengiriman <span className='text-hel-reg text-l'>Rp {cartcheckout.priceService}</span></p>
+                ? <p className='float-right text-hel-95 text-ml'>
+                    Biaya Pengiriman <span className='text-hel-reg text-l'>Rp {cartcheckout.priceService}</span>
+                  </p>
                 : <div/>
             }
             <div className='clearfix' />

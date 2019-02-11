@@ -63,17 +63,46 @@ class EditProfile extends Component<PropsComponent, StateComponent> {
         if (data.province_id === e.target.value) return data
       })
       this.props.getAllCities(Number(province[0].province_id))
-      this.props.updateDataProfile({ prop: 'userAddress', value: { indexAddress: this.state.indexAddress, province_id: Number(province[0].province_id), target: { id: e.target.id, value: province[0].province } } })
+      this.props.updateDataProfile({
+        prop: 'userAddress',
+        value: {
+          indexAddress: this.state.indexAddress,
+          province_id: Number(province[0].province_id),
+          target: {
+            id: e.target.id,
+            value: province[0].province
+          }
+        }
+      })
       this.props.updateDataProfile({ prop: 'postal_code', value: 0 })
     }
     if (e.target.id === 'city') {
       let city: any[] = _.filter(this.props.cities, (data: any) => {
         if (data.city_id === e.target.value) return data
       })
-      this.props.updateDataProfile({ prop: 'userAddress', value: { indexAddress: this.state.indexAddress, city_id: Number(city[0].city_id), target: { id: e.target.id, value: `${city[0].type} ${city[0].city_name}` } } })
+      this.props.updateDataProfile({
+        prop: 'userAddress',
+        value: {
+          indexAddress: this.state.indexAddress,
+          city_id: Number(city[0].city_id),
+          target: {
+            id: e.target.id,
+            value: `${city[0].type} ${city[0].city_name}`
+          }
+        }
+      })
     }
     if (e.target.id === 'address' || e.target.id === 'postal_code') {
-      this.props.updateDataProfile({ prop: 'userAddress', value: { indexAddress: this.state.indexAddress, target: { id: e.target.id, value: e.target.value } } })
+      this.props.updateDataProfile({
+        prop: 'userAddress',
+        value: {
+          indexAddress: this.state.indexAddress,
+          target: {
+            id: e.target.id,
+            value: e.target.value
+          }
+        }
+      })
     }
     this.props.updateDataProfile({ prop: e.target.id, value: e.target.value })
   }

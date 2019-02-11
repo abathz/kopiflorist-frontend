@@ -40,7 +40,7 @@ const INITIAL_STATE: State = {
   tripReviews: []
 }
 
-export default (state = INITIAL_STATE, action: Action) => {
+const TripReducer = (state = INITIAL_STATE, action: Action) => {
   switch (action.type) {
     case UPDATE_DATA_TRIP:
       if (action.payload.prop === 'other_photo') {
@@ -72,3 +72,5 @@ export default (state = INITIAL_STATE, action: Action) => {
       return state
   }
 }
+
+export default TripReducer

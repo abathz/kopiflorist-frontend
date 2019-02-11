@@ -64,9 +64,9 @@ class ListArchive extends Component<PropsComponent, StateComponent> {
   sortYear () {
     return _.countBy(this.props.data, (data: any) => {
       const MAX_YEAR = 2029
-      const dateCreated: number[] = data.date_created.substring(0, 10).split('-')
-      for (let index = dateCreated[0] ; index < MAX_YEAR; index++) {
-        return `${dateCreated[0]}`
+      const [ year ]: number[] = data.date_created.substring(0, 10).split('-')
+      for (let index = year ; index < MAX_YEAR; index++) {
+        return `${year}`
       }
     })
   }
@@ -108,19 +108,19 @@ class ListArchive extends Component<PropsComponent, StateComponent> {
 
   renderBlogArchive (month: any) {
     return _.map(this.props.data, (data: any, index: any) => {
-      const dateCreated = data.date_created.substring(0, 10).split('-')
-      if (dateCreated[1] === '01' && month === 'January') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '02' && month === 'February') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '03' && month === 'March') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '04' && month === 'April') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '05' && month === 'May') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '06' && month === 'June') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '07' && month === 'July') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '08' && month === 'August') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '09' && month === 'September') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '10' && month === 'October') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '11' && month === 'November') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
-      else if (dateCreated[1] === '12' && month === 'December') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      const [ ,monthCreated ] = data.date_created.substring(0, 10).split('-')
+      if (monthCreated === '01' && month === 'January') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '02' && month === 'February') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '03' && month === 'March') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '04' && month === 'April') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '05' && month === 'May') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '06' && month === 'June') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '07' && month === 'July') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '08' && month === 'August') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '09' && month === 'September') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '10' && month === 'October') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '11' && month === 'November') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
+      else if (monthCreated === '12' && month === 'December') return <Link key={index} route={`/blog/${data.id}/${data.slug}`}><a className='text-m text-black'><p>{data.blog_title}</p></a></Link>
     })
   }
 

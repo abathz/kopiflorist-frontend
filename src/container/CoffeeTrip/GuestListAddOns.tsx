@@ -125,7 +125,6 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     let res: number = 0
 
     let totalProductAddOns: number = _.map(allProduct, (data: any, index: number) => data.price * shop.addOns[index].quantity).reduce((a: number, b: number) => a + b, 0)
-
     res += totalProductAddOns
 
     return res

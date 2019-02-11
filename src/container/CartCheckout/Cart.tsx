@@ -108,7 +108,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
         <Row>
           <Col>
             <p className='text-hel-95 text-xl'>My Cart</p>
-            <Table  responsive={true}>
+            <Table responsive={true}>
               <thead>
                 <tr>
                   <th>Activity/Product</th>

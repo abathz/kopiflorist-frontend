@@ -214,7 +214,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
 
   tripDate () {
     const { tripDetail } = this.props
-    const date = `${tripDetail.trip_date}`.substring(0, 10).split('-')
+    const date = `${tripDetail.trip_date}`.substring(0, 10)
     const startDate = moment(date).format('DD MMMM YYYY')
     const endDate = moment(date).add(tripDetail.duration - 1, 'd').format('DD MMMM YYYY')
     return tripDetail.duration !== 1 ? `${startDate} - ${endDate}` : startDate

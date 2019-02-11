@@ -14,7 +14,7 @@ const INITIAL_STATE: State = {
   addOns: []
 }
 
-export default (state = INITIAL_STATE, action: Action) => {
+const ShopReducer = (state = INITIAL_STATE, action: Action) => {
   switch (action.type) {
     case UPDATE_DATA_SHOP:
       return { ...state, [action.payload.prop]: action.payload.value }
@@ -47,3 +47,5 @@ export default (state = INITIAL_STATE, action: Action) => {
       return state
   }
 }
+
+export default ShopReducer

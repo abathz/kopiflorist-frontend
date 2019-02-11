@@ -14,7 +14,7 @@ const INITIAL_STATE: State = {
   trackingDelivery: {}
 }
 
-export default (state= INITIAL_STATE, action: Action) => {
+const RajaongkirReducer = (state= INITIAL_STATE, action: Action) => {
   switch (action.type) {
     case GET_ALL_PROVINCES:
       return { ...state, provinces: action.payload.provinces }
@@ -32,3 +32,5 @@ export default (state= INITIAL_STATE, action: Action) => {
       return state
   }
 }
+
+export default RajaongkirReducer
