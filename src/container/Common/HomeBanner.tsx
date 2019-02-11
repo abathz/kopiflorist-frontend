@@ -5,7 +5,8 @@ import {
   CarouselItem,
   CarouselControl,
   CarouselIndicators,
-  CarouselCaption } from 'reactstrap'
+  CarouselCaption
+} from 'reactstrap'
 
 interface StateProps { }
 
@@ -34,15 +35,11 @@ class HomeBanner extends Component<PropsComponent, StateComponent> {
   }
 
   onExiting = () => {
-    this.setState({
-      animating: true
-    })
+    this.setState({ animating: true })
   }
 
   onExited = () => {
-    this.setState({
-      animating: false
-    })
+    this.setState({ animating: false })
   }
 
   next = () => {
@@ -78,16 +75,16 @@ class HomeBanner extends Component<PropsComponent, StateComponent> {
   }
 
   render () {
-    const { activeIndex } = this.state
+    const { activeIndex, items } = this.state
     return (
       <Carousel
         className='mb-5'
-        activeIndex={this.state.activeIndex}
+        activeIndex={activeIndex}
         next={this.next}
         previous={this.previous}
         interval={2000}
       >
-        <CarouselIndicators items={this.state.items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
+        <CarouselIndicators items={items} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
         {this.renderSlide()}
         <CarouselControl direction='prev' directionText='Previous' onClickHandler={this.previous} />
         <CarouselControl direction='next' directionText='Next' onClickHandler={this.next} />

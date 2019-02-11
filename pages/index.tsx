@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
-import {
-  Container,
-  Col,
-  Row } from 'reactstrap'
+import { Container, Col, Row } from 'reactstrap'
 import _ from 'lodash'
 import Header from 'container/Common/Header'
 import Footer from 'container/Common/Footer'
-import HomeBanner from 'container/HomeBanner'
+import HomeBanner from 'container/Common/HomeBanner'
 import ShopList from 'container/Shop/ShopList'
 import CoffeeTripList from 'container/CoffeeTrip/CoffeeTripList'
 import { Link } from 'routes'
@@ -24,17 +21,11 @@ interface StateComponent {
 export default class extends Component<PropsComponent, StateComponent> {
   constructor (props: PropsComponent) {
     super(props)
-    this.state = {
-      modal: false
-    }
-
-    this.toggle = this.toggle.bind(this)
+    this.state = { modal: false }
   }
 
-  toggle () {
-    this.setState({
-      modal: !this.state.modal
-    })
+  toggle = () => {
+    this.setState({ modal: !this.state.modal })
   }
 
   render () {
