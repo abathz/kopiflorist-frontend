@@ -32,18 +32,21 @@ class CoffeeTripList extends Component<PropsComponent, StateComponent> {
       const date = `${data.trip_date}`.substring(0, 10)
       const startDate = moment(date).format('DD MMMM YYYY')
       const endDate = moment(date).add(data.duration - 1, 'd').format('DD MMMM YYYY')
-      return (
-        <Col key={index} lg='4' xs='12' className='mb-5'>
-          <Link route={`/coffee_trip/${data.id}`}>
-            <img className='img-fluid' src={data.main_photo} style={{ cursor: 'pointer' }}/>
-          </Link>
-          <div className='mt-3'>
-            <p className='text-l text-hel-95 h4'>{data.title}</p>
-            <p className='text-m text-os-reg text-justify'>{data.description}</p>
-            <p><span className='text-hel-bold'>{startDate}</span>{data.duration !== 1 ? <span className='text-hel-bold'> - {endDate}</span> : ''}</p>
-          </div>
-        </Col>
-      )
+      console.log(data)
+      if (data.availability) {
+        return (
+          <Col key={index} lg='4' xs='12' className='mb-5'>
+            <Link route={`/coffee_trip/${data.id}`}>
+              <img className='img-fluid' src={data.main_photo} style={{ cursor: 'pointer' }} />
+            </Link>
+            <div className='mt-3'>
+              <p className='text-l text-hel-95 h4'>{data.title}</p>
+              <p className='text-m text-os-reg text-justify'>{data.description}</p>
+              <p><span className='text-hel-bold'>{startDate}</span>{data.duration !== 1 ? <span className='text-hel-bold'> - {endDate}</span> : ''}</p>
+            </div>
+          </Col>
+        )
+      }
     })
   }
 
