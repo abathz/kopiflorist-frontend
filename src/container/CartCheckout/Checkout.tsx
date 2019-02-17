@@ -127,6 +127,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             pickupMethodSelected: true,
             messageAlert: 'Biaya antar ditanggung oleh customer. Hanya untuk daerah Bandung dan sekitarnya'
           })
+          this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         case 'dakota':
           this.setState({
@@ -134,6 +135,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             pickupMethodSelected: true,
             messageAlert: 'Untuk pengiriman via DAKOTA harap hubungi +62 813-1375-5587 via Whatsapp'
           })
+          this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         case 'jne':
           this.setState({
@@ -141,6 +143,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             pickupMethodSelected: true,
             idPickup: Number(idPickupMethod)
           })
+          console.log(idPickupMethod, codePickupMethod)
           this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
@@ -210,13 +213,12 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     let { id: idAddress, city_id } = profile.address[index]
     let cartId = this.props.cartcheckout.myCart.id
 
-    this.setState({
-      idActiveList: id,
-      addressSelected: true
-    })
-    this.props.getDeliveryCost(cartId, Number(city_id), this.state.idPickup)
-    this.props.updateDataCheckout({ prop: 'city', value: city_id })
-    this.props.updateDataCheckout({ prop: 'idAddress', value: idAddress })
+    this.setState({ idActiveList: id, addressSelected: true })
+    if (this.state.codePickup === 'jne') {
+      this.props.getDeliveryCost(cartId, Number(city_id), this.state.idPickup)
+      this.props.updateDataCheckout({ prop: 'city', value: city_id })
+      this.props.updateDataCheckout({ prop: 'idAddress', value: idAddress })
+    }
   }
 
   dataTripCart () {
