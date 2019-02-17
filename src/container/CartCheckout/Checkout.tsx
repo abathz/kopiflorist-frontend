@@ -120,6 +120,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
     if (e.target.id === 'pickup_method') {
       let [ idPickupMethod, codePickupMethod ] = e.target.value.split(',')
+      this.setState({ idActiveList: 0 })
       switch (codePickupMethod) {
         case 'gojek':
           this.setState({
@@ -147,7 +148,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
-          this.props.updateDataCheckout({ prop: e.target.id, value: idPickupMethod })
+          this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return ''
       }
     }
@@ -201,7 +202,8 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       }
     }
 
-    this.props.createInvoice(data)
+    // this.props.createInvoice(data)
+    console.log('TCL: Checkout -> onPayClicked -> data', data)
   }
 
   onAddAddressClicked = () => {
@@ -216,9 +218,9 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     this.setState({ idActiveList: id, addressSelected: true })
     if (this.state.codePickup === 'jne') {
       this.props.getDeliveryCost(cartId, Number(city_id), this.state.idPickup)
-      this.props.updateDataCheckout({ prop: 'city', value: city_id })
-      this.props.updateDataCheckout({ prop: 'idAddress', value: idAddress })
     }
+    this.props.updateDataCheckout({ prop: 'city', value: city_id })
+    this.props.updateDataCheckout({ prop: 'idAddress', value: idAddress })
   }
 
   dataTripCart () {
