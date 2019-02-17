@@ -10,6 +10,7 @@ interface StateProps {
   id: number
   detailsInvoice: any
   trackingDelivery: any
+  isShipping: boolean
 }
 
 interface DispatchProps {
@@ -110,6 +111,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
 
   renderDataTrips () {
     const { detailsInvoice } = this.props
+    console.log(detailsInvoice)
     if (!detailsInvoice.cart) return ''
     return _.map(detailsInvoice.cart.trips, (data: any, index: number) => {
       let tripDate = data.trip_days.trip_date.substring(0, 10)
@@ -266,6 +268,9 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
   }
 
   render () {
+    const { isShipping, detailsInvoice, trackingDelivery } = this.props
+    if (!trackingDelivery.summary) return ''
+    if (!detailsInvoice.pickup) return <div/>
     const transactionStatus = this.transactionStatus()
     return (
       <>
@@ -291,8 +296,25 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
             <Row className='mb-4'>
               {this.renderDataProducts()}
             </Row>
-            <h4>Tracking Delivery</h4>
-            {this.renderDataTrackingDelivery()}
+            {
+              detailsInvoice.pickup.pickup_method.code === 'jne'
+              ? <>
+                  <h4>Tracking Delivery</h4>
+                  <p className='text-hel-95 text-black text-l'>
+                    Status: <span className='text-hel-bold text-yellow text-ml'>
+                      {
+                        isShipping
+                          ? trackingDelivery.summary.destination === trackingDelivery.manifest[trackingDelivery.manifest.length - 1].city_name
+                            ? 'Shipped'
+                            : 'Shipping'
+                        : 'Waiting for Shipping'
+                      }
+                    </span>
+                  </p>
+                  {this.renderDataTrackingDelivery()}
+              </>
+              : <div/>
+            }
           </Col>
         </Row>
       </>
@@ -302,9 +324,9 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
 
 const mapStateToProps = ({ user, rajaongkir }: any) => {
   const { detailsInvoice } = user
-  const { trackingDelivery } = rajaongkir
+  const { trackingDelivery, isShipping } = rajaongkir
 
-  return { detailsInvoice, trackingDelivery }
+  return { detailsInvoice, trackingDelivery, isShipping }
 }
 
 export default connect(mapStateToProps, { getInvoice, createMidtransPayment, trackDelivery })(DetailsOrderHistory)

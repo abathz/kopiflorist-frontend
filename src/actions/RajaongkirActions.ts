@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { Dispatch } from 'redux'
-import { GET_ALL_PROVINCES, GET_ALL_CITIES, GET_DEIVERY_COST, RESET_STATE_RAJAONGKIR_ALL, RESET_STATE_RAJAONGKIR_COST, TRACK_DELIVERY } from './types'
+import { GET_ALL_PROVINCES, GET_ALL_CITIES, GET_DEIVERY_COST, RESET_STATE_RAJAONGKIR_ALL, RESET_STATE_RAJAONGKIR_COST, TRACK_DELIVERY_SUCCESS, TRACK_DELIVERY_FAILED } from './types'
 
 export const resetData = (state: string) => (dispatch: Dispatch<any>) => {
   if (state === 'all') dispatch({ type: RESET_STATE_RAJAONGKIR_ALL })
@@ -23,9 +23,13 @@ export const getDeliveryCost = (cartId: number, destination: number, courier: nu
 }
 
 export const trackDelivery = (idInvoice: number) => async (dispatch: Dispatch<any>) => {
-  const res = await axios.get(`/invoice/${idInvoice}/track`)
+  try {
+    const res = await axios.get(`/invoice/${idInvoice}/track`)
 
-  await trackDeliverySuccess(dispatch, res)
+    await trackDeliverySuccess(dispatch, res)
+  } catch (error) {
+    await trackDeliveryFailed(dispatch)
+  }
 }
 
 const getAllProvinceSuccess = (dispatch: Dispatch<any>, res: any) => {
@@ -51,7 +55,11 @@ const getDeliveryCostSuccess = (dispatch: Dispatch<any>, res: any) => {
 
 const trackDeliverySuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
-    type: TRACK_DELIVERY,
+    type: TRACK_DELIVERY_SUCCESS,
     payload: res.data
   })
+}
+
+const trackDeliveryFailed = (dispatch: Dispatch<any>) => {
+  dispatch({ type: TRACK_DELIVERY_FAILED })
 }

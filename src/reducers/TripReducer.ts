@@ -2,10 +2,10 @@ import { Action, UPDATE_DATA_TRIP, ADD_DATA_GUEST, GET_ALL_TRIP, GET_TRIP, GET_T
 
 interface State {
   name: string
-  email: string
+  id_number: string
   food_preference: string
   age: number
-  phone: number
+  gender: string
   group_size: string
   guest_list: number
   guestList: any[]
@@ -22,10 +22,10 @@ interface State {
 
 const INITIAL_STATE: State = {
   name: '',
-  email: '',
+  id_number: '',
   food_preference: '',
   age: 0,
-  phone: 0,
+  gender: '',
   group_size: '',
   price: 0,
   guest_list: 0,

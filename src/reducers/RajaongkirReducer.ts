@@ -1,10 +1,11 @@
-import { Action, GET_ALL_PROVINCES, GET_ALL_CITIES, GET_DEIVERY_COST, RESET_STATE_RAJAONGKIR_ALL, RESET_STATE_RAJAONGKIR_COST, TRACK_DELIVERY } from 'actions/types'
+import { Action, GET_ALL_PROVINCES, GET_ALL_CITIES, GET_DEIVERY_COST, RESET_STATE_RAJAONGKIR_ALL, RESET_STATE_RAJAONGKIR_COST, TRACK_DELIVERY_SUCCESS, TRACK_DELIVERY_FAILED } from 'actions/types'
 
 interface State {
   provinces: any[]
   cities: any[]
   deliveryCost: any
   trackingDelivery: any
+  isShipping?: boolean
 }
 
 const INITIAL_STATE: State = {
@@ -26,8 +27,10 @@ const RajaongkirReducer = (state= INITIAL_STATE, action: Action) => {
       return { ...state, cities: [], deliveryCost: [] }
     case RESET_STATE_RAJAONGKIR_COST:
       return { ...state, deliveryCost: [] }
-    case TRACK_DELIVERY:
-      return { ...state, trackingDelivery: action.payload.result }
+    case TRACK_DELIVERY_SUCCESS:
+      return { ...state, trackingDelivery: action.payload.result, isShipping: true }
+    case TRACK_DELIVERY_FAILED:
+      return { ...state, isShipping: false }
     default:
       return state
   }

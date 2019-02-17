@@ -46,10 +46,10 @@ export const orderTrip = (newData: any) => async () => {
 export const addDataGuest = (newData: any) => (dispatch: Dispatch<any>) => {
   let data = {
     name: newData.name,
-    email: newData.email,
+    id_number: newData.id_number,
     food_preference: newData.food_preference,
     age: newData.age,
-    phone: newData.phone
+    gender: newData.gender
   }
 
   dispatch({

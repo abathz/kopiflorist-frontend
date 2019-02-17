@@ -79,10 +79,10 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
     const { trip } = this.props
     let data = {
       name: trip.name,
-      email: trip.email,
+      id_number: trip.id_number,
       food_preference: trip.food_preference,
       age: trip.age,
-      phone: trip.phone
+      gender: trip.gender
     }
 
     this.props.addDataGuest(data)
@@ -95,14 +95,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
 
   onContinueToCartClicked = () => {
     const { shop, trip, allProduct, tripPackage } = this.props
-    // tslint:disable-next-line:no-empty
-    if (tripPackage.max_participant === 1) {
-    } else if (tripPackage.min_participant < trip.guestList.length) {
-      this.setState((prevState) => ({
-        alert: !prevState.alert
-      }))
-      return
-    }
+
     const productAddOns = _.map(allProduct, (data: any, index: number) => {
       return {
         id: data.id,
@@ -117,7 +110,11 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
       productAddOns
     }
 
-    this.props.orderTrip(data)
+    if (tripPackage.max_participant === 1 && tripPackage.min_participant === 1 || tripPackage.min_participant === trip.guestList.length) {
+      this.props.orderTrip(data)
+    } else {
+      this.setState((prevState) => ({ alert: !prevState.alert }))
+    }
   }
 
   totalAddOns () {
@@ -164,8 +161,8 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
                 <Input type='text' id='name' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
-                <Label for='email'>Email</Label>
-                <Input type='text' id='email' onChange={this.onInputChange} />
+                <Label for='id_number'>ID number (Passport/Driving License/Identity Card)</Label>
+                <Input type='text' id='id_number' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='food_preference'>Meal Preference</Label>
@@ -184,8 +181,12 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
                 <Input type='tel' id='age' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
-                <Label for='phone'>Phone</Label>
-                <Input type='tel' id='phone' onChange={this.onInputChange} />
+                <Label for='gender'>Gender</Label>
+                <Input type='select' id='gender' onChange={this.onInputChange}>
+                  <option defaultChecked={true}>{}</option>
+                  <option value='vegetable'>Male</option>
+                  <option value='meat'>Female</option>
+                </Input>
               </FormGroup>
             </Form>
           </Col>

@@ -125,7 +125,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           this.setState({
             codePickup: 'gojek',
             pickupMethodSelected: true,
-            messageAlert: 'Biaya antar ditanggung oleh customer'
+            messageAlert: 'Biaya antar ditanggung oleh customer. Hanya untuk daerah Bandung dan sekitarnya'
           })
           return
         case 'dakota':
