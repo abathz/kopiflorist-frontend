@@ -99,6 +99,13 @@ export const deleteOrderTrip = (idCartTrip: number) => async () => {
   await deleteOrderTripSuccess()
 }
 
+export const applyCouponToCart = (newData: any) => async (dispatch: Dispatch<any>) => {
+  let idCart = newData.cart_id
+  let couponCode = newData.coupon_code
+  let res = await axios.get(`/coupon/apply/${idCart}?coupon_code=${couponCode}`)
+  await applyCouponToCartSuccess(res)
+}
+
 const getInfoMyCartSuccess = (dispatch: Dispatch<any>, res: any) => {
   dispatch({
     type: GET_INFO_MY_CART,
@@ -125,5 +132,10 @@ const deleteOrderProductSuccess = () => {
 }
 
 const deleteOrderTripSuccess = () => {
+  window.location.reload()
+}
+
+const applyCouponToCartSuccess = (res: any) => {
+  localStorage.setItem('couponDetail', JSON.stringify(res.data.coupon))
   window.location.reload()
 }

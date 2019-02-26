@@ -12,7 +12,8 @@ import {
   updateDataCheckout,
   getDeliveryCost,
   resetData,
-  createInvoice
+  createInvoice,
+  applyCouponToCart
 } from 'actions'
 import moment from 'moment'
 import Loading from 'container/Common/Loading'
@@ -39,6 +40,7 @@ interface DispatchProps {
   getDeliveryCost: typeof getDeliveryCost
   resetData: typeof resetData
   createInvoice: typeof createInvoice
+  applyCouponToCart: typeof applyCouponToCart
 }
 
 interface PropsComponent extends StateProps, DispatchProps {}
@@ -53,6 +55,7 @@ interface StateComponent {
   idActiveList: number
   isFormShow: boolean
   isSmallDevice: boolean
+  couponDetail: any
 }
 
 class Checkout extends Component<PropsComponent, StateComponent> {
@@ -68,15 +71,20 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       idPickup: 0,
       idActiveList: 0,
       isFormShow: false,
-      isSmallDevice: false
+      isSmallDevice: false,
+      couponDetail: {}
     }
   }
 
   componentDidMount () {
+    let coupon: any = localStorage.getItem('couponDetail')
     this.props.getAllPickupMethod()
     this.props.getAllCart()
     this.props.getAllProvince()
-    this.setState({ isSmallDevice: window.outerWidth < 576 })
+    this.setState({
+      isSmallDevice: window.outerWidth < 576,
+      couponDetail: JSON.parse(coupon)
+    })
   }
 
   toggleModal = () => {
@@ -171,9 +179,14 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   onCouponSubmit = (e: FormEvent) => {
     e.preventDefault()
-    this.setState((prevState) => ({
-      modal: !prevState.modal
-    }))
+    const { cartcheckout, myCart } = this.props
+
+    let data = {
+      cart_id: myCart.id,
+      coupon_code: cartcheckout.coupon_code
+    }
+
+    this.props.applyCouponToCart(data)
   }
 
   onPayClicked = () => {
@@ -258,10 +271,15 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   renderTotalPrice () {
+    const { couponDetail } = this.state
+    let totalPrice = 0
+
     const { dataProduct, dataTrip, cartcheckout } = this.props
     const totalPriceTrip = _.map(dataTrip.cart_trip, (data: any) => data.package.price).reduce((a: number, b: number) => a + b, 0)
     const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
-    let totalPrice = totalPriceProduct + totalPriceTrip + cartcheckout.priceService
+    totalPrice = totalPriceProduct + totalPriceTrip + cartcheckout.priceService
+
+    if (couponDetail.details) totalPrice = couponDetail.details.discounted_price
 
     return totalPrice
   }
@@ -449,7 +467,11 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             <div className='clearfix' />
             <p className='float-right text-hel-95 text-ml'>Total <span className='text-hel-reg text-l'>Rp {this.renderTotalPrice()}</span></p>
             <div className='clearfix' />
-            <div className='text-yellow text-s float-right' style={{ cursor: 'pointer' }} onMouseDown={this.onUseCouponClicked}>Use Coupon Code</div>
+            {
+              !this.state.couponDetail
+                ? <div className='text-yellow text-s float-right' style={{ cursor: 'pointer' }} onMouseDown={this.onUseCouponClicked}>Use Coupon Code</div>
+                : <div className='text-yellow text-m float-right'>Coupon Code: {this.state.couponDetail.coupon_code}</div>
+            }
             <div className='clearfix' />
             <Button className='mt-4 button-yellow' block={true} onMouseDown={this.onPayClicked}>Pay</Button>
           </Col>
@@ -487,5 +509,6 @@ export default connect(mapStateToProps, {
   updateDataCheckout,
   getDeliveryCost,
   resetData,
-  createInvoice
+  createInvoice,
+  applyCouponToCart
 })(Checkout)
