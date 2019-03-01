@@ -150,9 +150,9 @@ class Checkout extends Component<PropsComponent, StateComponent> {
           this.setState({
             codePickup: 'jne',
             pickupMethodSelected: true,
-            idPickup: Number(idPickupMethod)
+            idPickup: Number(idPickupMethod),
+            messageAlert: 'Untuk pengiriman dilakukan sebelum jam 14.00. Diatas jam 14.00 akan dikirim besok hari.'
           })
-          console.log(idPickupMethod, codePickupMethod)
           this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
@@ -191,9 +191,11 @@ class Checkout extends Component<PropsComponent, StateComponent> {
 
   onPayClicked = () => {
     const { cartcheckout } = this.props
+    const { couponDetail } = this.state
     let data: any
     data = {
       isAddressFill: false,
+      coupon_id: couponDetail.id || null,
       cart_id: cartcheckout.myCart.id,
       address_id: cartcheckout.idAddress,
       pickup_method_id: cartcheckout.pickup_method,
@@ -204,6 +206,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       if (cartcheckout.address !== '' && cartcheckout.city !== 0 && cartcheckout.province !== 0 && cartcheckout.postal_code !== '') {
         data = {
           isAddressFill: true,
+          coupon_id: couponDetail.id || null,
           address: cartcheckout.address,
           postal_code: cartcheckout.postal_code,
           province_id: cartcheckout.province,
@@ -215,8 +218,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       }
     }
 
-    // this.props.createInvoice(data)
-    console.log('TCL: Checkout -> onPayClicked -> data', data)
+    this.props.createInvoice(data)
   }
 
   onAddAddressClicked = () => {
@@ -279,7 +281,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     const totalPriceProduct = _.map(dataProduct.cart_product, (data: any) => data.total_price).reduce((a: number, b: number) => a + b, 0)
     totalPrice = totalPriceProduct + totalPriceTrip + cartcheckout.priceService
 
-    if (couponDetail.details) totalPrice = couponDetail.details.discounted_price
+    if (couponDetail && couponDetail.details) totalPrice = couponDetail.details.discounted_price
 
     return totalPrice
   }
@@ -412,19 +414,22 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     } else if (this.state.codePickup === 'jne' && this.state.addressSelected) {
       if (deliveryCost === null) return <Loading/>
       return (
-        <FormGroup>
-          <Label for='service'>Service</Label>
-          <Input type='select' id='service' onChange={this.onInputChange}>
-            <option defaultChecked={true}>Choose Service</option>
-            {_.map(this.props.deliveryCost.costs, (data: any, index: number) => {
-              let [ minEstimateDeliveryDay, maxEstimateDeliveryDay ] = data.cost[0].etd.split('-')
-              if (minEstimateDeliveryDay === maxEstimateDeliveryDay) {
-                return <option key={index} value={`${data.service}-${data.cost[0].value}`}>{data.service} (One Day)</option>
-              }
-              return <option key={index} value={`${data.service}-${data.cost[0].value}`}>{data.service} ({`${minEstimateDeliveryDay}-${maxEstimateDeliveryDay} days`})</option>
-            })}
-          </Input>
-        </FormGroup>
+        <>
+          <Alert color='info'>{this.state.messageAlert}</Alert>
+          <FormGroup>
+            <Label for='service'>Service</Label>
+            <Input type='select' id='service' onChange={this.onInputChange}>
+              <option defaultChecked={true}>Choose Service</option>
+              {_.map(this.props.deliveryCost.costs, (data: any, index: number) => {
+                let [minEstimateDeliveryDay, maxEstimateDeliveryDay] = data.cost[0].etd.split('-')
+                if (minEstimateDeliveryDay === maxEstimateDeliveryDay) {
+                  return <option key={index} value={`${data.service}-${data.cost[0].value}`}>{data.service} (One Day)</option>
+                }
+                return <option key={index} value={`${data.service}-${data.cost[0].value}`}>{data.service} ({`${minEstimateDeliveryDay}-${maxEstimateDeliveryDay} days`})</option>
+              })}
+            </Input>
+          </FormGroup>
+        </>
       )
     }
 

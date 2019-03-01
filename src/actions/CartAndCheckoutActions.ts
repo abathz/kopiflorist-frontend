@@ -43,7 +43,7 @@ export const getAllPickupMethod = () => async (dispatch: Dispatch<any>) => {
   await getAllPickupMethodSuccess(dispatch, res)
 }
 
-export const createInvoice = (newData: any) => async (dispatch: Dispatch<any>) => {
+export const createInvoice = (newData: any) => async () => {
   if (newData.isAddressFill) {
     let dataAddress = {
       address: newData.address,
@@ -62,6 +62,7 @@ export const createInvoice = (newData: any) => async (dispatch: Dispatch<any>) =
   }
 
   let dataPayment = {
+    coupon_id: newData.coupon_id,
     address_id: idAddress || newData.address_id,
     pickup_method_id: newData.pickup_method_id,
     pickup_method_service: newData.pickup_method_service,

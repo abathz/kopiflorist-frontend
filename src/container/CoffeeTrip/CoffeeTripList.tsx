@@ -32,7 +32,6 @@ class CoffeeTripList extends Component<PropsComponent, StateComponent> {
       const date = `${data.trip_date}`.substring(0, 10)
       const startDate = moment(date).format('DD MMMM YYYY')
       const endDate = moment(date).add(data.duration - 1, 'd').format('DD MMMM YYYY')
-      console.log(data)
       if (data.availability) {
         return (
           <Col key={index} lg='4' xs='12' className='mb-5'>
