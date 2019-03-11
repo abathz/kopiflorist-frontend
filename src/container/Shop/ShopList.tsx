@@ -56,6 +56,11 @@ class ShopList extends Component<PropsComponent, StateComponent> {
                 <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
               </Link>
               <div className='mt-3'>
+                {data.discount &&
+                  <div className='discount-badge mb-4'>
+                    {data.discount.amount} % Off
+                    </div>
+                }
                 <p className='text-l text-hel-95 h4'>{data.name}</p>
                 <p className='text-m text-os-reg text-justify'>{data.description}</p>
               </div>
@@ -67,6 +72,8 @@ class ShopList extends Component<PropsComponent, StateComponent> {
       if (this.state.activeTab === 1) {
         return _.map(product, (data: any) => {
           if (data.availability && data.category === 'Roasted Beans') {
+
+            console.log(data)
             const slug = data.name.split(' ').join('-').toLowerCase()
             return (
               <Col key={data.id} lg='3' xs='12' className='mb-5'>
@@ -74,6 +81,11 @@ class ShopList extends Component<PropsComponent, StateComponent> {
                   <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
                 </Link>
                 <div className='mt-3'>
+                  {data.discount &&
+                    <div className='discount-badge mb-4'>
+                      {data.discount.amount} % Off
+                    </div>
+                  }
                   <p className='text-l text-hel-95 h4'>{data.name}</p>
                   <p className='text-m text-os-reg text-justify'>{data.description}</p>
                 </div>
@@ -91,6 +103,11 @@ class ShopList extends Component<PropsComponent, StateComponent> {
                   <a><img className='img-fluid' src={data.photo} alt={data.name} /></a>
                 </Link>
                 <div className='mt-3'>
+                  {data.discount &&
+                    <div className='discount-badge mb-4'>
+                      {data.discount.amount} % Off
+                    </div>
+                  }
                   <p className='text-l text-hel-95 h4'>{data.name}</p>
                   <p className='text-m text-os-reg text-justify'>{data.description}</p>
                 </div>

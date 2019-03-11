@@ -130,6 +130,16 @@ span:hover{
   }
 }
 
+.discount-badge {
+  text-align: center;
+  width: 100px;
+  padding: 5px;
+  background-color: rgb(240, 65, 65);
+  color: #fff;
+  border-radius: 5px;
+  font-family: $os-bold;
+}
+
 /***********************************************************/
 /************************ LOADING **************************/
 /***********************************************************/

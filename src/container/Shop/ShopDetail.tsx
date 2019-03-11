@@ -100,7 +100,12 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             </Row>
           </Col>
           <Col xs={{ size: 5, offset: 1 }}>
-            <p className='text-xl text-black text-hel-95'>{product.name}</p>
+            <span className='text-xl text-black text-hel-95'>{product.name}</span>
+            {product.discount &&
+              <div className='discount-badge mb-4'>
+                {product.discount.amount} % Off
+              </div>
+            }
             <p className='text-ml text-black text-hel-95'>Product Description</p>
             <p className='text-m text-black text-hel-reg'>{product.description}</p>
             <div className='mb-4' style={{ borderBottom: '1pt solid #979797' }} />
@@ -120,9 +125,24 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
                   </Input>
                 </FormGroup>
               </Col>
-              <Col className='pt-2'>
-                <span className='text-black text-hel-95 text-l'>IDR {product.price}</span>
-                <span className='text-s text-black'> / {product.weight_in}</span>
+              <Col xs='4' className='pt-2'>
+                <div>
+                  <span
+                    className={`text-black ${product.discount ? 'text-hel-reg text-m' : 'text-hel-95 text-ml'}`}
+                    style={{ textDecoration: product.discount ? 'line-through' : 'none' }}
+                  >
+                    IDR {product.price}
+                  </span>
+                  <span className='text-s text-black' style={{ textDecoration: product.discount ? 'line-through' : 'none' }}> / {product.weight_in}</span>
+                </div>
+                {product.discount &&
+                  <div>
+                    <span className='text-hel-95 text-ml' style={{ color: 'red' }}>IDR {product.discount.price_discount}</span>
+                    <span className='text-s' style={{ color: 'red' }}> / {product.weight_in}</span>
+                  </div>
+                }
+              </Col>
+              <Col xs='4' className='pt-2'>
                 <span className='text-ml text-black' style={{ marginLeft: '45px' }}>Stock: <span className='text-black text-hel-95 text-l'>{product.quantity}</span></span>
               </Col>
             </Row>
