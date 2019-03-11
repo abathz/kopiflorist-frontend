@@ -100,7 +100,9 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             </Row>
           </Col>
           <Col xs={{ size: 5, offset: 1 }}>
-            <span className='text-xl text-black text-hel-95'>{product.name}</span>
+            <div className={`${!product.discount && 'mb-4'}`}>
+              <span className='text-xl text-black text-hel-95'>{product.name}</span>
+            </div>
             {product.discount &&
               <div className='discount-badge mb-4'>
                 {product.discount.amount} % Off
