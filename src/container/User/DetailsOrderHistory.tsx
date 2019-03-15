@@ -268,7 +268,6 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { isShipping, detailsInvoice, trackingDelivery } = this.props
-    if (!detailsInvoice.pickup) return <div/>
     const transactionStatus = this.transactionStatus()
     return (
       <>
@@ -295,7 +294,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
               {this.renderDataProducts()}
             </Row>
             {
-              detailsInvoice.pickup.pickup_method.code === 'jne'
+              detailsInvoice.pickup && detailsInvoice.pickup.pickup_method.code === 'jne'
               ? <>
                   <h4>Tracking Delivery</h4>
                   <p className='text-hel-95 text-black text-l'>

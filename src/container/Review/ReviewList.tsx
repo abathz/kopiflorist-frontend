@@ -32,7 +32,6 @@ class ReviewList extends Component<PropsComponent, StateComponent> {
       const endDate = moment(date).add(data.trip_days.duration_in_days - 1, 'd').format('DD MMMM YYYY')
       let item = {
         trip_id: data.trip_id,
-        trip_booked_id: data.trip_booked_id,
         title: data.title,
         photo: data.photo,
         date: `${startDate} - ${endDate}`,

@@ -195,7 +195,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     let data: any
     data = {
       isAddressFill: false,
-      coupon_id: couponDetail.id || null,
+      coupon_id: couponDetail && couponDetail.id,
       cart_id: cartcheckout.myCart.id,
       address_id: cartcheckout.idAddress,
       pickup_method_id: cartcheckout.pickup_method,
@@ -206,7 +206,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       if (cartcheckout.address !== '' && cartcheckout.city !== 0 && cartcheckout.province !== 0 && cartcheckout.postal_code !== '') {
         data = {
           isAddressFill: true,
-          coupon_id: couponDetail.id || null,
+          coupon_id: couponDetail && couponDetail.id,
           address: cartcheckout.address,
           postal_code: cartcheckout.postal_code,
           province_id: cartcheckout.province,

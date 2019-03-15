@@ -145,7 +145,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
                 }
               </Col>
               <Col xs='4' className='pt-2'>
-                <span className='text-ml text-black' style={{ marginLeft: '45px' }}>Stock: <span className='text-black text-hel-95 text-l'>{product.quantity}</span></span>
+                <span className='text-ml text-black'>Stock: <span className='text-black text-hel-95 text-l'>{product.quantity}</span></span>
               </Col>
             </Row>
             <Row>

@@ -204,9 +204,16 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
   renderGroupSize () {
     const { tripDetail } = this.props
     return _.map(tripDetail.trip_package, (data: any, index: number) => {
+      let realPrice = tripDetail.discount > 0 ? data.price_discount : data.price
       return (
-        <option key={data.id} id={data.package_name} value={`${data.trip_package_id}-${data.price}`}>
-          {`${data.package_name} ${data.max_participant === data.min_participant ? `(${data.min_participant} person)` : `(${data.min_participant}-${data.max_participant} persons)`}`}
+        <option key={data.id} id={data.package_name} value={`${data.trip_package_id}-${realPrice}`}>
+          {`
+            ${data.package_name}
+            ${data.max_participant === data.min_participant
+              ? `(${data.min_participant} person)`
+              : `(${data.min_participant}-${data.max_participant} persons)`
+            }
+          `}
         </option>
       )
     })
@@ -222,6 +229,7 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { tripDetail, trip } = this.props
+    console.log(tripDetail)
     return (
       <>
         <Row className='mb-5'>
@@ -232,7 +240,12 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
             </Row>
           </Col>
           <Col lg={{ size: 5, offset: 1 }} xs='12'>
-            <p className='text-xl text-black text-hel-95'>{tripDetail.title}</p>
+            <span className='text-xl text-black text-hel-95'>{tripDetail.title}</span>
+            {tripDetail.discount > 0 &&
+              <div className='discount-badge mb-4'>
+              {tripDetail.discount} % Off
+              </div>
+            }
             <p className='text-m text-black text-hel-reg'>{tripDetail.description}</p>
             <p className='text-m text-black text-hel-reg'>{tripDetail.address}</p>
             <p className='text-m text-black text-hel-reg'>{this.tripDate()}</p>

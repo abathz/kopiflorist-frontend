@@ -59,7 +59,7 @@ class ShopList extends Component<PropsComponent, StateComponent> {
                 {data.discount &&
                   <div className='discount-badge mb-4'>
                     {data.discount.amount} % Off
-                    </div>
+                  </div>
                 }
                 <p className='text-l text-hel-95 h4'>{data.name}</p>
                 <p className='text-m text-os-reg text-justify'>{data.description}</p>

@@ -13,7 +13,7 @@ export const updateDataReview = ({ prop, value }: any) => (dispatch: Dispatch<an
 export const createReview = (data: any) => async (dispatch: Dispatch<any>) => {
   let id = data.id
   let newData = {
-    trip_booked_id: data.trip_booked_id,
+    cart_trip_id: data.cart_trip_id,
     message: data.message,
     rating: data.rating
   }

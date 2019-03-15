@@ -75,7 +75,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>{data.quantity}</td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.package.price}</td>
           <td style={{ paddingTop: '30px' }}>
-            <Button color='danger' onMouseDown={this.onTripCartDeleted(data.id)}>Delete</Button>
+            <Button color='danger' block={true} onMouseDown={this.onTripCartDeleted(data.id)}>Delete</Button>
           </td>
         </tr>
       )
@@ -95,7 +95,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>{data.quantity}</td>
           <td style={{ paddingTop: '38px' }} className='text-os-reg text-ml text-black-light'>Rp {data.total_price}</td>
           <td style={{ paddingTop: '30px' }}>
-            <Button color='danger' onMouseDown={this.onProductCartDeleted(data.id)}>Delete</Button>
+            <Button color='danger' block={true} onMouseDown={this.onProductCartDeleted(data.id)}>Delete</Button>
           </td>
         </tr>
       )

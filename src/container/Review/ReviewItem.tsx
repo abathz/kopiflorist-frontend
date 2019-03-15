@@ -48,12 +48,12 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
     const { data, review } = this.props
     let newData = {
       id: data.trip_id,
-      trip_booked_id: data.trip_booked_id,
+      cart_trip_id: data.cart_trip_id,
       message: review.reviewTrip,
       rating: review.ratingReview
     }
-
-    this.props.createReview(newData)
+    console.log(newData)
+    // this.props.createReview(newData)
   }
 
   render () {

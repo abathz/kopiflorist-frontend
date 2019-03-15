@@ -39,6 +39,11 @@ class CoffeeTripList extends Component<PropsComponent, StateComponent> {
               <img className='img-fluid' src={data.main_photo} style={{ cursor: 'pointer' }} />
             </Link>
             <div className='mt-3'>
+              {data.discount > 0 &&
+                <div className='discount-badge mb-4'>
+                  {data.discount} % Off
+                  </div>
+              }
               <p className='text-l text-hel-95 h4'>{data.title}</p>
               <p className='text-m text-os-reg text-justify'>{data.description}</p>
               <p><span className='text-hel-bold'>{startDate}</span>{data.duration !== 1 ? <span className='text-hel-bold'> - {endDate}</span> : ''}</p>
