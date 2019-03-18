@@ -11,21 +11,25 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  Badge
  } from 'reactstrap'
 import { Link } from 'routes'
 import ModalAuth from './ModalAuth'
-import { getProfile, getInfoMyCart, logout } from 'actions'
+import { getProfile, getInfoMyCart, getUserReviews , logout } from 'actions'
+import _ from 'lodash'
 
 interface StateProps {
   profile: any
   myCart: any
+  userReviews: any
 }
 
 interface DispatchProps {
   getProfile: typeof getProfile
   logout: typeof logout
   getInfoMyCart: typeof getInfoMyCart
+  getUserReviews: typeof getUserReviews
 }
 
 interface PropsComponent extends StateProps, DispatchProps { }
@@ -58,6 +62,7 @@ class Header extends Component<PropsComponent, StateComponent> {
     if (token) {
       this.props.getProfile()
       this.props.getInfoMyCart()
+      this.props.getUserReviews()
     }
   }
 
@@ -69,6 +74,16 @@ class Header extends Component<PropsComponent, StateComponent> {
     this.setState({
       modal: !this.state.modal
     })
+  }
+
+  calculateUserGetReview = () => {
+    const { userReviews } = this.props
+    let totalReview = _.reduce(userReviews, (map: any, obj: any) => {
+      map['total_review'] = obj.review === null ? ++map['total_review'] || 1 : ''
+      return map
+    }, {})
+
+    return totalReview.total_review
   }
 
   renderDropdown () {
@@ -88,7 +103,7 @@ class Header extends Component<PropsComponent, StateComponent> {
             </Link>
             <Link route='review'>
               <DropdownItem>
-                Review
+                Review <Badge color='danger' pill={true}>{this.calculateUserGetReview()}</Badge>
               </DropdownItem>
             </Link>
             <DropdownItem divider={true} />
@@ -160,15 +175,14 @@ class Header extends Component<PropsComponent, StateComponent> {
               </Nav>
               <Nav className='ml-auto mt-3 signup_login' navbar={true}>
                 {
-                  this.state.token
-                  ? <NavItem>
-                      <NavLink>
-                        <Link route='cart'>
-                          <p>Cart({myCart !== null ? myCart.item_count : 0})</p>
-                        </Link>
-                      </NavLink>
-                    </NavItem>
-                  : <div/>
+                  this.state.token &&
+                  <NavItem>
+                    <NavLink>
+                      <Link route='cart'>
+                        <p>Cart({myCart !== null ? myCart.item_count : 0})</p>
+                      </Link>
+                    </NavLink>
+                  </NavItem>
                 }
                 {this.renderDropdown()}
               </Nav>
@@ -182,11 +196,12 @@ class Header extends Component<PropsComponent, StateComponent> {
   }
 }
 
-const mapStateToProps = ({ user, cartcheckout }: any) => {
+const mapStateToProps = ({ user, cartcheckout, review }: any) => {
   const { profile } = user
   const { myCart } = cartcheckout
+  const { userReviews } = review
 
-  return { profile, myCart }
+  return { profile, myCart, userReviews }
 }
 
-export default connect(mapStateToProps, { getProfile, getInfoMyCart, logout })(Header)
+export default connect(mapStateToProps, { getProfile, getInfoMyCart, getUserReviews, logout })(Header)

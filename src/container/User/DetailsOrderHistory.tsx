@@ -118,7 +118,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
       let endDate = moment(tripDate).add(data.trip_days.duration_in_days - 1, 'd').format('DD MMMM YYYY')
       return (
         <Col xs='12' key={index}>
-          <div className='review-item'>
+          <div className='ordered-item'>
             <Col xs='12'>
               <Row>
                 <Col lg='2' xs='4'>
@@ -145,7 +145,7 @@ class DetailsOrderHistory extends Component<PropsComponent, StateComponent> {
     return _.map(detailsInvoice.cart.products, (data: any, index: number) => {
       return (
         <Col xs='12' key={index}>
-          <div className='review-item'>
+          <div className='ordered-item'>
             <Col xs='12'>
               <Row>
                 <Col lg='2' xs='4'>

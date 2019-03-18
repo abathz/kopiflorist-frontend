@@ -31,11 +31,12 @@ class ReviewList extends Component<PropsComponent, StateComponent> {
       const startDate = moment(date).format('DD MMMM YYYY')
       const endDate = moment(date).add(data.trip_days.duration_in_days - 1, 'd').format('DD MMMM YYYY')
       let item = {
+        cart_trip_id: data.id,
         trip_id: data.trip_id,
         title: data.title,
         photo: data.photo,
         date: `${startDate} - ${endDate}`,
-        review: data.review || null
+        review: data.review
       }
       return <ReviewItem key={index} data={item}/>
     })

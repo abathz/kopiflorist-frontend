@@ -1,6 +1,6 @@
 import React, { Component, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
-import { Col, Row, Button, Input, FormGroup, Label } from 'reactstrap'
+import { Col, Row, Button, Input, FormGroup, Label, Alert, FormFeedback } from 'reactstrap'
 import ReactStars from 'react-stars'
 import { updateDataReview, createReview } from 'actions'
 
@@ -19,6 +19,7 @@ interface PropsComponent extends StateProps, DispatchProps {}
 
 interface StateComponent {
   isReviewItemClicked: boolean
+  error: boolean
 }
 
 class ReviewItem extends Component<PropsComponent, StateComponent> {
@@ -26,7 +27,8 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
     super(props)
 
     this.state = {
-      isReviewItemClicked: false
+      isReviewItemClicked: false,
+      error: false
     }
   }
 
@@ -52,8 +54,11 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
       message: review.reviewTrip,
       rating: review.ratingReview
     }
-    console.log(newData)
-    // this.props.createReview(newData)
+    if (newData.message === '' || newData.rating === 0) {
+      this.setState({ error: true })
+      return
+    }
+    this.props.createReview(newData)
   }
 
   render () {
@@ -71,7 +76,6 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
                   <span className='text-ml text-black'>{data.title}</span>
                   <ReactStars
                     className='float-right'
-                    style={{ marginTop: '-1px' }}
                     count={5}
                     value={data.review === null ? ratingReview : data.review.rating}
                     edit={data.review === null}
@@ -94,7 +98,8 @@ class ReviewItem extends Component<PropsComponent, StateComponent> {
                 <div className={`review-input ${this.state.isReviewItemClicked ? 'review-input-active' : ''}`}>
                   <FormGroup>
                     <Label for='reviewTrip'>Review</Label>
-                    <Input type='textarea' id='reviewTrip' onChange={this.onInputChange}/>
+                    <Input type='textarea' id='reviewTrip' invalid={this.state.error} onChange={this.onInputChange} />
+                    <FormFeedback>Feedback message and rating is required</FormFeedback>
                   </FormGroup>
                   <Row>
                     <Col xs='4'>
