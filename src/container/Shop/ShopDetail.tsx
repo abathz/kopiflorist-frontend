@@ -100,10 +100,10 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             </Row>
           </Col>
           <Col xs={{ size: 5, offset: 1 }}>
-            <div className={`${!product.discount && 'mb-4'}`}>
+            <div className={`${!product.discount > 0 && 'mb-4'}`}>
               <span className='text-xl text-black text-hel-95'>{product.name}</span>
             </div>
-            {product.discount &&
+            {product.discount > 0 &&
               <div className='discount-badge mb-4'>
                 {product.discount.amount} % Off
               </div>
@@ -130,14 +130,14 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
               <Col xs='4' className='pt-2'>
                 <div>
                   <span
-                    className={`text-black ${product.discount ? 'text-hel-reg text-m' : 'text-hel-95 text-ml'}`}
-                    style={{ textDecoration: product.discount ? 'line-through' : 'none' }}
+                    className={`text-black ${product.discount > 0 ? 'text-hel-reg text-m' : 'text-hel-95 text-ml'}`}
+                    style={{ textDecoration: product.discount > 0 ? 'line-through' : 'none' }}
                   >
                     IDR {product.price}
                   </span>
-                  <span className='text-s text-black' style={{ textDecoration: product.discount ? 'line-through' : 'none' }}> / {product.weight_in}</span>
+                  <span className='text-s text-black' style={{ textDecoration: product.discount > 0 ? 'line-through' : 'none' }}> / {product.weight_in}</span>
                 </div>
-                {product.discount &&
+                {product.discount > 0 &&
                   <div>
                     <span className='text-hel-95 text-ml' style={{ color: 'red' }}>IDR {product.discount.price_discount}</span>
                     <span className='text-s' style={{ color: 'red' }}> / {product.weight_in}</span>
