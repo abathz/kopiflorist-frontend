@@ -19,12 +19,6 @@ class Footer extends Component<{},{}> {
           </Col>
           <Col lg='4' xs='12'>
             <h4 className='text-white'>Our Address</h4>
-            <h6 className='text-white'>Workshop</h6>
-            <p className='text-os-reg text-white text-m'>
-              Jl. Gamelan No.6a, RW.09<br />
-              Turangga, Lengkong<br />
-              Kota Bandung, Jawa Barat 40264
-            </p>
             <h6 className='text-white'>Coffee Shop</h6>
             <p className='text-os-reg text-white text-m'>
               Pasar Bunga Tega Lega Kav. 6<br/>
@@ -41,7 +35,7 @@ class Footer extends Component<{},{}> {
             </Row>
             <Row>
               <Col xs='12'>
-                <div className='text-os-reg text-white text-m'>+62 813-1375-5587</div>
+                <div className='text-os-reg text-white text-m'>+62 821-2114-4614</div>
               </Col>
               <Col xs='12'>
                 <div className='text-os-reg text-white text-m'>sampurasun@kopiflorist.id</div>
