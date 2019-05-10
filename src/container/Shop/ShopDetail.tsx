@@ -53,7 +53,16 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
   }
 
   onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    this.props.updateDataShop({ prop: 'quantity', value: e.target.value })
+    if (e.target.id === 'quantity') {
+      let quantity = Number(e.target.value)
+      console.log(quantity)
+      if (quantity > this.props.product.quantity) {
+        e.target.value = String(this.props.product.quantity)
+      } else if (quantity < 0) {
+        e.target.value = '1'
+      }
+      this.props.updateDataShop({ prop: 'quantity', value: e.target.value })
+    }
   }
 
   onBuyClicked = () => {
@@ -100,7 +109,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             </Row>
           </Col>
           <Col xs={{ size: 5, offset: 1 }}>
-            <div className={`${!product.discount > 0 && 'mb-4'}`}>
+            <div className={`${product.discount == 0 && 'mb-4'}`}>
               <span className='text-xl text-black text-hel-95'>{product.name}</span>
             </div>
             {product.discount > 0 &&
@@ -136,14 +145,7 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
             <Row>
               <Col xs='6'>
                 <FormGroup>
-                  <Input type='select' id='quantity' onChange={this.onInputChange}>
-                    <option defaultChecked={true}>Quantity</option>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
-                  </Input>
+                  <Input type='number' placeholder="Quantity" min={1} max={product.quantity} id='quantity' onChange={this.onInputChange} />
                 </FormGroup>
               </Col>
               <Col xs='4' className='pt-2'>
