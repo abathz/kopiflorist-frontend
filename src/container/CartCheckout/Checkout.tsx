@@ -153,6 +153,9 @@ class Checkout extends Component<PropsComponent, StateComponent> {
             idPickup: Number(idPickupMethod),
             messageAlert: 'Untuk pengiriman dilakukan sebelum jam 14.00. Diatas jam 14.00 akan dikirim besok hari.'
           })
+
+          let cartId = this.props.cartcheckout.myCart.id
+          this.props.getDeliveryCost(cartId, this.props.cartcheckout.city, Number(idPickupMethod))
           this.props.updateDataCheckout({ prop: e.target.id, value: Number(idPickupMethod) })
           return
         default:
@@ -190,7 +193,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
   }
 
   onPayClicked = () => {
-    const { cartcheckout } = this.props
+    const { profile, cartcheckout } = this.props
     const { couponDetail } = this.state
     let data: any
     data = {
@@ -202,7 +205,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
       pickup_method_service: cartcheckout.service
     }
 
-    if (this.state.isFormShow) {
+    if (this.state.isFormShow || !profile.address || profile.address.length == 0) {
       if (cartcheckout.address !== '' && cartcheckout.city !== 0 && cartcheckout.province !== 0 && cartcheckout.postal_code !== '') {
         data = {
           isAddressFill: true,
@@ -411,7 +414,7 @@ class Checkout extends Component<PropsComponent, StateComponent> {
     const { deliveryCost } = this.props
     if (this.state.codePickup === 'dakota' || this.state.codePickup === 'gojek') {
       return <Alert color='info'>{this.state.messageAlert}</Alert>
-    } else if (this.state.codePickup === 'jne' && this.state.addressSelected) {
+    } else if (this.state.codePickup === 'jne' && (this.state.addressSelected || (this.props.cartcheckout.city && this.props.cartcheckout.province))) {
       if (deliveryCost === null) return <Loading/>
       return (
         <>
