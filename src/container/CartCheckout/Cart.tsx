@@ -102,6 +102,34 @@ class Cart extends Component<PropsComponent, StateComponent> {
     })
   }
 
+  isCartEmpty () {
+    const { dataProduct, dataTrip } = this.props
+    return (dataProduct.cart_product === undefined || dataTrip.cart_trip === undefined || dataProduct.cart_product.length + dataTrip.cart_trip.length === 0)
+  }
+
+  renderCartActionButton () {
+    if (this.isCartEmpty()) return ''
+    return (
+      <Row>
+        <Col className='text-right'>
+          <Link route='home'><Button block={this.state.isSmallDevices}>Continue Shopping</Button></Link>
+          <Link route='checkout'>
+            <Button
+              block={this.state.isSmallDevices}
+              className='button-yellow'
+              style={{
+                width: !this.state.isSmallDevices ? '160px' : '',
+                marginLeft: !this.state.isSmallDevices ? '50px' : ''
+              }}
+            >
+              Checkout
+            </Button>
+          </Link>
+        </Col>
+      </Row>
+    )
+  }
+
   render () {
     return (
       <>
@@ -133,23 +161,7 @@ class Cart extends Component<PropsComponent, StateComponent> {
             <div className='clearfix'/>
           </Col>
         </Row>
-        <Row>
-          <Col className='text-right'>
-            <Link route='home'><Button block={this.state.isSmallDevices}>Continue Shopping</Button></Link>
-            <Link route='checkout'>
-              <Button
-                block={this.state.isSmallDevices}
-                className='button-yellow'
-                style={{
-                  width: !this.state.isSmallDevices ? '160px' : '',
-                  marginLeft: !this.state.isSmallDevices ? '50px' : ''
-                }}
-              >
-                Checkout
-              </Button>
-            </Link>
-          </Col>
-        </Row>
+        {this.renderCartActionButton()}
       </>
     )
   }
