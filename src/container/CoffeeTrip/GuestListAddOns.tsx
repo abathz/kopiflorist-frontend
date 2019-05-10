@@ -72,6 +72,14 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
   }
 
   onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.id === 'age') {
+      let age = Number(e.target.value)
+      if (age < 1) {
+        e.target.value = '1'
+      } else if (age > 100) {
+        e.target.value = '100'
+      }
+    }
     this.props.updateDataTrip({ prop: e.target.id, value: e.target.value })
   }
 
@@ -110,7 +118,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
       productAddOns
     }
 
-    if (tripPackage.max_participant === 1 && tripPackage.min_participant === 1 || tripPackage.min_participant === trip.guestList.length) {
+    if (tripPackage.max_participant === 1 && tripPackage.min_participant === 1 || (trip.guestList.length >= tripPackage.min_participant && trip.guestList.length <= tripPackage.max_participant)) {
       this.props.orderTrip(data)
     } else {
       this.setState((prevState) => ({ alert: !prevState.alert }))
@@ -178,7 +186,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
             <Form>
               <FormGroup>
                 <Label for='age'>Age</Label>
-                <Input type='tel' id='age' onChange={this.onInputChange} />
+                <Input type='number' min={1} max={100} id='age' onChange={this.onInputChange} />
               </FormGroup>
               <FormGroup>
                 <Label for='gender'>Gender</Label>
