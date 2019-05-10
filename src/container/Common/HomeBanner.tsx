@@ -107,15 +107,17 @@ class HomeBanner extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { activeIndex } = this.state
+    let { allBanner } = this.props
+    allBanner.forEach(function(element) { element.key = element.id; });
     return (
       <Carousel
         className='mb-5'
         activeIndex={activeIndex}
         next={this.next}
         previous={this.previous}
-        interval={2000}
+        interval={5000}
       >
-        <CarouselIndicators items={this.props.allBanner} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
+        <CarouselIndicators items={allBanner} activeIndex={activeIndex} onClickHandler={this.goToIndex} />
         {this.renderSlide()}
         <CarouselControl direction='prev' directionText='Previous' onClickHandler={this.previous} />
         <CarouselControl direction='next' directionText='Next' onClickHandler={this.next} />
