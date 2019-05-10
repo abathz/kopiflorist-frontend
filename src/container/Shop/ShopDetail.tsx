@@ -55,7 +55,6 @@ class ShopDetail extends Component<PropsComponent, StateComponent> {
   onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === 'quantity') {
       let quantity = Number(e.target.value)
-      console.log(quantity)
       if (quantity > this.props.product.quantity) {
         e.target.value = String(this.props.product.quantity)
       } else if (quantity < 0) {

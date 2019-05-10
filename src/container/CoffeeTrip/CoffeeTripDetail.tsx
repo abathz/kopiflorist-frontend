@@ -229,7 +229,6 @@ class CoffeeTripDetail extends Component<PropsComponent, StateComponent> {
 
   render () {
     const { tripDetail, trip } = this.props
-    console.log(tripDetail)
     return (
       <>
         <Row className='mb-5'>
