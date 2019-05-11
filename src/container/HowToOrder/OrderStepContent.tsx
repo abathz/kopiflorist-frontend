@@ -6,7 +6,7 @@ class OrderStepContent extends Component<{}, {}> {
     return (
       <Row>
         <Col xs={{ size: 8, offset: 2 }} className='mb-5'>
-          <div style={{ backgroundColor: '#333', height: '450px' }} />
+          <img className='img-fluid' src='/static/img/How-To-Order.jpeg' alt=''/>
         </Col>
         <Col xs='12'>
           <ol>
