@@ -23,9 +23,9 @@ interface State {
 const INITIAL_STATE: State = {
   name: '',
   id_number: '',
-  food_preference: '',
+  food_preference: 'default',
   age: 0,
-  gender: '',
+  gender: 'male',
   group_size: '',
   price: 0,
   guest_list: 0,

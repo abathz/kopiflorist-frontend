@@ -175,7 +175,7 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
               <FormGroup>
                 <Label for='food_preference'>Meal Preference</Label>
                 <Input type='select' id='food_preference' onChange={this.onInputChange}>
-                  <option defaultChecked={true}>{}</option>
+                  <option defaultChecked={true} value='default'>No Specific Preferences</option>
                   <option value='vegetable'>Vegetable</option>
                   <option value='meat'>Meat</option>
                 </Input>
@@ -191,9 +191,8 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
               <FormGroup>
                 <Label for='gender'>Gender</Label>
                 <Input type='select' id='gender' onChange={this.onInputChange}>
-                  <option defaultChecked={true}>{}</option>
-                  <option value='vegetable'>Male</option>
-                  <option value='meat'>Female</option>
+                  <option defaultChecked={true} value='male'>Male</option>
+                  <option value='female'>Female</option>
                 </Input>
               </FormGroup>
             </Form>
@@ -313,9 +312,11 @@ class GuestListAddOns extends Component<PropsComponent, StateComponent> {
                 <p className='text-black text-hel-reg text-m mt-4 mb-0'>(Add-ons)</p>
                 {
                   _.map(shop.addOns, (data: any, index: number) => {
-                    return (
-                      <p key={index} className='mb-1'><span className='text-black text-hel-reg text-m'>{data.name} x{data.quantity}</span><span className='float-right text-black text-os-reg text-m'>Rp {data.quantity * data.price}</span></p>
-                    )
+                    if (data.quantity > 0) {
+                      return (
+                        <p key={index} className='mb-1'><span className='text-black text-hel-reg text-m'>{data.name} x{data.quantity}</span><span className='float-right text-black text-os-reg text-m'>Rp {data.quantity * data.price}</span></p>
+                      )
+                    }
                   })
                 }
                 <div className='clearfix' />
